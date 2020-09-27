@@ -1,0 +1,15 @@
+H:\develop\dnet\AWCF\AWCF\AWCF\bin\Debug\AWCF.exe.config
+H:\develop\dnet\AWCF\AWCF\AWCF\bin\Debug\AWCF.exe
+H:\develop\dnet\AWCF\AWCF\AWCF\bin\Debug\AWCF.pdb
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\AWCF.csprojAssemblyReference.cache
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\MainWindow.g.cs
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\App.g.cs
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\AWCF_MarkupCompile.cache
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\AWCF_MarkupCompile.lref
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\MainWindow.baml
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\AWCF.g.resources
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\AWCF.Properties.Resources.resources
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\AWCF.csproj.GenerateResource.cache
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\AWCF.csproj.CoreCompileInputs.cache
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\AWCF.exe
+H:\develop\dnet\AWCF\AWCF\AWCF\obj\Debug\AWCF.pdb
