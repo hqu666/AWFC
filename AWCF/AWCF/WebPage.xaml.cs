@@ -12,21 +12,24 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Web.WebView2.Core;
 
 namespace AWCF {
 	/// <summary>
-	/// MainWindow.xaml の相互作用ロジック
+	/// WebPage.xaml の相互作用ロジック
 	/// </summary>
-	public partial class MainWindow : Window {
-		public MainWindow()
+	public partial class WebPage : Page {
+		public WebPage()
 		{
 			InitializeComponent();
-			CallWeb();
 		}
 
-		public void CallWeb()
+		private void ButtonGo_Click(object sender, RoutedEventArgs e)
 		{
-			MainFrame.Navigate(typeof(WebPage));
+			if (webView != null && webView.CoreWebView2 != null) {
+				webView.CoreWebView2.Navigate(addressBar.Text);
+			}
 		}
+
 	}
 }

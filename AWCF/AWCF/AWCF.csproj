@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5B219DF3-44A9-4605-A988-770B7CBA03AA}</ProjectGuid>
+    <ProjectGuid>{4CDBCFEF-82D7-43B3-B3AA-687194191EC5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>AWCF</RootNamespace>
     <AssemblyName>AWCF</AssemblyName>
@@ -55,8 +55,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="WebWindow.xaml.cs">
-      <DependentUpon>WebWindow.xaml</DependentUpon>
+    <Compile Include="WebPage.xaml.cs">
+      <DependentUpon>WebPage.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -70,7 +70,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="WebWindow.xaml">
+    <Page Include="WebPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
