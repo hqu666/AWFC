@@ -21,12 +21,20 @@ namespace AWCF {
 		public MainWindow()
 		{
 			InitializeComponent();
-			CallWeb();
+	//		CallWeb();
 		}
 
 		public void CallWeb()
 		{
-			MainFrame.Navigate(typeof(WebPage));
+			//MainFrame.Navigate(typeof(WebPage));
+
 		}
+
+		private void Button_Click(object sender, RoutedEventArgs e)
+		{
+			WebWindow webWindow = new WebWindow();
+			webWindow.Show();
+		}
+
 	}
 }

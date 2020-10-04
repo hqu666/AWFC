@@ -10,25 +10,27 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Web.WebView2.Core;
 
-namespace AWCF {
-	/// <summary>
-	/// WebPage.xaml の相互作用ロジック
-	/// </summary>
-	public partial class WebPage : Page {
-		public WebPage()
-		{
-			InitializeComponent();
+namespace AWCF
+{
+    /// <summary>
+    /// WebWindow.xaml の相互作用ロジック
+    /// </summary>
+    public partial class WebWindow : Window
+    {
+        public WebWindow()
+        {
+            InitializeComponent();
+			webView.Source = new Uri(@"https://www.yahoo.co.jp/");
+
 		}
-
 		private void ButtonGo_Click(object sender, RoutedEventArgs e)
 		{
 			if (webView != null && webView.CoreWebView2 != null) {
 				webView.CoreWebView2.Navigate(addressBar.Text);
 			}
 		}
-
 	}
 }

@@ -1,0 +1,33 @@
+﻿<Window x:Class="WebSample.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:WebSample"
+		xmlns:WPF="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+
+	<Grid x:Name="Grid1" Grid.Row="1" Grid.Column="1">
+		<WPF:WebView x:Name="webView1"
+                      Grid.Row="0"
+                      Grid.Column="0"
+                      Loaded="WebView_Loaded" />
+	</Grid>
+	<!--xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"--><!--
+	<Grid x:Name="Grid1" Visibility="Visible" >
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition/>
+			<ColumnDefinition Width="71*"/>
+		</Grid.ColumnDefinitions>
+		--><!--<WPF:WebView x:Name="WebView1" Visibility="Visible" Grid.Column="1" Margin="50,50,50,50">
+		</WPF:WebView>
+		<Button Name="BTN1" Click="BTN1_Click" Margin="285,380,285,10" Grid.Column="1" >Click Me</Button>
+		<TextBlock Margin="0,0,747,390" Grid.ColumnSpan="2">
+            <Hyperlink
+                NavigateUri="http://www.google.com">
+                Google
+            </Hyperlink>
+		</TextBlock>--><!--
+	</Grid>-->
+</Window>

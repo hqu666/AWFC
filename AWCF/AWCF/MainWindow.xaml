@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AWCF"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+		xmlns:local="clr-namespace:AWCF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 	<Window.Resources>
@@ -61,7 +62,7 @@
 	</Window.Resources>
 	<Grid Margin="0,0,0,0" >
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="110" />
+			<ColumnDefinition Width="150" />
 			<ColumnDefinition Width="Auto" />
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions >
@@ -69,8 +70,16 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition x:Name="attach_row" Height="Auto"/>
 		</Grid.RowDefinitions>
-		<Frame x:Name="MainFrame" Content="Frame" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Height="360"  Width="671"
-			Margin="0,0,-638,-341"  VerticalAlignment="Top" Grid.RowSpan="3" />
+
+
+		<wv2:WebView2 Name = "webView" Grid.Row="0" Grid.Column="1"   Grid.RowSpan="3"
+                  Source = "https://www.microsoft.com" Margin="0,0,-630,-359"/>
+
+		<!--<Frame x:Name="MainFrame" Content="Frame" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" Height="360"  Width="671"
+			Margin="0,0,-638,-341"  VerticalAlignment="Top" Grid.RowSpan="3" />-->
+		<Button HorizontalAlignment="Left" Margin="10,253,0,-250" Grid.Row="2" VerticalAlignment="Top" Width="131">
+			<Button Content="Button" Margin="0" Width="75" Click="Button_Click"/>
+		</Button>
 
 	</Grid>
 </Window>
