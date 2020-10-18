@@ -19,16 +19,10 @@ namespace AWCF {
 	/// MainWindow.xaml の相互作用ロジック
 	/// </summary>
 	public partial class MainWindow : Window {
+
 		public MainWindow()
 		{
 			InitializeComponent();
-	//		CallWeb();
-		}
-
-		public void CallWeb()
-		{
-			//MainFrame.Navigate(typeof(WebPage));
-
 		}
 		private void ButtonGo_Click(object sender, RoutedEventArgs e)
 		{

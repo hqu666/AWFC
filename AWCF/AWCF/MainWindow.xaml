@@ -5,9 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
 	   xmlns:local="clr-namespace:AWCF"
-        mc:Ignorable="d"
+		xmlns:vm="clr-namespace:AWCF.ViewModel"
+		mc:Ignorable="d"
 		Topmost="true"
         Title="MainWindow" Height="1000" Width="1800">
+	<Window.DataContext>
+		<vm:MainViewModel/>
+	</Window.DataContext>
+
 	<Window.Resources>
 		<Style TargetType="StackPanel">
 			<Setter Property="VerticalAlignment" Value="Center"/>
@@ -73,7 +78,7 @@
 		</Grid.RowDefinitions>
 
 		<Frame x:Name="MainFrame"
-					Source="WebPage.xaml"
+					Source = "{Binding FrameSource}"
 					VerticalAlignment="Stretch" 
 					HorizontalAlignment="Stretch" 
 						Grid.Row="0" Grid.Column="1"   Grid.RowSpan="3" Margin="5,5,5,5" />
