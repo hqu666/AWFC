@@ -25,9 +25,7 @@ namespace AWCF {
 
 		private void ButtonGo_Click(object sender, RoutedEventArgs e)
 		{
-			if (webView != null && webView.CoreWebView2 != null) {
-				webView.CoreWebView2.Navigate(addressBar.Text);
-			}
+
 		}
 
 	}

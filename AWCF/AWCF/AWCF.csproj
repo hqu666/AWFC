@@ -109,6 +109,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView">
+      <Version>6.1.2</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Web.WebView2">
       <Version>0.9.628-prerelease</Version>
     </PackageReference>

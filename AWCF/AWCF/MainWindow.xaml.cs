@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Web.WebView2;
 
 namespace AWCF {
 	/// <summary>
@@ -28,6 +29,13 @@ namespace AWCF {
 		{
 			//MainFrame.Navigate(typeof(WebPage));
 
+		}
+		private void ButtonGo_Click(object sender, RoutedEventArgs e)
+		{
+			//	CoreWebView2 がnull
+			//if (webView != null && webView.CoreWebView2 != null) {
+			//	webView.CoreWebView2.Navigate(addressBar.Text);
+			//}
 		}
 
 		private void Button_Click(object sender, RoutedEventArgs e)
