@@ -1,4 +1,4 @@
-﻿<Page x:Class="AWCF.WebPage"
+﻿<Page x:Class="AWCF.View.WebPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,18 +9,18 @@
 	  xmlns:vm="clr-namespace:AWCF.ViewModel"
 	  mc:Ignorable="d"
       Title="WebPage">
-	<Page.DataContext>
-		<vm:WebViewModel/>
-	</Page.DataContext>
-	<DockPanel>
-		<DockPanel DockPanel.Dock="Top" >
-			<Button x:Name="ButtonGo" DockPanel.Dock="Right" Click="ButtonGo_Click" Content="Go"/>
-			<TextBox Name = "addressBar" Text= "{Binding WebUrl}"/>
-		</DockPanel>
-		<Controls:WebView  Name = "webView" 
+    <Page.DataContext>
+        <vm:WebViewModel/>
+    </Page.DataContext>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" >
+            <Button x:Name="ButtonGo" DockPanel.Dock="Right" Click="ButtonGo_Click" Content="Go"/>
+            <TextBox Name = "addressBar" Text= "{Binding WebUrl}"/>
+        </DockPanel>
+        <Controls:WebView  Name = "webView" 
 										Source = "{Binding WebUrl}"
 										  />
-		<!--
+        <!--
 												VerticalAlignment="Stretch" 
 										HorizontalAlignment="Stretch" 
 										Width="365" Height="205"
@@ -28,5 +28,5 @@
 		<wv2:WebView2 Name = "webView"
 										 MinHeight="375" MinWidth="640"
                   Source = "https://www.yahoo.co.jp/" Margin="0,0,0,0" Width="474"/>-->
-	</DockPanel>
+    </DockPanel>
 </Page>

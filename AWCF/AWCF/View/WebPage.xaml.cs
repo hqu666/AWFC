@@ -13,20 +13,22 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AWCF {
-	/// <summary>
-	/// WebPage.xaml の相互作用ロジック
-	/// </summary>
-	public partial class WebPage : Page {
-		public WebPage()
-		{
-			InitializeComponent();
-		}
+namespace AWCF.View
+{
+    /// <summary>
+    /// WebPage.xaml の相互作用ロジック
+    /// </summary>
+    public partial class WebPage : Page
+    {
+        public WebPage()
+        {
+            InitializeComponent();
+        }
 
-		private void ButtonGo_Click(object sender, RoutedEventArgs e)
-		{
+        private void ButtonGo_Click(object sender, RoutedEventArgs e)
+        {
 
-		}
+        }
 
-	}
+    }
 }
