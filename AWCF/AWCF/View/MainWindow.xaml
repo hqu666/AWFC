@@ -92,13 +92,30 @@
                 </Grid>
 
                 <DataGrid Grid.Row="1"/>
-                <Button Content="Button" 
-                        Grid.Row="2"
-                            Height="50"
-                            Margin="0" Width="75" 
-                        Click="Button_Click"/>
+                <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition  Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button Content="エクスプローラー"  
+						Command="{Binding ExploreShow}"
+						Grid.Column="0" 
+							HorizontalAlignment="Left"  VerticalAlignment="Top" 
+							 />
+                    <Button Content="ファイル選択"
+							Command="{Binding FileDlogShow}"
+							Grid.Column="1" 
+							HorizontalAlignment="Right"  VerticalAlignment="Center" 
+							 />
+                    <Button Content="フォルダ選択"
+							Command="{Binding FolderDlogShow}"
+							 Grid.Column="2" 
+							HorizontalAlignment="Right"  VerticalAlignment="Center" 
+							/>
 
-            </Grid>
+                </Grid>
+                </Grid>
             <StackPanel Orientation="Vertical">
             </StackPanel>
         </Grid>
@@ -124,7 +141,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Width="120" Height="120" >
+                    <Button >
                         <Button.Background>
                             <ImageBrush ImageSource="/AWCF;component/Resources/pl_r_btn.png" Stretch="UniformToFill"/>
                         </Button.Background>
@@ -162,7 +179,7 @@
                                 <ColumnDefinition  Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Button Grid.Column="0"
-                                    Width="60" Height="60" MinWidth="60" 
+                                    MaxHeight="40" Width="40" MinWidth="30"
                                     >
                                 <Button.Background>
                                     <ImageBrush ImageSource="/AWCF;component/Resources/rewbtn.png" Stretch="UniformToFill"/>
@@ -247,7 +264,8 @@
                                         <Grid HorizontalAlignment="Center" UseLayoutRounding="True" VerticalAlignment="Center">
                                             <Path x:Name="grip" Data="M 0,0 C0,0 11,0 11,0 11,0 11,18 11,18 11,18 0,18 0,18 0,18 0,0 0,0 z" 
                                                   Fill="{StaticResource SliderThumb.Static.Background}" Stretch="Fill" SnapsToDevicePixels="True" 
-                                                  Stroke="{StaticResource SliderThumb.Static.Border}" StrokeThickness="1" UseLayoutRounding="True" VerticalAlignment="Center"/>
+                                                  Stroke="{StaticResource SliderThumb.Static.Border}" StrokeThickness="1" 
+                                                  UseLayoutRounding="True" VerticalAlignment="Center"/>
                                         </Grid>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsMouseOver" Value="true">
@@ -293,7 +311,7 @@
                                                         <RepeatButton Command="{x:Static Slider.IncreaseLarge}" Style="{StaticResource RepeatButtonTransparent}"/>
                                                     </Track.IncreaseRepeatButton>
                                                     <Track.Thumb>
-                                                        <Thumb x:Name="Thumb" Focusable="False" Height="52" OverridesDefaultStyle="True" 
+                                                        <Thumb x:Name="Thumb" Focusable="False" Height="36" OverridesDefaultStyle="True" 
                                                                Template="{StaticResource SliderThumbHorizontalDefault}" VerticalAlignment="Center" Width="11"/>
                                                     </Track.Thumb>
                                                 </Track>
@@ -455,7 +473,7 @@
                                 </Slider.Resources>
                             </Slider>
                             <Button  Grid.Column="2"
-                                     Width="60" Height="60" MinWidth="60" 
+                                     Width="40" Height="40" MinWidth="30"
                                     >
                                 <Button.Background>
                                     <ImageBrush ImageSource="/AWCF;component/Resources/ffbtn.png" Stretch="UniformToFill"/>

@@ -1,10 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows;
+using System.Windows.Media;
+using System.Data.SqlClient;
 using System.Text;
-
-
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using System.Reflection;
+using System.Windows.Shapes;
+using Livet;
+using Livet.Commands;
+using Livet.Messaging.Windows;
+using Livet.EventListeners;
 
 ///WebBrowserコントロールを配置すると、IEのバージョン 7をIE11の Edgeモードに変更///
 ///WebBrowserコントロールを配置すると、IEのバージョン 7をIE11の Edgeモードに変更///
@@ -16,6 +31,9 @@ using System.Runtime.InteropServices;
 ///FileOpenDialogのカスタマイズ//////////////////////////////////////////////////////////////////////
 //WMP//////////////////////////////////////
 using System.Xml;                       //flv
+using ListBox = System.Windows.Controls.ListBox;
+using Point = System.Drawing.Point;
+using Path = System.IO.Path;
 //using WMPLib;
 //using System.Windows.Controls.MediaElement;
 //using AxShockwaveFlashObjects;          //flv
@@ -159,7 +177,7 @@ namespace AWCF.ViewModel
         Point mouceDownPoint;
         int PlayListMouseDownNo;
         string PlayListMouseDownValue = "";
-        DragDropEffects DDEfect;
+  //      DragDropEffects DDEfect;
         TreeNode ftSelectNode;
         TreeNode dragNode;
         TreeNode fileTreeDropNode; //ドロップ先のTreeNodeを取得する
@@ -214,7 +232,7 @@ namespace AWCF.ViewModel
         //        元に戻す.Visible = false;
         //        ペーストToolStripMenuItem.Visible = false;
         //        このファイルを再生ToolStripMenuItem.Visible = false;                //プレイリストへボタン非表示
-        //        MyLog(dbMsg);
+        //        MyLog(TAG, dbMsg);
         //    }
         //    catch (Exception er)
         //    {
@@ -233,7 +251,7 @@ namespace AWCF.ViewModel
         //        regkey.Close();
         //        WriteSetting();
         //        Application.ApplicationExit -= new EventHandler(Application_ApplicationExit);         //ApplicationExitイベントハンドラを削除
-        //        MyLog(dbMsg);
+        //        MyLog(TAG, dbMsg);
         //    }
         //    catch (Exception er)
         //    {
@@ -285,7 +303,7 @@ namespace AWCF.ViewModel
 
         //        MakeDriveList();
 
-        //        MyLog(dbMsg);
+        //        MyLog(TAG, dbMsg);
         //    }
         //    catch (Exception er)
         //    {
@@ -302,7 +320,7 @@ namespace AWCF.ViewModel
         //    {
         //        WriteSetting();
         //        Application.ApplicationExit -= new EventHandler(Application_ApplicationExit);         //ApplicationExitイベントハンドラを削除
-        //        MyLog(dbMsg);
+        //        MyLog(TAG, dbMsg);
         //    }
         //    catch (Exception er)
         //    {
@@ -327,7 +345,7 @@ namespace AWCF.ViewModel
                 string[] extStrs = fullName.Split('.');
                 string extentionStr = "." + extStrs[extStrs.Length - 1].ToLower();
                 dbMsg += ",extentionStr=" + extentionStr;
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
                 /*		if (extentionStr == ".m3u") {
 							fullName = fullName.Replace(@":\\", @":\");
 							ComboBoxAddItems(PlaylistComboBox, fullName);
@@ -342,12 +360,12 @@ namespace AWCF.ViewModel
                 lsFullPathName = fullName;
             //    ToView(fullName);
                 //	}
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
             catch (Exception er)
             {
                 dbMsg += "<<以降でエラー発生>>" + er.Message;
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
         }
 
@@ -419,21 +437,173 @@ namespace AWCF.ViewModel
 						currentStateLabel.Text = ( "Unknown State: " + e.newState.ToString() );
 						break;
 					}*/
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
             catch (NotImplementedException er)
             {
                 dbMsg += "<<以降でエラー発生>>" + er.Message;
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
                 throw new NotImplementedException();
             }
             catch (Exception er)
             {
                 dbMsg += "<<以降でエラー発生>>" + er.Message;
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
 
         }
+
+
+        public string NowSelectedPath = "C:";
+
+        #region FileDlogShow	　単一ファイルの選択
+        private ViewModelCommand _FileDlogShow;
+
+        public ViewModelCommand FileDlogShow
+        {
+            get {
+                if (_FileDlogShow == null)
+                {
+                    _FileDlogShow = new ViewModelCommand(ShowFileDlog);
+                }
+                return _FileDlogShow;
+            }
+        }
+        /// <summary>
+        /// 単一ファイルの選択ダイアログから選択されたファイルをアイコン化処理に渡す
+        /// </summary>
+        public void ShowFileDlog()
+        {
+            string TAG = "File_bt_Click";
+            string dbMsg = "";
+            try
+            {
+                string SelectFileName = "";
+                //①
+                System.Windows.Forms.OpenFileDialog ofDialog = new System.Windows.Forms.OpenFileDialog();
+                //② デフォルトのフォルダを指定する
+                dbMsg += ",NowSelectedPath=" + NowSelectedPath;
+                ofDialog.InitialDirectory = @NowSelectedPath;
+                //③ダイアログのタイトルを指定する
+                ofDialog.Title = "添付ファイル選択";
+                //ダイアログを表示する
+                if (ofDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    SelectFileName = ofDialog.FileName;
+                    dbMsg += ">>" + SelectFileName;
+                    NowSelectedPath = System.IO.Path.GetDirectoryName(SelectFileName);
+                    dbMsg += ">>NowSelectedPath=" + NowSelectedPath;
+                }
+                else
+                {
+                    dbMsg += "キャンセルされました";
+                }
+                // オブジェクトを破棄する
+                ofDialog.Dispose();
+
+                if (!SelectFileName.Equals(""))
+                {
+                    string[] files = { SelectFileName };
+           //         FilesFromLocal(files);
+                }
+                MyLog(TAG, dbMsg);
+            }
+            catch (Exception er)
+            {
+                MyErrorLog(TAG, dbMsg, er);
+            }
+        }
+        #endregion
+
+        #region FolderDlogShow	　フォルダ選択
+        private ViewModelCommand _FolderDlogShow;
+
+        public ViewModelCommand FolderDlogShow
+        {
+            get {
+                if (_FolderDlogShow == null)
+                {
+                    _FolderDlogShow = new ViewModelCommand(ShowFolderDlog);
+                }
+                return _FolderDlogShow;
+            }
+        }
+        /// <summary>
+        /// フォルダ選択ダイアログから選択されたフォルダのファイルリストをファイルをアイコン化処理に渡す
+        /// </summary>
+        private void ShowFolderDlog()
+        {
+            string TAG = "Folder_bt_Click";
+            string dbMsg = "";
+            try
+            {
+                //①
+                System.Windows.Forms.FolderBrowserDialog fbDialog = new System.Windows.Forms.FolderBrowserDialog();
+                // ダイアログの説明文を指定する
+                fbDialog.Description = "添付ファイルをフォルダ単位で指定";
+                // デフォルトのフォルダを指定する
+                dbMsg += ",NowSelectedPath=" + NowSelectedPath;
+                fbDialog.SelectedPath = @NowSelectedPath;
+                // 「新しいフォルダーの作成する」ボタンを表示しない
+                fbDialog.ShowNewFolderButton = false;
+                //フォルダを選択するダイアログを表示する
+                if (fbDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    NowSelectedPath = fbDialog.SelectedPath;
+                    dbMsg += ">>" + NowSelectedPath;
+                    string[] files = System.IO.Directory.GetFiles(@NowSelectedPath, "*", System.IO.SearchOption.AllDirectories);
+                    dbMsg += ">>" + files.Length + "件";
+            //        FilesFromLocal(files);
+                }
+                else
+                {
+                    dbMsg += "キャンセルされました";
+                }
+                // オブジェクトを破棄する
+                fbDialog.Dispose();
+                MyLog(TAG, dbMsg);
+            }
+            catch (Exception er)
+            {
+                MyErrorLog(TAG, dbMsg, er);
+            }
+        }
+        #endregion
+
+        #region ExploreShow	　エクスプローラー表示
+        private ViewModelCommand _ExploreShow;
+
+        public ViewModelCommand ExploreShow
+        {
+            get {
+                if (_ExploreShow == null)
+                {
+                    _ExploreShow = new ViewModelCommand(ShowExplore);
+                }
+                return _ExploreShow;
+            }
+        }
+        /// <summary>
+        /// エクスプローラで作業対象フォルダを表示する
+        /// </summary>
+        private void ShowExplore()
+        {
+            string TAG = "ShowExplore";
+            //	Process.Start("EXPLORER.EXE", @"c:\");
+            //最近表示した場所	をシェルなら
+            //	explorer.exe shell:::{ 22877A6D - 37A1 - 461A - 91B0 - DBDA5AAEBC99}
+            System.Diagnostics.Process.Start("EXPLORER.EXE", @"{ 22877A6D - 37A1 - 461A - 91B0 - DBDA5AAEBC99}");
+            string dbMsg = "";
+            try
+            {
+                MyLog(TAG, dbMsg);
+            }
+            catch (Exception er)
+            {
+                MyErrorLog(TAG, dbMsg, er);
+            }
+        }
+        #endregion
 
         /*		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
 				{
@@ -942,7 +1112,7 @@ AddType video/MP2T .ts
             {
                 Console.WriteLine(TAG + "でエラー発生" + e.Message + ";" + dbMsg);
             }
-            MyLog(dbMsg);
+            MyLog(TAG, dbMsg);
             return retStr;
         }
 
@@ -975,12 +1145,12 @@ AddType video/MP2T .ts
                     rPlayList = ofd.FileName;
                 }
                 dbMsg += ",選択されたファイル名=" + rPlayList;
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
             catch (Exception er)
             {
                 dbMsg += "<<以降でエラー発生>>" + er.Message;
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
             return rPlayList;
         }
@@ -1106,7 +1276,7 @@ AddType video/MP2T .ts
                                     catch (Exception e)
                                     {
                                         dbMsg += "<<以降でエラー発生>>" + e.Message;
-                                        MyLog(dbMsg);
+                                        MyLog(TAG, dbMsg);
                                         return retIntr;
                                         throw;
                                     }
@@ -1116,12 +1286,12 @@ AddType video/MP2T .ts
                     }
                 }
                 dbMsg += ",このデレクトリには" + retIntr + "件";
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
             catch (Exception e)
             {
                 dbMsg += "<<以降でエラー発生>>" + e.Message;
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
             return retIntr;
         }
@@ -1193,12 +1363,12 @@ AddType video/MP2T .ts
 							throw;
 						}*/
                 dbMsg += ",結果" + retItems.Count + "件";
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
             catch (Exception er)
             {
                 dbMsg += "<<以降でエラー発生>>" + er.Message;
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
                 throw;
             }
             return retItems;
@@ -1258,7 +1428,7 @@ AddType video/MP2T .ts
                         }
                     }           //ListBox1に結果を表示する
                 }
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
             catch (UnauthorizedAccessException UAEx)
             {
@@ -1297,14 +1467,14 @@ AddType video/MP2T .ts
                 FileInfo fi = new FileInfo(fileName);
                 retStr = fi.DirectoryName + Path.DirectorySeparatorChar + fi.Name;
                 dbMsg += ",retStr=" + retStr;
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
             catch (Exception er)
             {
                 dbMsg += "<<以降でエラー発生>>" + er.Message;
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
-            MyLog(dbMsg);
+            MyLog(TAG, dbMsg);
             return retStr;
         }
 
@@ -1326,12 +1496,12 @@ AddType video/MP2T .ts
 										dbMsg += ",ReadyState=" + playerWebBrowser.ReadyState;
 									}
 					*/
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
             catch (Exception er)
             {
                 dbMsg += "<<以降でエラー発生>>" + er.Message;
-                MyLog(dbMsg);
+                MyLog(TAG, dbMsg);
             }
         }
 
@@ -1644,7 +1814,7 @@ AddType video/MP2T .ts
 		*/
             contlolPart += "\t\t\t<div id =" + '"' + "statediv" + '"' + ">" + souceName + "</div>\n";     //span	 '"' + 
 
-            MyLog(dbMsg);
+            MyLog(TAG, dbMsg);
             return contlolPart;
         }           //Video用のタグを作成
 
@@ -1673,7 +1843,7 @@ AddType video/MP2T .ts
             contlolPart += "\n\t\t<img src = " + '"' + fileName + '"' + " style=" + '"' + "width:100%" + '"' + "/>\n";
             // + '"' + webWidth + '"' + " height = " + '"' + webHeight + '"' +
             contlolPart += "\t\t<div>\n\t\t\t" + comentStr + "\n\t\t</div>\n";
-            MyLog(dbMsg);
+            MyLog(TAG, dbMsg);
             return contlolPart;
         }  //静止画用のタグを作成
 
@@ -1752,7 +1922,7 @@ AddType video/MP2T .ts
                 comentStr = "このファイルの再生方法は確認中です。";
             }
             contlolPart += "\t\t<div>\n\t\t\t" + comentStr + "\n\t\t</div>\n";
-            MyLog(dbMsg);
+            MyLog(TAG, dbMsg);
             return contlolPart;
         }  //静止画用のタグを作成selectNode
 
@@ -1797,7 +1967,7 @@ AddType video/MP2T .ts
             }
             contlolPart += "\t\t</pre>\n";
             contlolPart += "\t\t<div>\n\t\t\t" + comentStr + "\n\t\t</div>\n";
-            MyLog(dbMsg);
+            MyLog(TAG, dbMsg);
             return contlolPart;
         }  //Text用のタグを作成		
 
@@ -1829,7 +1999,7 @@ AddType video/MP2T .ts
                 comentStr = "このファイルの再生方法は確認中です。";
             }
             contlolPart += "\t\t<div>\n\t\t\t" + comentStr + "\n\t\t</div>\n";
-            MyLog(dbMsg);
+            MyLog(TAG, dbMsg);
             return contlolPart;
         }  //アプリケーション用のタグを作成
 
@@ -1870,12 +2040,12 @@ AddType video/MP2T .ts
 //                    this.playerWebBrowser.Resize += new System.EventHandler(this.ReSizeViews);
 //                }
 
-//                //		MyLog(dbMsg);
+//                //		MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -1984,12 +2154,12 @@ AddType video/MP2T .ts
 //                {
 //                    dbMsg += "<<playerWebBrowser.Navigateでエラー発生>>" + er.Message;
 //                }
-//                //		MyLog(dbMsg);
+//                //		MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }//形式に合わせたhtml作成
 
@@ -2066,12 +2236,12 @@ AddType video/MP2T .ts
 //                {
 //                    dbMsg += ",***指定されたファイルが無い？？*";
 //                }
-//                //			MyLog(dbMsg);
+//                //			MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception e)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + e.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }//形式に合わせたhtml作成
 //         /*		http://html5-css3.jp/tips/youtube-html5video-window.html
@@ -2161,13 +2331,13 @@ AddType video/MP2T .ts
 //                                //<embed src="ふらだんすswfファイルのパス" width="横幅" height="高さ" allowFullScreen="フルスクリーン化を可能にするかどうか" flashvars="fms_app=FMSアプリケーションディレクトリのパス&video_file=動画ファイルのパス&image_file=サムネイル画像のパス&link_url=リンク先のURL&autoplay=オートプレイのON・OFF&mute=ミュートのON・OFF&volume=音量&controller=操作パネルの表示・非表示&buffertime=バッファ時間" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object>
 //                                this.SFPlayer.MovieData = fileName;
 //                                */
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                this.mediaPlayer = null;
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -2232,13 +2402,13 @@ AddType video/MP2T .ts
 //                //dbMsg += ",AccessibleName=" + this.SFPlayer.AccessibleName;
 //                //dbMsg += ",AccessibleRole=" + this.SFPlayer.AccessibleRole;
 //                //dbMsg += ",Controls=" + this.SFPlayer.Controls;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                this.mediaPlayer = null;
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -2275,13 +2445,13 @@ AddType video/MP2T .ts
 //                ////dbMsg += ",AccessibleName=" + this.SFPlayer.AccessibleName;
 //                ////dbMsg += ",AccessibleRole=" + this.SFPlayer.AccessibleRole;
 //                ////dbMsg += ",Controls=" + this.SFPlayer.Controls;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                this.mediaPlayer = null;
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -2334,13 +2504,13 @@ AddType video/MP2T .ts
 //                }
 
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                this.mediaPlayer = null;
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 //        //C#でFLVファイルをお手軽再生   http://zecl.hatenablog.com/entry/20081119/p1///////////////////////////////
@@ -2361,12 +2531,12 @@ AddType video/MP2T .ts
 
 //                this.ClientSize = new System.Drawing.Size(width, height);
 //                this.SFPlayer.ClientSize = this.SFPlayer.Size;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -2430,12 +2600,12 @@ AddType video/MP2T .ts
 //                this.ResumeLayout(false);
 
 //                InitAxShockwaveFlash();
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 
 //        }
@@ -2469,12 +2639,12 @@ AddType video/MP2T .ts
 //                this.SFPlayer.SAlign = "LT";
 //                this.SFPlayer.WMode = "Window";
 //                this.SFPlayer.Dock = DockStyle.Fill;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -2517,12 +2687,12 @@ AddType video/MP2T .ts
 //                this.SFPlayer.CallFunction(contlolPart);
 //                //SFPlayerのプロパティ		MovieData	""	string
 //                //         this.SFPlayer.CallFunction("<invoke name=\"loadAndPlayVideo\" returntype=\"xml\"><arguments><string>" + fileName + "</string></arguments></invoke>");
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 
 //        }
@@ -2559,13 +2729,13 @@ AddType video/MP2T .ts
 //                //        //            PlayTitolLabel.Text = ("Undefined;WindowsMediaPlayerの状態が定義されていません");
 //                //        break;
 //                //}
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                this.mediaPlayer = null;
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -2583,13 +2753,13 @@ AddType video/MP2T .ts
 //                //        //            PlayTitolLabel.Text = ("Undefined;WindowsMediaPlayerの状態が定義されていません");
 //                //        break;
 //                //}
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                this.mediaPlayer = null;
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -2607,13 +2777,13 @@ AddType video/MP2T .ts
 //                //        //            PlayTitolLabel.Text = ("Undefined;WindowsMediaPlayerの状態が定義されていません");
 //                //        break;
 //                //}
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                this.mediaPlayer = null;
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 //        #endregion
@@ -2672,13 +2842,13 @@ AddType video/MP2T .ts
 //                VolBar.Value = SettingsVolum;
 //                VolLabel.Text = VolBar.Value.ToString();
 //                PlayPouseButton.PerformClick();
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                this.mediaPlayer = null;
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 //        //AxWindowsMediaPlayer  https://so-zou.jp/software/tech/programming/c-sharp/media/video/ax-windows-media-player/
@@ -2741,12 +2911,12 @@ AddType video/MP2T .ts
 //                        break;
 //                }
 //                //      PlayTitolLabel.Text = (rStr);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -2836,13 +3006,13 @@ AddType video/MP2T .ts
 //                    default:
 //                        break;
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                this.mediaPlayer = null;
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -2886,12 +3056,12 @@ AddType video/MP2T .ts
 //                    }
 //                    PlayTitolLabel.Text = this.mediaPlayer.status;
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 
 //        }
@@ -2913,12 +3083,12 @@ AddType video/MP2T .ts
 //                mediaPlayer.Ctlcontrols.currentPosition = (double)MediaPositionTrackBar.Value;
 //                dbMsg += ">>" + mediaPlayer.Ctlcontrols.currentPosition;
 //                dbMsg += "/" + CurrentMediaDuration;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -2959,12 +3129,12 @@ AddType video/MP2T .ts
 //                    dbMsg += "/" + CurrentMediaDuration;
 //                    PlayTitolLabel.Text = this.mediaPlayer.status + "[" + this.mediaPlayer.ClientSize.Width + "×" + this.mediaPlayer.ClientSize.Height + "]";
 //                }
-//                //        MyLog(dbMsg);
+//                //        MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -2979,12 +3149,12 @@ AddType video/MP2T .ts
 //                dbMsg += ",Value=" + tb.Value;
 //                this.mediaPlayer.settings.volume = tb.Value;
 //                VolLabel.Text = tb.Value.ToString();
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -3008,12 +3178,12 @@ AddType video/MP2T .ts
 //                VolBar.Value = this.mediaPlayer.settings.volume;
 //                dbMsg += ",Value=" + VolBar.Value;
 //                VolLabel.Text = VolBar.Value.ToString();
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -3049,13 +3219,13 @@ AddType video/MP2T .ts
 //                    dbMsg += ">FLPを削除";
 //                }
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                this.mediaPlayer = null;
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -3130,12 +3300,12 @@ AddType video/MP2T .ts
 
 //								}*/
 //                //		}
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception e)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + e.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 //        #endregion
@@ -3165,7 +3335,7 @@ AddType video/MP2T .ts
 //                plaingItem = checKLocalFile(plaingItem);
 //                ToView(plaingItem);
 //            }
-//            MyLog(dbMsg);
+//            MyLog(TAG, dbMsg);
 //        }           //リサイズ時の再描画
 
 //        private void ReSizeViews(object sender, EventArgs e)
@@ -3206,12 +3376,12 @@ AddType video/MP2T .ts
 //                //			WriteSetting();
 //                this.MediaControlPanel.Width = this.MediaPlayerSplitContainer.Width;
 //                dbMsg += ",MediaControlPanel=" + this.MediaControlPanel.Width;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }//表示サイズ変更
 
@@ -3267,16 +3437,16 @@ AddType video/MP2T .ts
 //                    }
 //                    if (retNode.FullPath == fullName)
 //                    {
-//                        //			MyLog(dbMsg);
+//                        //			MyLog(TAG, dbMsg);
 //                        return retNode;
 //                    }
 //                }
-//                //		MyLog(dbMsg);
+//                //		MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return retNode;
 //        }
@@ -3380,7 +3550,7 @@ AddType video/MP2T .ts
 //                    catch (System.UnauthorizedAccessException se)
 //                    {
 //                        dbMsg += "<<GetDirectoriesでエラー発生>>" + se.Message;
-//                        MyLog(dbMsg);
+//                        MyLog(TAG, dbMsg);
 //                    }
 //                    if (0 < itemCount)
 //                    {
@@ -3433,12 +3603,12 @@ AddType video/MP2T .ts
 //                    //	splitContainer2.Panel1Collapsed = true;             //playlistPanelを閉じる
 //                }
 //                //	appSettings.CurrentFile = passNameStr;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -3485,12 +3655,12 @@ AddType video/MP2T .ts
 //                openNode.Expand();
 //                fileTree.SelectedNode = openNode;
 //                fileTree.Focus();
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -3518,12 +3688,12 @@ AddType video/MP2T .ts
 //                fullPath = fullPath + Path.DirectorySeparatorChar + "新しいフォルダ";
 //                System.IO.Directory.CreateDirectory(fullPath);
 //                ReExpandNode(fullPath);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "でエラー発生" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -3595,12 +3765,12 @@ AddType video/MP2T .ts
 //                {
 //                    dbMsg += "「キャンセル」が選択されました";
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "でエラー発生" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            //https://dobon.net/vb/dotnet/file/directorycreate.html
 //        }
@@ -3621,12 +3791,12 @@ AddType video/MP2T .ts
 //                fi.MoveTo(destName);                                           //MoveToメソッドで移動先を指定してファイルを移動します。@"D:\files2\sample2.txt"
 //                                                                               // http://www.openreference.org/articles/view/329
 //                                                                               //	fi = null;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //                throw new NotImplementedException();//要求されたメソッドまたは操作が実装されない場合にスローされる例外。
 //            }
 //        }
@@ -3681,12 +3851,12 @@ AddType video/MP2T .ts
 //                dirs = System.IO.Directory.GetFiles(destName, "*", System.IO.SearchOption.AllDirectories);
 //                dbMsg += ">>" + dirs.Length + "件";
 //                di.Delete(true);                                                  //フォルダ"C:\TEST\SUB"を根こそぎ削除する☆trueにしないと中身が有った場合にエラー発生
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "でエラー発生" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            //https://dobon.net/vb/dotnet/file/directorycreate.html
 //        }
@@ -3763,12 +3933,12 @@ AddType video/MP2T .ts
 //                        MessageBoxIcon.Exclamation,
 //                        MessageBoxDefaultButton.Button1);                  //メッセージボックスを表示する
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -3845,12 +4015,12 @@ AddType video/MP2T .ts
 //                    }
 //                    FileSystem.CopyDirectory(sourceName, destName, UIOption.AllDialogs, UICancelOption.DoNothing);
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "でエラー発生" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -3880,12 +4050,12 @@ AddType video/MP2T .ts
 //                    dbMsg += ">>フォルダ";
 //                    MoveFolder(sourceName, destName);
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -3963,12 +4133,12 @@ AddType video/MP2T .ts
 //                カットToolStripMenuItem.Visible = true;
 //                ペーストToolStripMenuItem.Visible = false;
 //                dbMsg += ">copy=" + copySouce + ",cut=" + cutSouce + ",先=" + peastFor + ">";
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4021,12 +4191,12 @@ AddType video/MP2T .ts
 //                dbMsg += ",peast先=" + dropSouceUrl;
 //                PeastSelecter(copySouce, cutSouce, dropSouceUrl);
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4045,12 +4215,12 @@ AddType video/MP2T .ts
 //                dbMsg += ",MainWindowTitle=" + p.MainWindowTitle;
 //                dbMsg += ",ModuleName=" + p.MainModule.ModuleName;
 //                dbMsg += ",ProcessName=" + p.ProcessName;
-//                MyLog(dbMsg);                                             //何故かここのLogが出ない
+//                MyLog(TAG, dbMsg);                                             //何故かここのLogが出ない
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4154,12 +4324,12 @@ AddType video/MP2T .ts
 //                        dbMsg += ">>範囲外";
 //                    }
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4198,12 +4368,12 @@ AddType video/MP2T .ts
 //                    dbMsg += ".flRightClickItemUrl=" + flRightClickItemUrl;
 //                    DragURLs.Add(flRightClickItemUrl);
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //                throw new NotImplementedException();//要求されたメソッドまたは操作が実装されない場合にスローされる例外。
 //            }
 //        }
@@ -4263,12 +4433,12 @@ AddType video/MP2T .ts
 //																	MessageBoxDefaultButton.Button1);                   //メッセージボックスを表示する
 //		*/
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //                throw new NotImplementedException();//要求されたメソッドまたは操作が実装されない場合にスローされる例外。
 //            }
 //        }
@@ -4308,12 +4478,12 @@ AddType video/MP2T .ts
 //                        FileBrowser_KeyUp(fileTree.Name, fullPath, e);
 //                    }
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //                throw new NotImplementedException();//要求されたメソッドまたは操作が実装されない場合にスローされる例外。
 //            }
 //        }
@@ -4443,12 +4613,12 @@ AddType video/MP2T .ts
 //                    default:
 //                        break;
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "でエラー発生" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4591,12 +4761,12 @@ AddType video/MP2T .ts
 //                    }
 //                    tsi2e.DropDownItems.Add(tsi3e2); // 第2階層のメニューの最後尾に追加
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "でエラー発生" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4644,12 +4814,12 @@ AddType video/MP2T .ts
 //                        break;
 //                }
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4725,12 +4895,12 @@ AddType video/MP2T .ts
 //                    ReadPlayList(ListUrl);             //	再読込み
 //                                                       //	}
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4763,12 +4933,12 @@ AddType video/MP2T .ts
 //                    default:
 //                        break;
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4891,12 +5061,12 @@ AddType video/MP2T .ts
 //                    FileListVewDrow(fullName);
 //                }
 //                FileItemSelect(fullName);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4910,12 +5080,12 @@ AddType video/MP2T .ts
 //                TreeNode selectedNode = tv.SelectedNode;
 //                dbMsg += " ,SelectedNode=" + selectedNode.FullPath;
 //                FileTreeItemSelect(selectedNode);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4934,12 +5104,12 @@ AddType video/MP2T .ts
 //                TreeNode selectedNode = tv.SelectedNode;
 //                dbMsg += " ,SelectedNode=" + selectedNode.FullPath;
 //                FileTreeItemSelect(selectedNode);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -4995,7 +5165,7 @@ AddType video/MP2T .ts
 //									//	tn2.Nodes.Add( "..." );
 //								}
 //								*/
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
@@ -5015,12 +5185,12 @@ AddType video/MP2T .ts
 //            try
 //            {
 //                //		FileTreeItemSelect(e.Node);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5084,12 +5254,12 @@ AddType video/MP2T .ts
 //                dbMsg += " (Down;" + PlayListMouseDownNo + ")";     //(Down;0)M:\\sample\123.flv
 //                PlayListMouseDownValue = tv.SelectedNode.FullPath; //draglist.SelectedValue.ToString();
 //                dbMsg += PlayListMouseDownValue;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5117,16 +5287,16 @@ AddType video/MP2T .ts
 //										dbMsg += ">>DoDragDrop";
 //										mouceDownPoint = Point.Empty;
 //									}
-//									MyLog(dbMsg);
+//									MyLog(TAG, dbMsg);
 //								}
 //							}
 //							//	}       //if (e.Button == System.Windows.Forms.MouseButtons.Left)*/
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5176,12 +5346,12 @@ AddType video/MP2T .ts
 //                        dbMsg += ",cut=" + cutSouce;
 //                    }
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5212,12 +5382,12 @@ AddType video/MP2T .ts
 //                }
 
 //                e.Effect = DDEfect;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5275,12 +5445,12 @@ AddType video/MP2T .ts
 //                e.Effect = DragDropEffects.None;
 //                fileTreeDropNode = null;
 //                dragFrom = "";
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5313,12 +5483,12 @@ AddType video/MP2T .ts
 //                    retBool = false;
 //                }
 //                dbMsg += ">retBool=" + retBool;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return retBool;
 //        }
@@ -5478,7 +5648,7 @@ AddType video/MP2T .ts
 //                                catch (System.UnauthorizedAccessException se)
 //                                {
 //                                    dbMsg += "<<GetDirectoriesでエラー発生>>" + se.Message;
-//                                    MyLog(dbMsg);
+//                                    MyLog(TAG, dbMsg);
 //                                    //	throw System.UnauthorizedAccessException;
 //                                }
 
@@ -5515,22 +5685,22 @@ AddType video/MP2T .ts
 //                    }
 
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (UnauthorizedAccessException UAEx)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + UAEx.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (PathTooLongException PathEx)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + PathEx.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            progresPanel.Visible = false;
 //        }
@@ -5599,12 +5769,12 @@ AddType video/MP2T .ts
 //																				FilelistView.ListViewItemSorter = new ListViewItemComparer(tColumn, sOrder, sMode);
 //																		*/        //				lv.Sort();              //②並び替える
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5643,12 +5813,12 @@ AddType video/MP2T .ts
 //                //		appSettings.CurrentFile = lsFullPathName;
 //                //		WriteSetting();
 //                FileItemSelect(lsFullPathName);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5739,12 +5909,12 @@ AddType video/MP2T .ts
 //                    }
 //                    fileTreeContextMenuStrip.Show(pos);                     // コンテキストメニューを表示
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5765,12 +5935,12 @@ AddType video/MP2T .ts
 //                    dbMsg += ",(このファイルを再生ToolStripMenuItem.Visible=" + このファイルを再生ToolStripMenuItem.Visible;
 //                    FileViewItemSelect(selectItem, FilelistView.Name);
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5789,12 +5959,12 @@ AddType video/MP2T .ts
 //                string destName = lv.FocusedItem.Text;          //.SelectedItems[0].ToString();          //.FullPath;
 //                dbMsg += ",destName=" + destName;
 //                TargetReName(destName);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //                throw new NotImplementedException();//要求されたメソッドまたは操作が実装されない場合にスローされる例外。
 //            }
 //        }
@@ -5853,12 +6023,12 @@ AddType video/MP2T .ts
 //                dbMsg += "dragFrom=" + dragFrom;
 //                dbMsg += ",dragSouceUrl=" + dragSouceUrl;
 //                dbMsg += ",DDEfect=" + DDEfect;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5914,13 +6084,13 @@ AddType video/MP2T .ts
 //                DDEfect = e.Effect;
 //                if (DDEfect == DragDropEffects.None)
 //                {
-//                    //				MyLog(dbMsg);
+//                    //				MyLog(TAG, dbMsg);
 //                }
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -5979,13 +6149,13 @@ AddType video/MP2T .ts
 //                }
 //                if (dbMsg.Contains("へ>"))
 //                {
-//                    MyLog(dbMsg);
+//                    MyLog(TAG, dbMsg);
 //                }
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6007,12 +6177,12 @@ AddType video/MP2T .ts
 //                    dbMsg += ">>" + cutSouce;
 //                }
 //                e.Effect = DDEfect;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6075,12 +6245,12 @@ AddType video/MP2T .ts
 //                fileTreeDropNode = null;
 //                dragSouceUrl = "";
 //                dragFrom = "";
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6123,12 +6293,12 @@ AddType video/MP2T .ts
 //                {
 //                    dbMsg += ";FocusedItem無し";
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //                throw new NotImplementedException();//要求されたメソッドまたは操作が実装されない場合にスローされる例外。
 //            }
 //        }
@@ -6165,12 +6335,12 @@ AddType video/MP2T .ts
 //                    }
 //                }
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6302,12 +6472,12 @@ AddType video/MP2T .ts
 //                        }
 //                    }           //ListBox1に結果を表示する
 //                }
-//                //			MyLog(dbMsg);
+//                //			MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return PlayListBoxItem;
 //        }
@@ -6391,12 +6561,12 @@ AddType video/MP2T .ts
 //                    playListBox.Items.Clear();
 //                }
 //                //		ToView( fileNameLabel.Text );
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6416,12 +6586,12 @@ AddType video/MP2T .ts
 //                lsFullPathName = plaingItem;
 //                PlayListLabelWrigt((playListBox.SelectedIndex + 1).ToString() + "/" + PlayListBoxItem.Count.ToString(), plaingItem);
 //                ToView(plaingItem);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6455,12 +6625,12 @@ AddType video/MP2T .ts
 //								ToView(plaingItem);*/
 //                    }
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6491,12 +6661,12 @@ AddType video/MP2T .ts
 //                    parentPathLabel.Text = souceNames[souceNames.Length - 2];
 //                }
 //                PlayListsplitContainer.Panel2.Update();
-//                //		MyLog(dbMsg);
+//                //		MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6526,12 +6696,12 @@ AddType video/MP2T .ts
 //                lsFullPathName = plaingItem;
 //                PlayListLabelWrigt((playListBox.SelectedIndex + 1).ToString() + "/" + PlayListBoxItem.Count.ToString(), playListBox.SelectedValue.ToString());
 //                ToView(plaingItem);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6561,12 +6731,12 @@ AddType video/MP2T .ts
 //                lsFullPathName = plaingItem;
 //                PlayListLabelWrigt((playListBox.SelectedIndex + 1).ToString() + "/" + PlayListBoxItem.Count.ToString(), playListBox.SelectedValue.ToString());
 //                ToView(plaingItem);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 
 //        }
@@ -6600,12 +6770,12 @@ AddType video/MP2T .ts
 //                {
 //                    このファイルを再生ToolStripMenuItem.Visible = true;
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6633,12 +6803,12 @@ AddType video/MP2T .ts
 //                dbMsg += ",type=" + type;
 //                SetPlayListItems(parentDir, type);
 //                //	}
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6696,12 +6866,12 @@ AddType video/MP2T .ts
 //                        break;
 //                }
 
-//                //		MyLog(dbMsg);
+//                //		MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 //        /// <summary>
@@ -6793,12 +6963,12 @@ AddType video/MP2T .ts
 //                    default:
 //                        break;
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6838,12 +7008,12 @@ AddType video/MP2T .ts
 //                {
 //                    dbMsg += ",SelectedItem=" + PlaylistComboBox.SelectedItem;
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 
 //        }
@@ -6929,12 +7099,12 @@ AddType video/MP2T .ts
 //                {
 //                    PlaylistComboBox.Items.Add(playList);
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -6971,12 +7141,12 @@ AddType video/MP2T .ts
 //                    WriteSetting();
 
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -7024,12 +7194,12 @@ AddType video/MP2T .ts
 //                    ReadPlayList(playList);             //	再読込み
 //                }
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -7069,12 +7239,12 @@ AddType video/MP2T .ts
 //                {
 //                    playListBox.SelectedIndex = playListBox.Items.Count - 1;                //削除した次の項目を選択
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception e)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + e.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -7116,12 +7286,12 @@ AddType video/MP2T .ts
 //                        }
 //                    }
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception e)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + e.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -7156,12 +7326,12 @@ AddType video/MP2T .ts
 //                    dbMsg += ".flRightClickItemUrl=" + flRightClickItemUrl;
 //                    DragURLs.Add(flRightClickItemUrl);
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //                throw new NotImplementedException();//要求されたメソッドまたは操作が実装されない場合にスローされる例外。
 //            }
 //        }
@@ -7253,12 +7423,12 @@ AddType video/MP2T .ts
 //                    selIndex = 0;
 //                }
 //                playListBox.SelectedIndex = selIndex;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception e)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + e.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -7399,12 +7569,12 @@ AddType video/MP2T .ts
 //                    PlayListLabelWrigt((playListBox.SelectedIndex + 1).ToString() + "/" + PlayListBoxItem.Count.ToString(), playListBox.SelectedValue.ToString());
 //                }
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -7458,12 +7628,12 @@ AddType video/MP2T .ts
 //                }
 
 //                dbMsg += ",PlayListFileNames=" + PlaylistComboBox.Items.Count + "件";
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -7486,12 +7656,12 @@ AddType video/MP2T .ts
 //                dbMsg += ",stringList=" + stringList.Count + "件";
 //                stringList.Insert(insarPosition, uriPath);
 //                dbMsg += ">>" + stringList.Count + "件";
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return stringList;
 //        }
@@ -7558,12 +7728,12 @@ AddType video/MP2T .ts
 //                    }
 //                }
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return itemList;
 //        }
@@ -7613,12 +7783,12 @@ AddType video/MP2T .ts
 //                    ReadPlayList(playList);             //	再読込み
 //                }
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -7659,12 +7829,12 @@ AddType video/MP2T .ts
 //                {
 //                    addList = addList + "\r\n" + uriPath;
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return addList;
 //        }
@@ -7720,12 +7890,12 @@ AddType video/MP2T .ts
 //                {
 //                    addList = Item2PlayListBody(addList, addFiles, toTop);
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return addList;
 //        }
@@ -7748,7 +7918,7 @@ AddType video/MP2T .ts
 //                                                                //	rText = rText.Replace('/', Path.DirectorySeparatorChar);
 //                rText = AddOne2PlayListBody(rText, addFiles, toTop);
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //                System.IO.StreamWriter sw = new System.IO.StreamWriter(fileName, false, new UTF8Encoding(true));     // BOM付き
 //                sw.Write(rText);
 //                sw.Close();
@@ -7757,12 +7927,12 @@ AddType video/MP2T .ts
 //                {
 //                    ReadPlayList(fileName);             //	再読込み
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -7869,12 +8039,12 @@ AddType video/MP2T .ts
 //                    }
 //                }
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -7904,12 +8074,12 @@ AddType video/MP2T .ts
 //								dbMsg += "  >> " + addRecord;
 //							}*/
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return uriPath;
 //        }
@@ -7962,12 +8132,12 @@ AddType video/MP2T .ts
 //                    addRecord = MakePlayListRecordBody(addFiles, Type) + "\r\n";
 //                }
 //                addRecord = addRecord.Replace("\r\n\r\n", "\r\n");
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return addRecord;
 //        }
@@ -8020,12 +8190,12 @@ AddType video/MP2T .ts
 //                    viewSplitContainer.Panel1Collapsed = false;//リストエリアを開く
 //                    ComboBoxAddItems(PlaylistComboBox, sfd.FileName);
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }//形式に合わせたhtml作成
 
@@ -8101,12 +8271,12 @@ AddType video/MP2T .ts
 //                dbMsg += ">>PLArray=" + PLArray.Length + "件";
 //                viewSplitContainer.Panel1Collapsed = false;//リストエリアを開く
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 
 //        }
@@ -8212,12 +8382,12 @@ AddType video/MP2T .ts
 //                        }
 //                    }
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return PlayListFileNames;
 //        }
@@ -8260,12 +8430,12 @@ AddType video/MP2T .ts
 //                }
 //                progresPanel.Visible = false;
 //                dbMsg += ",=" + PlayListFileNames.Count() + "件";
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -8297,12 +8467,12 @@ AddType video/MP2T .ts
 //                    }
 //                    dbMsg += ",PLArray=" + PLArray.Length + "件";
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return PLArray;
 //        }
@@ -8317,12 +8487,12 @@ AddType video/MP2T .ts
 //                plaingItem = playListBox.SelectedValue.ToString();
 //                dbMsg += ";plaingItem=" + plaingItem;
 //                PlayFromPlayList(plaingItem);
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 
 //        }
@@ -8371,12 +8541,12 @@ AddType video/MP2T .ts
 //                    dragSouceIDP = draglist.IndexFromPoint(mouceDownPoint);//マウス下のListBoxのインデックスを得る
 //                    dbMsg += "(Pointから;" + dragSouceIDP + ")";
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -8441,7 +8611,7 @@ AddType video/MP2T .ts
 //                                dbMsg += ">>DoDragDrop";
 //                                mouceDownPoint = Point.Empty;
 //                            }
-//                            MyLog(dbMsg);
+//                            MyLog(TAG, dbMsg);
 //                        }
 //                    }
 //                }
@@ -8454,7 +8624,7 @@ AddType video/MP2T .ts
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -8506,12 +8676,12 @@ AddType video/MP2T .ts
 //                        PlayListContextMenuStrip.Show(pos);                     // コンテキストメニューを表示
 //                    }
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -8535,10 +8705,10 @@ AddType video/MP2T .ts
 //		//			Cursor.Current = noneCursor;
 //		}
 
-//						MyLog(dbMsg);
+//						MyLog(TAG, dbMsg);
 //					} catch (Exception er) {
 //						dbMsg += "<<以降でエラー発生>>" + er.Message;
-//						MyLog(dbMsg);
+//						MyLog(TAG, dbMsg);
 //					}
 //				}
 //		*/
@@ -8559,10 +8729,10 @@ AddType video/MP2T .ts
 //							dbMsg += "マウスの右ボタンでドラッグをキャンセル";
 //							e.Action = DragAction.Cancel;
 //						}
-//						MyLog(dbMsg);
+//						MyLog(TAG, dbMsg);
 //					} catch (Exception er) {
 //						dbMsg += "<<以降でエラー発生>>" + er.Message;
-//						MyLog(dbMsg);
+//						MyLog(TAG, dbMsg);
 //					}
 //				}*/
 
@@ -8621,12 +8791,12 @@ AddType video/MP2T .ts
 //                }
 //                e.Effect = DDEfect;             //		e.Effect = DragDropEffects.All;     //http://www.itlab51.com/?p=2904
 //                dbMsg += ",DDEfect=" + e.Effect;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -8677,12 +8847,12 @@ AddType video/MP2T .ts
 //                {
 //                    e.Effect = DragDropEffects.All;
 //                }
-//                //		MyLog(dbMsg);
+//                //		MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -8701,12 +8871,12 @@ AddType video/MP2T .ts
 //                dbMsg += "dragFrom=" + dragFrom;
 //                dbMsg += ",dragSouceUrl=" + dragSouceUrl;
 //                dbMsg += ",DDEfect=" + DDEfect;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -8808,12 +8978,12 @@ AddType video/MP2T .ts
 //                //	dragSouceUrl = "";
 //                dragSouceIDl = -1;
 //                DDEfect = DragDropEffects.None;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -8826,10 +8996,10 @@ AddType video/MP2T .ts
 //						if (e.KeyCode == Keys.ShiftKey) {
 //							draglist.SelectionMode = SelectionMode.MultiExtended;
 //						}
-//						MyLog(dbMsg);
+//						MyLog(TAG, dbMsg);
 //					} catch (Exception er) {
 //						dbMsg += "<<以降でエラー発生>>" + er.Message;
-//						MyLog(dbMsg);
+//						MyLog(TAG, dbMsg);
 //					}
 //		*/
 //        }
@@ -8871,12 +9041,12 @@ AddType video/MP2T .ts
 //                {
 //                    dbMsg += ";FocusedItem無し";
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //                throw new NotImplementedException();//要求されたメソッドまたは操作が実装されない場合にスローされる例外。
 //            }
 //        }
@@ -8935,12 +9105,12 @@ AddType video/MP2T .ts
 //							AppendMenu(hMenu, MF_STRING, MF_BYCOMMAND, "バージョン情報");
 //							*/
 //                IsWriteSysMenu = true;    //システムメニューを追記した
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -9010,12 +9180,12 @@ AddType video/MP2T .ts
 //                            break;
 //                    }
 //                }
-//                //					MyLog(dbMsg);
+//                //					MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -9033,12 +9203,12 @@ AddType video/MP2T .ts
 //                        this.WindowState = FormWindowState.Normal;
 //                        break;
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -9068,12 +9238,12 @@ AddType video/MP2T .ts
 //                        e.Cancel = true;
 //                    }
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -9153,12 +9323,12 @@ AddType video/MP2T .ts
 //                serializer1.Serialize(sw, appSettings);                                                                                 //シリアル化し、XMLファイルに保存する
 //                sw.Close();                                                                                                             //閉じる
 
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -9313,12 +9483,12 @@ AddType video/MP2T .ts
 //                {
 //                    appSettings = new Settings();
 //                }
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
@@ -9449,7 +9619,7 @@ AddType video/MP2T .ts
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //            return retStr;
 //        }
@@ -9465,19 +9635,44 @@ AddType video/MP2T .ts
 //            catch (Exception er)
 //            {
 //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(dbMsg);
+//                MyLog(TAG, dbMsg);
 //            }
 //        }
 
 
         //デバッグツール///////////////////////////////////////////////////////////その他//
         Boolean debug_now = true;
-        public void MyLog(string msg)
+
+        //Livet Messenger用///////////////////////
+        new public void Dispose()
         {
-            if (debug_now)
-            {
-                Console.WriteLine(msg);
-            }
+            // 基本クラスのDispose()でCompositeDisposableに登録されたイベントを解放する。
+            //base.Dispose();
+            //Dispose(true);
+        }
+        ///////////////////////Livet Messenger用//
+        public static void MyLog(string TAG, string dbMsg)
+        {
+            dbMsg = "[" + MethodBase.GetCurrentMethod().Module.Name + "]" + dbMsg;
+            //dbMsg = "[" + MethodBase.GetCurrentMethod().Name + "]" + dbMsg;
+            CS_Util Util = new CS_Util();
+            Util.MyLog(TAG, dbMsg);
+        }
+
+        public static void MyErrorLog(string TAG, string dbMsg, Exception err)
+        {
+            dbMsg = "[" + MethodBase.GetCurrentMethod().Name + "]" + dbMsg;
+            CS_Util Util = new CS_Util();
+            Util.MyErrorLog(TAG, dbMsg, err);
+        }
+
+        public MessageBoxResult MessageShowWPF(String titolStr, String msgStr,
+                                                                        MessageBoxButton buttns,
+                                                                        MessageBoxImage icon
+                                                                        )
+        {
+            CS_Util Util = new CS_Util();
+            return Util.MessageShowWPF(msgStr, titolStr, buttns, icon);
         }
 
 
