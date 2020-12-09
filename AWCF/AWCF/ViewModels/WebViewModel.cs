@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AWCF.ViewModel {
+namespace AWCF.ViewModels {
 	class WebViewModel : INotifyPropertyChanged {
 		public string WebUrl { get; set; }
 		public WebViewModel()

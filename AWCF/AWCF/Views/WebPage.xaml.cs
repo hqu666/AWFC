@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AWCF.View
+namespace AWCF.Views
 {
     /// <summary>
     /// WebPage.xaml の相互作用ロジック

@@ -57,23 +57,24 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CS_Util.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\WebViewModel.cs" />
-    <Compile Include="View\MainWindow.xaml.cs">
+    <Compile Include="Models\PlayListModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\WebViewModel.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\WebPage.xaml.cs">
+    <Compile Include="Views\WebPage.xaml.cs">
       <DependentUpon>WebPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\MainWindow.xaml">
+    <Page Include="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\WebPage.xaml">
+    <Page Include="Views\WebPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -114,6 +115,18 @@
     <PackageReference Include="LivetCask">
       <Version>3.2.3.1</Version>
     </PackageReference>
+    <PackageReference Include="LivetCask.Behaviors">
+      <Version>3.2.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="LivetCask.Messaging">
+      <Version>3.2.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="LivetCask.Mvvm">
+      <Version>3.2.3.1</Version>
+    </PackageReference>
+    <PackageReference Include="LivetExtensions">
+      <Version>3.2.3.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView">
       <Version>6.1.2</Version>
     </PackageReference>
@@ -126,7 +139,11 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\explore_icon.png" />
+    <Resource Include="Resources\file_icon.png" />
+    <Resource Include="Resources\folder_icon.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\ffbtn.png" />
     <Resource Include="Resources\pl_r_btn.png" />
