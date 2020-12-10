@@ -54,12 +54,6 @@ namespace AWCF.ViewModels
 
         public ObservableCollection<PlayListModel> PLList { get; set; }
 
-        /// <summary>
-        /// プレイリスト選択
-        /// </summary>
-        public Dictionary<string, string> PLComboSource { get; set; }
-        public IList<string> PLComboSelectedItem { get; set; }
-        public Int32 PLComboSelectedIndex { get; set; }
 
         public string FrameSource { get; set; }
         public MainViewModel()
@@ -76,13 +70,7 @@ namespace AWCF.ViewModels
                 PLList = new ObservableCollection<PlayListModel>();
                 // ICommandの場合
                 //	EditCommand = CreateCommand(t_events => MyDoubleClickCommand(t_events));
-                PLComboSource = new Dictionary<string, string>()
-                {
-                    { "0", "すべて" },
-                    { "1", "案件イベント" },
-                    { "2", "工程イベント" },
-                    { "3", "通常イベント" },
-                };
+                PLComboSource = new Dictionary<string, string>();
                 PLComboSelectedIndex = 0;
                 RaisePropertyChanged(); //	"dataManager"
                 MyLog(TAG, dbMsg);
@@ -140,6 +128,218 @@ namespace AWCF.ViewModels
         }
 
 
+        #region プレイリスト選択コンボボックス
+        /// <summary>
+        /// プレイリスト選択コンボボックス
+        /// </summary>
+        public Dictionary<string, string> PLComboSource { get; set; }
+        public IList<string> PLComboSelectedItem { get; set; }
+        public Int32 PLComboSelectedIndex { get; set; }
+
+        //        /// <summary>
+        //        /// プレイリスト選択
+        //        /// </summary>
+        //        /// <param name="sender"></param>
+        //        /// <param name="e"></param>
+        //        private void PlaylistComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        //        {
+        //            string TAG = "[PlaylistComboBox_SelectedIndexChanged]";
+        //            string dbMsg = TAG;
+        //            try
+        //            {
+        //                if (PlaylistComboBox.SelectedItem != null)
+        //                {
+        //                    nowLPlayList = PlaylistComboBox.SelectedItem.ToString();//    "M:\\DL\\2013.m3u"  object { string}
+        //                    dbMsg += ",selePLName=" + nowLPlayList;
+        //                    if (nowLPlayList.Contains(".m3u"))
+        //                    {
+        //                        ReadPlayList(nowLPlayList);
+        //                        appSettings.CurrentList = nowLPlayList;
+        //                    }
+        //                    else if (0 == PlaylistComboBox.SelectedIndex)
+        //                    {
+        //                        string setType = "video";
+        //                        if (typeName.Text == "audio")
+        //                        {
+        //                            setType = typeName.Text;
+        //                        }
+        //                        dbMsg += ",setType=" + setType;
+        //                        continuousPlayCheckBox.Checked = true;
+        //                        SetPlayListItems(nowLPlayList, setType);
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    dbMsg += ",SelectedItem=" + PlaylistComboBox.SelectedItem;
+        //                }
+        //                MyLog(TAG, dbMsg);
+        //            }
+        //            catch (Exception er)
+        //            {
+        //                dbMsg += "<<以降でエラー発生>>" + er.Message;
+        //                MyLog(TAG, dbMsg);
+        //            }
+
+        //        }
+
+
+        //        /// <summary>
+        //        /// プレイリストDataSource
+        //        /// 参照　　　https://www.ipentec.com/document/document.aspx?page=csharp-listbox-use-original-datasource
+        //        /// </summary>
+        //        class PlayListItems
+        //        {
+        //            string notationName;            //表記名
+        //            string fullPathStr;             //フルパス名
+
+        //            public PlayListItems()
+        //            {
+        //            }
+        //            public PlayListItems(string notation, string pathStr)
+        //            {
+        //                notationName = notation;
+        //                fullPathStr = pathStr;
+        //            }
+
+        //            public string NotationName
+        //            {
+        //                set {
+        //                    notationName = value;
+        //                }
+        //                get {
+        //                    return notationName;
+        //                }
+        //            }
+
+        //            public string FullPathStr
+        //            {
+        //                set {
+        //                    fullPathStr = value;
+        //                }
+        //                get {
+        //                    return fullPathStr;
+        //                }
+        //            }
+        //        }
+        //        //playList///////////////////////////////////////////////////////////連続再生//
+        //        //playList///////////////////////////////////////////////////////////連続再生//
+        //        /// <summary>
+        //        /// PlaylistComboBoxにファイルやフォルダを追加する
+        //        /// </summary>
+        //        /// <param name="playList"></param>
+        //        private void AddPlaylistComboBox(string playList)
+        //        {
+        //            string TAG = "[AddPlaylistComboBox]";
+        //            string dbMsg = TAG;
+        //            try
+        //            {
+        //                int PlCount = PlaylistComboBox.Items.Count;
+        //                dbMsg += "(" + PlCount + ")" + playList;
+        //                playList = checKLocalFile(playList);
+
+        //                if (0 < PlCount)
+        //                {
+        //                    int alradyIndex = PlaylistComboBox.Items.IndexOf(playList);
+        //                    dbMsg += ".alradyIndex=" + alradyIndex;
+        //                    if (alradyIndex < 0)
+        //                    {
+        //                        if (playList.Contains(".m3u"))
+        //                        {
+        //                            PlaylistComboBox.Items.Add(playList);
+        //                            dbMsg += ".PlayLists=" + appSettings.PlayLists.Length + "件";
+        //                            alradyIndex = appSettings.IndexOfPlayLists(playList);
+        //                            dbMsg += "の" + alradyIndex + "番目";
+        //                            if (alradyIndex < 0)
+        //                            {
+        //                                List<string> PlArray = appSettings.PlayLists.ToList();
+        //                                PlArray.Add(playList);
+        //                                appSettings.PlayLists = PlArray.ToArray();
+        //                                //	appSettings.PlayLists[appSettings.PlayLists.Length - 1] = playList;
+        //                                dbMsg += ">>" + appSettings.PlayLists.Length + "件";
+        //                            }
+        //                        }
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    PlaylistComboBox.Items.Add(playList);
+        //                }
+        //                MyLog(TAG, dbMsg);
+        //            }
+        //            catch (Exception er)
+        //            {
+        //                dbMsg += "<<以降でエラー発生>>" + er.Message;
+        //                MyLog(TAG, dbMsg);
+        //            }
+        //        }
+
+        /// <summary>
+        /// PlayListComboBoxにアイテムを追加する
+        /// 未登録リストは追加する。
+        /// </summary>
+        public void AddPlayListCombo(string SelectFlieName)
+        {
+            string TAG = "AddPlayListCombo";
+            string dbMsg = "";
+            try
+            {
+                dbMsg += "PLComboSource=" + PLComboSource.Count() + "件";
+                dbMsg += "、SelectFlieName=" + SelectFlieName;
+                //登録済みのPlayリストと照合
+                if (!PLComboSource.ContainsKey(SelectFlieName))
+                {
+                    string DispName =System.IO.Path.GetFileName(SelectFlieName);
+                    //無ければリスト末尾に追加
+                    PLComboSource.Add(SelectFlieName, DispName);
+                    RaisePropertyChanged("PLComboSource");
+                    PLComboSelectedIndex = PLComboSource.Count() - 1;
+                    RaisePropertyChanged("PLComboSelectedIndex");
+                }
+                dbMsg += ">>" + PLComboSource.Count() + "件";
+                MyLog(TAG, dbMsg);
+            }
+            catch (Exception er)
+            {
+                MyErrorLog(TAG, dbMsg, er);
+            }
+        }        //public void ComboBoxAddItems(ComboBox wrComboBox, string addItemeName)
+        //{
+        //    string TAG = "[ComboBoxAddItems]";// + fileName;
+        //    string dbMsg = TAG;
+        //    try
+        //    {
+        //        dbMsg += wrComboBox.Name + "　に　" + addItemeName + "を追加";
+        //        string[] PLArray = ComboBoxItems2StrArray(wrComboBox, 1);//new string[] { PlaylistComboBox.Items.ToString() };
+        //        dbMsg += ",PLArray=" + PLArray.Length + "件";
+        //        bool wr = true;
+        //        if (0 < PLArray.Length)
+        //        {
+        //            if (-1 < Array.IndexOf(PLArray, addItemeName))
+        //            {         //既に登録されているリストでなければ
+        //                wr = false;
+        //            }
+        //        }
+        //        dbMsg += ",追記=" + wr;
+        //        if (wr)
+        //        {
+        //            wrComboBox.Items.Add(addItemeName);
+        //            PLArray = ComboBoxItems2StrArray(wrComboBox, 1);//new string[] { PlaylistComboBox.Items.ToString() };
+        //            dbMsg += ",PLArray=" + PLArray.Length + "件";
+        //            appSettings.PlayLists = PLArray;
+        //            WriteSetting();
+
+        //        }
+        //        MyLog(TAG, dbMsg);
+        //    }
+        //    catch (Exception er)
+        //    {
+        //        dbMsg += "<<以降でエラー発生>>" + er.Message;
+        //        MyLog(TAG, dbMsg);
+        //    }
+        //}
+        #endregion
+
+
         #region FileDlogShow	　単一ファイルの選択
         private ViewModelCommand _FileDlogShow;
 
@@ -181,6 +381,7 @@ namespace AWCF.ViewModels
                     if (extention.Contains("m3u"))
                     {
                         dbMsg += "PLListに追加";
+                        AddPlayListCombo( SelectFileName);
                     }
                     else
                     {
@@ -298,7 +499,7 @@ namespace AWCF.ViewModels
         }
         #endregion
 
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///以下使用待ち///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         Microsoft.Win32.RegistryKey regkey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(FEATURE_BROWSER_EMULATION);
         const string FEATURE_BROWSER_EMULATION = @"Software\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION";
@@ -7027,184 +7228,7 @@ AddType video/MP2T .ts
         //            }
         //        }
 
-        //        /// <summary>
-        //        /// プレイリスト選択
-        //        /// </summary>
-        //        /// <param name="sender"></param>
-        //        /// <param name="e"></param>
-        //        private void PlaylistComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        //        {
-        //            string TAG = "[PlaylistComboBox_SelectedIndexChanged]";
-        //            string dbMsg = TAG;
-        //            try
-        //            {
-        //                if (PlaylistComboBox.SelectedItem != null)
-        //                {
-        //                    nowLPlayList = PlaylistComboBox.SelectedItem.ToString();//    "M:\\DL\\2013.m3u"  object { string}
-        //                    dbMsg += ",selePLName=" + nowLPlayList;
-        //                    if (nowLPlayList.Contains(".m3u"))
-        //                    {
-        //                        ReadPlayList(nowLPlayList);
-        //                        appSettings.CurrentList = nowLPlayList;
-        //                    }
-        //                    else if (0 == PlaylistComboBox.SelectedIndex)
-        //                    {
-        //                        string setType = "video";
-        //                        if (typeName.Text == "audio")
-        //                        {
-        //                            setType = typeName.Text;
-        //                        }
-        //                        dbMsg += ",setType=" + setType;
-        //                        continuousPlayCheckBox.Checked = true;
-        //                        SetPlayListItems(nowLPlayList, setType);
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    dbMsg += ",SelectedItem=" + PlaylistComboBox.SelectedItem;
-        //                }
-        //                MyLog(TAG, dbMsg);
-        //            }
-        //            catch (Exception er)
-        //            {
-        //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-        //                MyLog(TAG, dbMsg);
-        //            }
 
-        //        }
-
-
-        //        /// <summary>
-        //        /// プレイリストDataSource
-        //        /// 参照　　　https://www.ipentec.com/document/document.aspx?page=csharp-listbox-use-original-datasource
-        //        /// </summary>
-        //        class PlayListItems
-        //        {
-        //            string notationName;            //表記名
-        //            string fullPathStr;             //フルパス名
-
-        //            public PlayListItems()
-        //            {
-        //            }
-        //            public PlayListItems(string notation, string pathStr)
-        //            {
-        //                notationName = notation;
-        //                fullPathStr = pathStr;
-        //            }
-
-        //            public string NotationName
-        //            {
-        //                set {
-        //                    notationName = value;
-        //                }
-        //                get {
-        //                    return notationName;
-        //                }
-        //            }
-
-        //            public string FullPathStr
-        //            {
-        //                set {
-        //                    fullPathStr = value;
-        //                }
-        //                get {
-        //                    return fullPathStr;
-        //                }
-        //            }
-        //        }
-        //        //playList///////////////////////////////////////////////////////////連続再生//
-        //        //playList///////////////////////////////////////////////////////////連続再生//
-        //        /// <summary>
-        //        /// PlaylistComboBoxにファイルやフォルダを追加する
-        //        /// </summary>
-        //        /// <param name="playList"></param>
-        //        private void AddPlaylistComboBox(string playList)
-        //        {
-        //            string TAG = "[AddPlaylistComboBox]";
-        //            string dbMsg = TAG;
-        //            try
-        //            {
-        //                int PlCount = PlaylistComboBox.Items.Count;
-        //                dbMsg += "(" + PlCount + ")" + playList;
-        //                playList = checKLocalFile(playList);
-
-        //                if (0 < PlCount)
-        //                {
-        //                    int alradyIndex = PlaylistComboBox.Items.IndexOf(playList);
-        //                    dbMsg += ".alradyIndex=" + alradyIndex;
-        //                    if (alradyIndex < 0)
-        //                    {
-        //                        if (playList.Contains(".m3u"))
-        //                        {
-        //                            PlaylistComboBox.Items.Add(playList);
-        //                            dbMsg += ".PlayLists=" + appSettings.PlayLists.Length + "件";
-        //                            alradyIndex = appSettings.IndexOfPlayLists(playList);
-        //                            dbMsg += "の" + alradyIndex + "番目";
-        //                            if (alradyIndex < 0)
-        //                            {
-        //                                List<string> PlArray = appSettings.PlayLists.ToList();
-        //                                PlArray.Add(playList);
-        //                                appSettings.PlayLists = PlArray.ToArray();
-        //                                //	appSettings.PlayLists[appSettings.PlayLists.Length - 1] = playList;
-        //                                dbMsg += ">>" + appSettings.PlayLists.Length + "件";
-        //                            }
-        //                        }
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    PlaylistComboBox.Items.Add(playList);
-        //                }
-        //                MyLog(TAG, dbMsg);
-        //            }
-        //            catch (Exception er)
-        //            {
-        //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-        //                MyLog(TAG, dbMsg);
-        //            }
-        //        }
-
-        //        /// <summary>
-        //        /// 指定したComboBoxにアイテムを追加する
-        //        /// 未登録リストは追加する。
-        //        /// </summary>
-        //        /// <param name="wrComboBox"></param>
-        //        /// <param name="addItemeName"></param>
-        //        public void ComboBoxAddItems(ComboBox wrComboBox, string addItemeName)
-        //        {
-        //            string TAG = "[ComboBoxAddItems]";// + fileName;
-        //            string dbMsg = TAG;
-        //            try
-        //            {
-        //                dbMsg += wrComboBox.Name + "　に　" + addItemeName + "を追加";
-        //                string[] PLArray = ComboBoxItems2StrArray(wrComboBox, 1);//new string[] { PlaylistComboBox.Items.ToString() };
-        //                dbMsg += ",PLArray=" + PLArray.Length + "件";
-        //                bool wr = true;
-        //                if (0 < PLArray.Length)
-        //                {
-        //                    if (-1 < Array.IndexOf(PLArray, addItemeName))
-        //                    {         //既に登録されているリストでなければ
-        //                        wr = false;
-        //                    }
-        //                }
-        //                dbMsg += ",追記=" + wr;
-        //                if (wr)
-        //                {
-        //                    wrComboBox.Items.Add(addItemeName);
-        //                    PLArray = ComboBoxItems2StrArray(wrComboBox, 1);//new string[] { PlaylistComboBox.Items.ToString() };
-        //                    dbMsg += ",PLArray=" + PLArray.Length + "件";
-        //                    appSettings.PlayLists = PLArray;
-        //                    WriteSetting();
-
-        //                }
-        //                MyLog(TAG, dbMsg);
-        //            }
-        //            catch (Exception er)
-        //            {
-        //                dbMsg += "<<以降でエラー発生>>" + er.Message;
-        //                MyLog(TAG, dbMsg);
-        //            }
-        //        }
 
         //        /// <summary>
         //        /// 表示しているプレイリストのURLを読み込んでプレイリストファイルの更新

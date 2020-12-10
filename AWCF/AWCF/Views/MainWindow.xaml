@@ -87,7 +87,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Background="Green" />
                     <StackPanel  Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <ComboBox ItemsSource="{Binding PLComboSource}"  
+                        <ComboBox ItemsSource="{Binding PLComboSource, Mode=TwoWay}"
 								    SelectedItem="{Binding PLComboSelectedItem, Mode=TwoWay}"
                                   SelectedIndex="{Binding PLComboSelectedIndex, Mode=TwoWay}"
 								 Height="26" Width="Auto"
