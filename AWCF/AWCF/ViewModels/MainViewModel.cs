@@ -302,7 +302,9 @@ namespace AWCF.ViewModels
             {
                 MyErrorLog(TAG, dbMsg, er);
             }
-        }        //public void ComboBoxAddItems(ComboBox wrComboBox, string addItemeName)
+        } 
+        
+        //public void ComboBoxAddItems(ComboBox wrComboBox, string addItemeName)
         //{
         //    string TAG = "[ComboBoxAddItems]";// + fileName;
         //    string dbMsg = TAG;
