@@ -9,7 +9,7 @@
 		xmlns:vm="clr-namespace:AWCF.ViewModels"
 		mc:Ignorable="d"
 		Topmost="true"
-        Title="MainWindow" Height="1000" Width="1800">
+        Title="MainWindow" Height="1080" Width="1920">
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
@@ -69,11 +69,11 @@
     <!--<UniformGrid Columns="3">-->
     <Grid Background = "Black">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="400" MinWidth="100" />
+            <ColumnDefinition Width="600" MinWidth="100" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition  Width="*" MinWidth="50" />
         </Grid.ColumnDefinitions>
-        <Grid  Grid.Column="0">
+        <Grid  Grid.Column="0" Background="White">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -82,19 +82,60 @@
                 </Grid.RowDefinitions>
                 <Grid VerticalAlignment="Bottom">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="Auto" />
+                        <ColumnDefinition  Width="Auto" />
+                        <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition  Width="Auto" />
+                        <ColumnDefinition  Width="Auto" />
+                        <ColumnDefinition  Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Background="Green" />
-                    <StackPanel  Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Command="{Binding FileDlogShow}"
+						AutomationProperties.HelpText="ファイル選択" 
+							Width="Auto"  
+							Grid.Column="0" 
+							HorizontalAlignment="Left"  VerticalAlignment="Center" MinWidth="26" MinHeight="26"
+							 >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/AWCF;component/Resources/file_icon.png"/>
+                        </Button.Background>
+                    </Button>
+                    <Button Command="{Binding FolderDlogShow}"
+							AutomationProperties.HelpText="フォルダ選択" 
+							Grid.Column="1" 
+							 VerticalAlignment="Center" Panel.ZIndex="26" MinWidth="26" 
+							 HorizontalAlignment="Center" Margin="20,5" Height="26"
+							>
+                        <Button.Background>
+                            <ImageBrush ImageSource="/AWCF;component/Resources/folder_icon.png" Stretch="UniformToFill"/>
+                        </Button.Background>
+                    </Button>
+                    <Button Command="{Binding ExploreShow}"
+							AutomationProperties.HelpText="エクスプローラーからDorp" 
+						Grid.Column="2" 
+							HorizontalAlignment="Right"  VerticalAlignment="Top" MinWidth="26" Panel.ZIndex="26" Height="26"
+							 >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/AWCF;component/Resources/explore_icon.png" Stretch="UniformToFill"/>
+                        </Button.Background>
+                    </Button>
+                    <StackPanel  Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
                         <ComboBox ItemsSource="{Binding PLComboSource, Mode=TwoWay}"
                                   SelectedValuePath="Key" DisplayMemberPath="Value"
-                                  SelectedIndex="{Binding PLComboSelectedIndex, Mode=TwoWay}"
+                                   SelectedIndex="{Binding PLComboSelectedIndex, Mode=TwoWay}"
 								 Height="26" Width="Auto"
 								/>
-                        <!--SelectedItem="{Binding PLComboSelectedItem, Mode=TwoWay}"-->
+                        <!--
+                                      SelectedItem="{Binding PLComboSelectedItem, Mode=TwoWay}"
+                     -->
 
                     </StackPanel>
+                    <Label  Grid.Column="4"
+                            Content="{Binding ListItemCount, Mode=TwoWay}"
+                            />
+                    <Label  Grid.Column="5"
+                            Content="件"
+                            />
                 </Grid>
 
                 <DataGrid  x:Name="MyCalendar"
@@ -109,13 +150,19 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="URL"
                                             Binding="{Binding UrlStr }" 
-                                            Width="*" />
+                                            Width="*">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style>
+                                    <Setter Property="TextBlock.HorizontalAlignment" Value="Right"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
                         <DataGridTextColumn Header="名" 
                                             Binding="{Binding Summary }" 
                                              />
                     </DataGrid.Columns>
                 </DataGrid>
-                <Grid Grid.Row="2" Background="#FFF1EBEB" >
+                <!--<Grid Grid.Row="2" Background="#FFF1EBEB" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
@@ -153,10 +200,8 @@
                     </Button>
 
 
+                </Grid>-->
                 </Grid>
-                </Grid>
-            <StackPanel Orientation="Vertical">
-            </StackPanel>
         </Grid>
         <GridSplitter Grid.Column="1"
                           Width="5"
