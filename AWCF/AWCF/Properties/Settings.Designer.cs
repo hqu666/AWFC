@@ -22,5 +22,77 @@ namespace AWCF.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PlayListStr {
+            get {
+                return ((string)(this["PlayListStr"]));
+            }
+            set {
+                this["PlayListStr"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrentPlayListFileName {
+            get {
+                return ((string)(this["CurrentPlayListFileName"]));
+            }
+            set {
+                this["CurrentPlayListFileName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NowSelectedPath {
+            get {
+                return ((string)(this["NowSelectedPath"]));
+            }
+            set {
+                this["NowSelectedPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NowSelectedFile {
+            get {
+                return ((string)(this["NowSelectedFile"]));
+            }
+            set {
+                this["NowSelectedFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:00")]
+        public global::System.TimeSpan NowSelectedPosition {
+            get {
+                return ((global::System.TimeSpan)(this["NowSelectedPosition"]));
+            }
+            set {
+                this["NowSelectedPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsFullScreen {
+            get {
+                return ((bool)(this["IsFullScreen"]));
+            }
+            set {
+                this["IsFullScreen"] = value;
+            }
+        }
     }
 }

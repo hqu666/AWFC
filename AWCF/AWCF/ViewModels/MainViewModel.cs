@@ -56,13 +56,63 @@ namespace AWCF.ViewModels
         /// </summary>
         public ObservableCollection<PlayListModel> PLList { get; set; }
         public int ListItemCount { get; set; }
+        #region 設定ファイルの項目
+        public string[] PlayLists;
+        /// <summary>
+        /// 登録されたファイル
+        /// </summary>
+        public string PlayListStr
+        {
+            get { return Properties.Settings.Default.PlayListStr; }
+            set { Properties.Settings.Default.PlayListStr = value; }
+        }
+        /// <summary>
+        /// 選択されているファイルのURL
+        /// </summary>
+        public string CurrentPlayListFileName
+        {
+            get { return Properties.Settings.Default.CurrentPlayListFileName; }
+            set { Properties.Settings.Default.CurrentPlayListFileName = value; }
+        }
+        /// <summary>
+        /// 最後に選択したフォルダ
+        /// </summary>
+        public string NowSelectedPath
+        {
+            get { return Properties.Settings.Default.NowSelectedPath; }
+            set { Properties.Settings.Default.NowSelectedPath = value; }
+        }
+        /// <summary>
+        /// 最後に選択したファイル
+        /// </summary>
+        public string NowSelectedFile
+        {
+            get { return Properties.Settings.Default.NowSelectedFile; }
+            set { Properties.Settings.Default.NowSelectedFile = value; }
+        }
+        /// <summary>
+        /// 最後に再生したメディアファイルの再生ポジション
+        /// </summary>
+        public TimeSpan NowSelectedPosition
+        {
+            get { return Properties.Settings.Default.NowSelectedPosition; }
+            set { Properties.Settings.Default.NowSelectedPosition = value; }
+        }
+        /// <summary>
+        /// フルスクリーンで起動するか
+        /// </summary>
+        public bool IsFullScreen
+        {
+            get { return Properties.Settings.Default.IsFullScreen; }
+            set { Properties.Settings.Default.IsFullScreen = value; }
+        }
+        //追加待ち///////////////////////////////////////////////////////////////////////////////////////////////////////////
         public int summaryCol = 2;
         public string[] videoFiles = new string[] {  ".mp4",".flv",".f4v",".webm",  ".ogv",".3gp",  ".rm",  ".asf",   ".swf",
                                               "mpa",".mpe",".webm",  ".ogv",".3gp",  ".3g2",  ".asf",  ".asx",
                                                 ".dvr-ms",".ivf",".wax",".wmv", ".wvx",  ".wm",  ".wmx",  ".wmz",
                                              };
-        public string CurrentPlayListFileName= @"P:\2013.m3u";
-
+        #endregion
 
         public string FrameSource { get; set; }
         public MainViewModel()
@@ -82,6 +132,7 @@ namespace AWCF.ViewModels
                 PLComboSource = new Dictionary<string, string>();
                 PLComboSelectedItem = new List<string>();
                 PLComboSelectedIndex = -1;
+                AddPlayListCombo("");
                 RaisePropertyChanged(); //	"dataManager"
                 MyLog(TAG, dbMsg);
                 CallWeb();
@@ -151,7 +202,6 @@ namespace AWCF.ViewModels
                 string[] delimiter = { "\r\n" };
                 string[] Strs = rText.Split(delimiter, StringSplitOptions.RemoveEmptyEntries);
                 PLList =new ObservableCollection<PlayListModel>();
-
                 var list = new List<string>();
                 list.AddRange(videoFiles);
                 foreach (string item in Strs)
@@ -440,28 +490,43 @@ namespace AWCF.ViewModels
         /// PlayListComboBoxにアイテムを追加する
         /// 未登録リストは追加する。
         /// </summary>
-        public void AddPlayListCombo(string SelectFlieName)
+        public void AddPlayListCombo(string AddFlieName)
         {
             string TAG = "AddPlayListCombo";
             string dbMsg = "";
             try
             {
                 dbMsg += "PLComboSource=" + PLComboSource.Count() + "件";
-                dbMsg += "、SelectFlieName=" + SelectFlieName;
+                dbMsg += "、AddFlieName=" + AddFlieName;
                 //登録済みのPlayリストと照合
-                if (!PLComboSource.ContainsKey(SelectFlieName))
+                dbMsg += "、登録済み=" + PlayListStr;
+                PlayLists = PlayListStr.Split(',');
+                var list = new List<string>();
+                list.AddRange(PlayLists);
+                if (list.Count ==0 && AddFlieName.Equals(""))
                 {
-                    string DispName =System.IO.Path.GetFileName(SelectFlieName);
-                    //無ければリスト末尾に追加
-                    PLComboSource.Add(SelectFlieName, DispName);
-                    RaisePropertyChanged("PLComboSource");
-
-                    PLComboSelectedIndex = PLComboSource.Count() - 1;
-                    RaisePropertyChanged("PLComboSelectedIndex");
-                    //PLComboSelectedItem.Add(SelectFlieName);
-                    //PLComboSelectedItem.Add(DispName);
-                    //RaisePropertyChanged("PLComboSelectedItem");
+                    return;
                 }
+                if (list.IndexOf(AddFlieName) <0)
+                    //if (!PLComboSource.ContainsKey(SelectFlieName))
+                {
+                    //無ければリスト先頭に追加
+                    PlayListStr = AddFlieName + "," + PlayListStr;
+                    //設定ファイル更新
+                    Properties.Settings.Default.Save();
+                }
+                PlayLists = PlayListStr.Split(',');
+                //コンボボックスソースの更新
+                PLComboSource = new Dictionary<string, string>();
+                foreach (string item in PlayLists)
+                {
+                    string DispName = System.IO.Path.GetFileName(item);
+                    PLComboSource.Add(item, DispName);
+                }
+
+                RaisePropertyChanged("PLComboSource");
+                PLComboSelectedIndex = 0;       // PLComboSource.Count() - 1;
+                RaisePropertyChanged("PLComboSelectedIndex");
                 dbMsg += ">>" + PLComboSource.Count() + "件";
                 MyLog(TAG, dbMsg);
             }
@@ -495,10 +560,14 @@ namespace AWCF.ViewModels
             string dbMsg = "";
             try
             {
-                string SelectFileName = "";
+       //         string SelectFileName = "";
                 //①
                 System.Windows.Forms.OpenFileDialog ofDialog = new System.Windows.Forms.OpenFileDialog();
                 //② デフォルトのフォルダを指定する
+                if (CurrentPlayListFileName.Equals(""))
+                {
+                    CurrentPlayListFileName = "C;";
+                }
                 NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
                 dbMsg += ",NowSelectedPath=" + NowSelectedPath;
                 ofDialog.InitialDirectory = @NowSelectedPath;
@@ -507,15 +576,17 @@ namespace AWCF.ViewModels
                 //ダイアログを表示する
                 if (ofDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    SelectFileName = ofDialog.FileName;
-                    dbMsg += ">>" + SelectFileName;
-                    NowSelectedPath = System.IO.Path.GetDirectoryName(SelectFileName);
+                    NowSelectedFile = ofDialog.FileName;
+                    dbMsg += ">>" + NowSelectedFile;
+                    NowSelectedPath = System.IO.Path.GetDirectoryName(NowSelectedFile);
                     dbMsg += ">>NowSelectedPath=" + NowSelectedPath;
-                    string extention = System.IO.Path.GetExtension(SelectFileName);
+                    //設定ファイル更新
+                    Properties.Settings.Default.Save();
+                    string extention = System.IO.Path.GetExtension(NowSelectedFile);
                     if (extention.Contains("m3u"))
                     {
                         dbMsg += "PLListに追加";
-                        AddPlayListCombo( SelectFileName);
+                        AddPlayListCombo(NowSelectedFile);
                     }
                     else
                     {
@@ -529,9 +600,9 @@ namespace AWCF.ViewModels
                 // オブジェクトを破棄する
                 ofDialog.Dispose();
 
-                if (!SelectFileName.Equals(""))
+                if (!NowSelectedFile.Equals(""))
                 {
-                    string[] files = { SelectFileName };
+                    string[] files = { NowSelectedFile };
                     //         FilesFromLocal(files);
                 }
                 MyLog(TAG, dbMsg);
@@ -581,7 +652,8 @@ namespace AWCF.ViewModels
                     dbMsg += ">>" + NowSelectedPath;
                     string[] files = System.IO.Directory.GetFiles(@NowSelectedPath, "*", System.IO.SearchOption.AllDirectories);
                     dbMsg += ">>" + files.Length + "件";
-                    //        FilesFromLocal(files);
+                    //設定ファイル更新
+                    Properties.Settings.Default.Save();
                 }
                 else
                 {
@@ -1026,7 +1098,6 @@ namespace AWCF.ViewModels
         }
 
 
-        public string NowSelectedPath = "C:";
 
         /*		private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
 				{
