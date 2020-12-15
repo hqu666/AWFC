@@ -4,12 +4,19 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+      xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
+      xmlns:igEditors="http://infragistics.com/Editors"
+		xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
 	   xmlns:local="clr-namespace:AWCF"
 		xmlns:vm="clr-namespace:AWCF.ViewModels"
 		mc:Ignorable="d"
 		Topmost="true"
-        Title="MainWindow" Height="1080" Width="1920">
+        Title="MainWindow" Height="1080" Width="1920"
+        Top="10" Left="10"
+        >
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
@@ -123,11 +130,9 @@
                         <ComboBox ItemsSource="{Binding PLComboSource, Mode=TwoWay}"
                                   SelectedValuePath="Key" DisplayMemberPath="Value"
                                    SelectedIndex="{Binding PLComboSelectedIndex, Mode=TwoWay}"
+                                  ContextMenu="{Binding PlayListComboItemMenu}"
 								 Height="26" Width="Auto"
 								/>
-                        <!--
-                                      SelectedItem="{Binding PLComboSelectedItem, Mode=TwoWay}"
-                     -->
 
                     </StackPanel>
                     <Label  Grid.Column="4"

@@ -45,7 +45,8 @@ using Path = System.IO.Path;
 //using System.Windows.Controls.MediaElement;
 //using AxShockwaveFlashObjects;          //flv
 using AWCF.Models;
-
+using ContextMenu = System.Windows.Controls.ContextMenu;
+using MenuItem = System.Windows.Controls.MenuItem;
 
 namespace AWCF.ViewModels
 {
@@ -55,6 +56,9 @@ namespace AWCF.ViewModels
         /// プレイリスト本体
         /// </summary>
         public ObservableCollection<PlayListModel> PLList { get; set; }
+        public string PlsyListFileURL;
+        public string ComboLastItemKey = "AddNew";
+        public string ComboLastItemVal = "新規リスト";
         public int ListItemCount { get; set; }
         #region 設定ファイルの項目
         public string[] PlayLists;
@@ -131,9 +135,10 @@ namespace AWCF.ViewModels
                 //	EditCommand = CreateCommand(t_events => MyDoubleClickCommand(t_events));
                 PLComboSource = new Dictionary<string, string>();
                 PLComboSelectedItem = new List<string>();
-                PLComboSelectedIndex = -1;
+          //      PLComboSelectedIndex = -1;
                 AddPlayListCombo("");
                 RaisePropertyChanged(); //	"dataManager"
+                MakePlayListComboMenu();
                 MyLog(TAG, dbMsg);
                 CallWeb();
             }
@@ -392,8 +397,8 @@ namespace AWCF.ViewModels
                 _plcomboselectedindex = value;
                 RaisePropertyChanged("PLComboSelectedIndex");
                 KeyValuePair<string, string>[] items = PLComboSource.ToArray();
-                string FileURL = items[value].Key;
-                ListUpFiles( FileURL);
+                PlsyListFileURL = items[value].Key;
+                ListUpFiles(PlsyListFileURL);
             }
         }
 
@@ -482,8 +487,110 @@ namespace AWCF.ViewModels
         //                }
         //            }
         //        }
-        //        //playList///////////////////////////////////////////////////////////連続再生//
-        //        //プレイリスト///////////////////////////////////////////////////////////FileListVewの操作//
+
+        #region プレイリストコンボからの削除
+        public ContextMenu PlayListComboItemMenu { get; set; }
+        public MenuItem PlayListComboItemDelete;
+        /// <summary>
+        /// コンボボックスにコンテキストメニューを追加する
+        /// </summary>
+        public void MakePlayListComboMenu()
+        {
+            string TAG = "MakePlayListComboMenu";
+            string dbMsg = "";
+            try
+            {
+                //  dbMsg += ",PLComboSelectedIndex=" + PLComboSelectedIndex;
+                PlayListComboItemMenu = new ContextMenu();
+                PlayListComboItemDelete = new MenuItem();
+                PlayListComboItemDelete.Header = "削除";
+                //コンテキストメニュー表示時に発生するイベントを追加
+                PlayListComboItemDelete.Click += PlayListComboItemDelete_Click;
+             //   PlayListComboItemMenu.Height = 40;
+                PlayListComboItemMenu.Items.Add(PlayListComboItemDelete);
+                RaisePropertyChanged("PlayListComboItemMenu");
+                MyLog(TAG, dbMsg);
+                //  Messenger.Raise(new WindowActionMessage(WindowAction.Close, "Close"));
+            }
+            catch (Exception er)
+            {
+                MyErrorLog(TAG, dbMsg, er);
+            }
+        }
+
+        private void PlayListComboItemDelete_Click(object sender, RoutedEventArgs e)
+        {
+            string TAG = "DeletePlayListComboItem";
+            string dbMsg = "";
+            try
+            {
+                dbMsg += ",現在のプレイリストは[ " + PLComboSelectedIndex +"]" + PlsyListFileURL;
+                if (!PlsyListFileURL.Equals(ComboLastItemKey)){
+                    if (PLComboSource.ContainsKey(PlsyListFileURL)){
+                        //Binding変更
+                        PLComboSource.Remove(PlsyListFileURL);
+                        RaisePropertyChanged("PLComboSource");
+                        //設定ファイル更新
+                        string rPlayListStr = "";
+                        foreach (KeyValuePair<string, string> item in PLComboSource){
+                            string kVal = item.Key;
+                            if (!kVal.Equals(ComboLastItemKey)){
+                                rPlayListStr += kVal;
+                            }
+                            PlayListStr = rPlayListStr;
+                            Properties.Settings.Default.Save();
+                        }
+                    }else{
+                        dbMsg += ",該当なし ";
+                    }
+                }
+                else
+                {
+                    dbMsg += ",固定メニュー";
+                }
+
+                MyLog(TAG, dbMsg);
+            }
+            catch (Exception er)
+            {
+                MyErrorLog(TAG, dbMsg, er);
+            }
+        }
+
+        /// <summary>
+        /// プレイリストコンボからの削除
+        /// </summary>
+        //public void DeletePlayListComboItem()
+        //{
+        //    string TAG = "DeletePlayListComboItem";
+        //    string dbMsg = "";
+        //    try
+        //    {
+        //        dbMsg += ",PLComboSelectedIndex=" + PLComboSelectedIndex;
+
+        //        MyLog(TAG, dbMsg);
+        //        //  Messenger.Raise(new WindowActionMessage(WindowAction.Close, "Close"));
+        //    }
+        //    catch (Exception er)
+        //    {
+        //        MyErrorLog(TAG, dbMsg, er);
+        //    }
+        //}
+
+        //private ViewModelCommand _PlayListComboItemDelete;
+
+        //public ViewModelCommand PlayListComboItemDelete
+        //{
+        //    get {
+        //        if (_PlayListComboItemDelete == null)
+        //        {
+        //            _PlayListComboItemDelete = new ViewModelCommand(DeletePlayListComboItem);
+        //        }
+        //        return _PlayListComboItemDelete;
+        //    }
+        //}
+
+        #endregion
 
 
         /// <summary>
@@ -523,7 +630,7 @@ namespace AWCF.ViewModels
                     string DispName = System.IO.Path.GetFileName(item);
                     PLComboSource.Add(item, DispName);
                 }
-
+                PLComboSource.Add(ComboLastItemKey, ComboLastItemVal);
                 RaisePropertyChanged("PLComboSource");
                 PLComboSelectedIndex = 0;       // PLComboSource.Count() - 1;
                 RaisePropertyChanged("PLComboSelectedIndex");
@@ -534,9 +641,12 @@ namespace AWCF.ViewModels
             {
                 MyErrorLog(TAG, dbMsg, er);
             }
-        } 
-        
+        }
+
         #endregion
+
+        //        //playList///////////////////////////////////////////////////////////連続再生//
+        //        //プレイリスト///////////////////////////////////////////////////////////FileListVewの操作//
 
 
         #region FileDlogShow	　単一ファイルの選択
