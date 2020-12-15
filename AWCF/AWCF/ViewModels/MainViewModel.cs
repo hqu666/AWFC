@@ -56,7 +56,10 @@ namespace AWCF.ViewModels
         /// プレイリスト本体
         /// </summary>
         public ObservableCollection<PlayListModel> PLList { get; set; }
-        public string PlsyListFileURL;
+        ///// <summary>
+        ///// 選択されている
+        ///// </summary>
+        //public string PlsyListFileURL;
         public string ComboLastItemKey = "AddNew";
         public string ComboLastItemVal = "新規リスト";
         public int ListItemCount { get; set; }
@@ -397,8 +400,8 @@ namespace AWCF.ViewModels
                 _plcomboselectedindex = value;
                 RaisePropertyChanged("PLComboSelectedIndex");
                 KeyValuePair<string, string>[] items = PLComboSource.ToArray();
-                PlsyListFileURL = items[value].Key;
-                ListUpFiles(PlsyListFileURL);
+                CurrentPlayListFileName = items[value].Key;
+                ListUpFiles(CurrentPlayListFileName);
             }
         }
 
@@ -488,7 +491,7 @@ namespace AWCF.ViewModels
         //            }
         //        }
 
-        #region プレイリストコンボからの削除
+        #region プレイリストコンボのメニュー
         public ContextMenu PlayListComboItemMenu { get; set; }
         public MenuItem PlayListComboItemDelete;
         /// <summary>
@@ -524,23 +527,27 @@ namespace AWCF.ViewModels
             string dbMsg = "";
             try
             {
-                dbMsg += ",現在のプレイリストは[ " + PLComboSelectedIndex +"]" + PlsyListFileURL;
-                if (!PlsyListFileURL.Equals(ComboLastItemKey)){
-                    if (PLComboSource.ContainsKey(PlsyListFileURL)){
+                dbMsg += ",現在のプレイリストは[ " + PLComboSelectedIndex +"]" + CurrentPlayListFileName;
+                if (!CurrentPlayListFileName.Equals(ComboLastItemKey)){
+                    if (PLComboSource.ContainsKey(CurrentPlayListFileName)){
                         //Binding変更
-                        PLComboSource.Remove(PlsyListFileURL);
+                        PLComboSource.Remove(CurrentPlayListFileName);
                         RaisePropertyChanged("PLComboSource");
                         //設定ファイル更新
                         string rPlayListStr = "";
+                        string kVal = "";
                         foreach (KeyValuePair<string, string> item in PLComboSource){
-                            string kVal = item.Key;
+                            kVal = item.Key;
                             if (!kVal.Equals(ComboLastItemKey)){
                                 rPlayListStr += kVal;
                             }
-                            PlayListStr = rPlayListStr;
-                            Properties.Settings.Default.Save();
                         }
-                    }else{
+                        CurrentPlayListFileName = kVal;
+                        PlayListStr = rPlayListStr;
+                        Properties.Settings.Default.Save();
+                    }
+                    else
+                    {
                         dbMsg += ",該当なし ";
                     }
                 }
@@ -614,11 +621,11 @@ namespace AWCF.ViewModels
                 {
                     return;
                 }
-                if (list.IndexOf(AddFlieName) <0)
-                    //if (!PLComboSource.ContainsKey(SelectFlieName))
+                if (list.IndexOf(AddFlieName) <0 && !AddFlieName.Equals(""))
                 {
                     //無ければリスト先頭に追加
                     PlayListStr = AddFlieName + "," + PlayListStr;
+                    CurrentPlayListFileName = AddFlieName;
                     //設定ファイル更新
                     Properties.Settings.Default.Save();
                 }
@@ -627,8 +634,11 @@ namespace AWCF.ViewModels
                 PLComboSource = new Dictionary<string, string>();
                 foreach (string item in PlayLists)
                 {
-                    string DispName = System.IO.Path.GetFileName(item);
-                    PLComboSource.Add(item, DispName);
+                    if (!item.Equals(""))
+                    {
+                        string DispName = System.IO.Path.GetFileName(item);
+                        PLComboSource.Add(item, DispName);
+                    }
                 }
                 PLComboSource.Add(ComboLastItemKey, ComboLastItemVal);
                 RaisePropertyChanged("PLComboSource");
