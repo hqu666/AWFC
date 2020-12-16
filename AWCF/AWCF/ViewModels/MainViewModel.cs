@@ -395,13 +395,31 @@ namespace AWCF.ViewModels
         {
             get => _plcomboselectedindex;
             set {
-                if (_plcomboselectedindex == value)
-                    return;
-                _plcomboselectedindex = value;
-                RaisePropertyChanged("PLComboSelectedIndex");
-                KeyValuePair<string, string>[] items = PLComboSource.ToArray();
-                CurrentPlayListFileName = items[value].Key;
-                ListUpFiles(CurrentPlayListFileName);
+                string TAG = "PLComboSelectedIndex(set)";
+                string dbMsg = "";
+                //try
+                //{
+                    if (_plcomboselectedindex == value)
+                        return;
+                    _plcomboselectedindex = value;
+                    RaisePropertyChanged("PLComboSelectedIndex");
+                    dbMsg += "[" + value + "]";
+                    KeyValuePair<string, string>[] items = PLComboSource.ToArray();
+                    CurrentPlayListFileName = items[value].Key;
+                    dbMsg += CurrentPlayListFileName;
+                    if (CurrentPlayListFileName.Equals(ComboLastItemKey)) {
+                    MakeNewPlayListFile();
+                    }
+                    else
+                    {
+                        ListUpFiles(CurrentPlayListFileName);
+                    }
+
+                //catch (Exception er)
+                //{
+                //    MyErrorLog(TAG, dbMsg, er);
+                //}
+                MyLog(TAG, dbMsg);
             }
         }
 
@@ -654,6 +672,84 @@ namespace AWCF.ViewModels
         }
 
         #endregion
+
+        /// <summary>
+        /// 新規プレイリストを作成する
+        /// </summary>
+        public void MakeNewPlayListFile()
+        {
+            string TAG = "MakeNewPlayListFile";
+            string dbMsg = "";
+            try
+            {
+                System.Windows.Forms.OpenFileDialog ofDialog = new System.Windows.Forms.OpenFileDialog();
+                if (CurrentPlayListFileName.Equals(""))
+                {
+                    CurrentPlayListFileName = "C;";
+                }
+                NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
+                dbMsg += ",NowSelectedPath=" + NowSelectedPath;
+                ofDialog.InitialDirectory = @NowSelectedPath;
+                //③ダイアログのタイトルを指定する
+                ofDialog.Title = "新規プレイリスト作成";
+                ofDialog.FileName = String.Format("{0:yyyyMM_ss}", DateTime.Now) + ".m3u8";
+                //  ofDialog.RestoreDirectory=true:
+                ofDialog.DefaultExt = ".m3u*";
+                //ダイアログを表示する
+                if (ofDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    string nSelectedFile = ofDialog.FileName;
+                    dbMsg += ">>" + nSelectedFile;
+                    if (File.Exists(nSelectedFile))
+                    {
+                        string titolStr = "既に存在するファイルです";
+                        string msgStr = "再度、ファイル作成ができるダイアログを開きますか";
+                        MessageBoxResult result = MessageShowWPF(titolStr, msgStr, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                        dbMsg += ",result=" + result;
+                        if (result== MessageBoxResult.Yes)
+                        {
+                            MakeNewPlayListFile();
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        dbMsg += "新規作成";
+                        NowSelectedPath = System.IO.Path.GetDirectoryName(nSelectedFile);
+                        string newFileName = System.IO.Path.GetFileName(nSelectedFile)+".m3u8";
+                        CurrentPlayListFileName = NowSelectedPath + "\\" + newFileName;
+                        dbMsg += ">>CurrentPlayListFileName=" + CurrentPlayListFileName;
+
+                        StreamWriter sw = File.CreateText(CurrentPlayListFileName);
+                        //sw.WriteLine("NEC");
+                        //sw.WriteLine("SONY");
+                        //sw.WriteLine("DELL");
+                        sw.Close();
+
+                        //設定ファイル更新
+                        Properties.Settings.Default.Save();
+                        AddPlayListCombo(CurrentPlayListFileName);
+                    }
+                }
+                else
+                {
+                    dbMsg += "キャンセルされました";
+                }
+                // オブジェクトを破棄する
+                ofDialog.Dispose();
+                MyLog(TAG, dbMsg);
+                //  Messenger.Raise(new WindowActionMessage(WindowAction.Close, "Close"));
+            }
+            catch (Exception er)
+            {
+                MyErrorLog(TAG, dbMsg, er);
+            }
+        }
+
+
 
         //        //playList///////////////////////////////////////////////////////////連続再生//
         //        //プレイリスト///////////////////////////////////////////////////////////FileListVewの操作//
