@@ -92,6 +92,7 @@
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" />
+                        <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" />
@@ -111,7 +112,7 @@
 							AutomationProperties.HelpText="フォルダ選択" 
 							Grid.Column="1" 
 							 VerticalAlignment="Center" Panel.ZIndex="26" MinWidth="26" 
-							 HorizontalAlignment="Center" Margin="20,5" Height="26"
+							 HorizontalAlignment="Center" Margin="5" Height="26"
 							>
                         <Button.Background>
                             <ImageBrush ImageSource="/AWCF;component/Resources/folder_icon.png" Stretch="UniformToFill"/>
@@ -126,14 +127,17 @@
                             <ImageBrush ImageSource="/AWCF;component/Resources/explore_icon.png" Stretch="UniformToFill"/>
                         </Button.Background>
                     </Button>
-                    <StackPanel  Grid.Column="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="新規プレイリスト"
+                             Command="{Binding FileNameInputShow}"
+  						Grid.Column="3" 
+                      />
+                    <StackPanel  Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right">
                         <ComboBox ItemsSource="{Binding PLComboSource, Mode=TwoWay}"
                                   SelectedValuePath="Key" DisplayMemberPath="Value"
                                    SelectedIndex="{Binding PLComboSelectedIndex, Mode=TwoWay}"
                                   ContextMenu="{Binding PlayListComboItemMenu}"
 								 Height="26" Width="Auto"
 								/>
-
                     </StackPanel>
                     <Label  Grid.Column="4"
                             Content="{Binding ListItemCount, Mode=TwoWay}"

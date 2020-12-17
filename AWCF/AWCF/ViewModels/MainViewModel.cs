@@ -673,6 +673,22 @@ namespace AWCF.ViewModels
 
         #endregion
 
+
+        public ViewModelCommand FileNameInputShow
+        {
+            get { return new Livet.Commands.ViewModelCommand(ShowFileNameInput); }
+        }
+        public void ShowFileNameInput()
+        {
+            NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
+
+            Messenger.Raise(new TransitionMessage(new FileNameInputViewModel() { NeedHideOwner = true,
+                PathStr = NowSelectedPath,
+                FileNameStr = String.Format("{0:yyyyMM_ss}", DateTime.Now),
+                ExtStr = ".m3u8"
+            },
+            "MessageKey2"));
+        }
         /// <summary>
         /// 新規プレイリストを作成する
         /// </summary>
@@ -696,7 +712,10 @@ namespace AWCF.ViewModels
                 //  ofDialog.RestoreDirectory=true:
                 ofDialog.DefaultExt = ".m3u*";
                 //ダイアログを表示する
-                if (ofDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                System.Windows.Forms.DialogResult Result =ofDialog.ShowDialog();
+                dbMsg += ",Result=" + Result;
+
+                if (Result == System.Windows.Forms.DialogResult.OK)
                 {
                     string nSelectedFile = ofDialog.FileName;
                     dbMsg += ">>" + nSelectedFile;

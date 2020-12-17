@@ -58,8 +58,12 @@
     </ApplicationDefinition>
     <Compile Include="CS_Util.cs" />
     <Compile Include="Models\PlayListModel.cs" />
+    <Compile Include="ViewModels\FileNameInputViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\WebViewModel.cs" />
+    <Compile Include="Views\FileNameInput.xaml.cs">
+      <DependentUpon>FileNameInput.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -70,6 +74,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\FileNameInput.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
