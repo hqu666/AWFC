@@ -11,6 +11,7 @@
 		xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
 	   xmlns:local="clr-namespace:AWCF"
+		xmlns:v="clr-namespace:AWCF.Views"
 		xmlns:vm="clr-namespace:AWCF.ViewModels"
 		mc:Ignorable="d"
 		Topmost="true"
@@ -73,6 +74,25 @@
             <Setter Property="Panel.ZIndex" Value="90" />
         </Style>
     </Window.Resources>
+
+    <behaviors:Interaction.Triggers>
+        <!--VMからダイアログサンプル①-->
+        <l:InteractionMessageTrigger MessageKey="MessageKey_Confirm" Messenger="{Binding Messenger}">
+            <l:ConfirmationDialogInteractionMessageAction />
+        </l:InteractionMessageTrigger>
+        
+        
+        <behaviors:EventTrigger EventName="Closed">
+            <l:DataContextDisposeAction/>
+        </behaviors:EventTrigger>
+        <l:InteractionMessageTrigger MessageKey="FileNameInputShow" Messenger="{Binding Messenger}" >
+            <l:TransitionInteractionMessageAction 
+                WindowType="{x:Type v:FileNameInput}" Mode="Modal" >
+            </l:TransitionInteractionMessageAction>
+        </l:InteractionMessageTrigger>
+
+    </behaviors:Interaction.Triggers>
+    
     <!--<UniformGrid Columns="3">-->
     <Grid Background = "Black">
         <Grid.ColumnDefinitions>
@@ -89,6 +109,8 @@
                 </Grid.RowDefinitions>
                 <Grid VerticalAlignment="Bottom">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition  Width="Auto" />
+                        <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" />
@@ -131,7 +153,48 @@
                              Command="{Binding FileNameInputShow}"
   						Grid.Column="3" 
                       />
-                    <StackPanel  Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right">
+
+                    <!--メッセージボックス；三択サンプル②-->
+                    <Button Content="三択" 
+         						Grid.Column="4" 
+                                VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Height="30" >
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="Click" >
+                                <l:ConfirmationDialogInteractionMessageAction>
+                                    <l:DirectInteractionMessage 
+                                            CallbackMethodTarget="{Binding}" 
+                                            CallbackMethodName="MessageBoxClosed"
+                                        >
+                                        <l:ConfirmationMessage Caption="Is this a MessageBox?" Text="Message text" Image="Question" Button="YesNoCancel" />
+                                    </l:DirectInteractionMessage>
+                                </l:ConfirmationDialogInteractionMessageAction>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                    </Button>
+
+                    <!--inputダイアログサンプル　https://github.com/runceel/Livet　①-->
+                    <Button Content="VMからConfirm"
+                             Command="{Binding ViewModelConfirmFrom}"
+  						Grid.Column="5" 
+                      />
+
+                    <!--メッセージボックス；Confirmサンプル　https://github.com/runceel/Livet　②-->
+                    <!--<Button Content="ConfirmFromView"
+                            Width="120"
+                             Grid.Column="5" >
+                        <behaviors:Interaction.Triggers>
+                            <behaviors:EventTrigger EventName="Click">
+                                <l:ConfirmationDialogInteractionMessageAction>
+                                    <l:DirectInteractionMessage CallbackMethodName="ConfirmFromView" CallbackMethodTarget="{Binding}">
+                                        <l:ConfirmationMessage Caption="テスト" Text="これはテスト用メッセージです。" />
+                                    </l:DirectInteractionMessage>
+                                </l:ConfirmationDialogInteractionMessageAction>
+                            </behaviors:EventTrigger>
+                        </behaviors:Interaction.Triggers>
+                    </Button>-->
+
+
+                    <StackPanel  Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Right">
                         <ComboBox ItemsSource="{Binding PLComboSource, Mode=TwoWay}"
                                   SelectedValuePath="Key" DisplayMemberPath="Value"
                                    SelectedIndex="{Binding PLComboSelectedIndex, Mode=TwoWay}"
@@ -139,10 +202,10 @@
 								 Height="26" Width="Auto"
 								/>
                     </StackPanel>
-                    <Label  Grid.Column="4"
+                    <Label  Grid.Column="7"
                             Content="{Binding ListItemCount, Mode=TwoWay}"
                             />
-                    <Label  Grid.Column="5"
+                    <Label  Grid.Column="8"
                             Content="件"
                             />
                 </Grid>

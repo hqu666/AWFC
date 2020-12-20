@@ -52,7 +52,7 @@ namespace AWCF.ViewModels
             string dbMsg = "";
             try
             {
-                ExtStr = ".m3u8";
+             //   ExtStr = ".m3u8";
                 RaisePropertyChanged(); //	"dataManager"
                 MyLog(TAG, dbMsg);
             }
@@ -100,6 +100,7 @@ namespace AWCF.ViewModels
                 if (fbDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     PathStr = fbDialog.SelectedPath;
+                    RaisePropertyChanged("PathStr");
                     dbMsg += ">>" + PathStr;
                     string[] files = System.IO.Directory.GetFiles(@PathStr, "*", System.IO.SearchOption.AllDirectories);
                     dbMsg += ">>" + files.Length + "件";
@@ -118,7 +119,67 @@ namespace AWCF.ViewModels
                 MyErrorLog(TAG, dbMsg, er);
             }
         }
+
+        
         #endregion
+        #region CancelCommand
+        private ViewModelCommand _CancelCommand;
+
+        public ViewModelCommand CancelCommand
+        {
+            get {
+                if (_CancelCommand == null)
+                {
+                    _CancelCommand = new ViewModelCommand(Cancel);
+                }
+                return _CancelCommand;
+            }
+        }
+
+        public void Cancel()
+        {
+            DialogResult = null;
+            Messenger.Raise(new WindowActionMessage(WindowAction.Close, "Close"));
+        }
+        #endregion
+
+        #region UpdateCommand
+        private ViewModelCommand _UpdateCommand;
+
+        public ViewModelCommand UpdateCommand
+        {
+            get {
+                if (_UpdateCommand == null)
+                {
+                    _UpdateCommand = new ViewModelCommand(Update);
+                }
+                return _UpdateCommand;
+            }
+        }
+
+        public string DialogResult { get; private set; }
+
+        public void Update()
+        {
+            string TAG = "Initialize";
+            string dbMsg = "";
+            try
+            {
+                //_Origin.Address = _Person.Address;
+                //_Origin.Name = _Person.Name;
+                this.DialogResult = PathStr + FileNameStr + ExtStr;
+                RaisePropertyChanged();
+                dbMsg += ",DialogResult= " + DialogResult;
+                MyLog(TAG, dbMsg);
+                Messenger.Raise(new WindowActionMessage(WindowAction.Close, "Close"));
+            }
+            catch (Exception er)
+            {
+                MyErrorLog(TAG, dbMsg, er);
+            }
+        }
+        #endregion
+
 
         //デバッグツール///////////////////////////////////////////////////////////その他//
         Boolean debug_now = true;

@@ -75,6 +75,10 @@ namespace AWCF.Views
             return Util.MessageShowWPF(msgStr, titolStr, buttns, icon);
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+        
 
+        }
     }
 }

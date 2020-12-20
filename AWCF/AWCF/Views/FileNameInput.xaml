@@ -14,8 +14,7 @@
 		mc:Ignorable="d"
         Topmost="True"
         Title="FileNameInput" 
-        Height="Auto" Width="Auto" 
-        d:DesignHeight="148">
+        d:DesignHeight="148" Height="150" Width="400">
 
     <Window.DataContext>
         <vm:FileNameInputViewModel/>
@@ -74,6 +73,16 @@
         </Style>
     </Window.Resources>
 
+    <behaviors:Interaction.Triggers>
+        <l:InteractionMessageTrigger MessageKey="Close" Messenger="{Binding Messenger}">
+            <l:WindowInteractionMessageAction InvokeActionOnlyWhenWindowIsActive="False" />
+        </l:InteractionMessageTrigger>
+        <!--Windowが閉じたタイミングでViewModelのDisposeメソッドが呼ばれます-->
+        <behaviors:EventTrigger EventName="Closed">
+            <l:DataContextDisposeAction/>
+        </behaviors:EventTrigger>
+    </behaviors:Interaction.Triggers>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -122,12 +131,14 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button
-                Content="確定"
-                Grid.Column="1" 
-                />
-            <Button
-                Content="キャンセル"
+            <Button Command="{Binding UpdateCommand}"
+                    IsDefault="True"
+                    Content="確定"
+                    Grid.Column="1" 
+                    />
+            <Button Command="{Binding CancelCommand}"
+                    IsCancel="True"
+                    Content="キャンセル"
                 Grid.Column="2" 
                 />
         </Grid>

@@ -408,7 +408,7 @@ namespace AWCF.ViewModels
                     CurrentPlayListFileName = items[value].Key;
                     dbMsg += CurrentPlayListFileName;
                     if (CurrentPlayListFileName.Equals(ComboLastItemKey)) {
-                    MakeNewPlayListFile();
+                    MakeNewPlayListFileAsync();
                     }
                     else
                     {
@@ -674,91 +674,257 @@ namespace AWCF.ViewModels
         #endregion
 
 
+        //public ViewModelCommand FileNameInputShow
+        //{
+        //    get { return new Livet.Commands.ViewModelCommand(ShowFileNameInput); }
+        //}
+        //public void ShowFileNameInput()
+        //{
+        //    NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
+
+        //    Messenger.Raise(new TransitionMessage(new FileNameInputViewModel() { NeedHideOwner = true,
+        //        PathStr = NowSelectedPath,
+        //        FileNameStr = String.Format("{0:yyyyMM_ss}", DateTime.Now),
+        //        ExtStr = ".m3u8"
+        //    },
+        //    "MessageKey2"));
+        //}
+
+        #region inputダイアログのサンプル
+        /// <summary>
+        /// 三択ダイアログのコールバック
+        /// https://days-of-programming.blogspot.com/2018/01/livetwpf.html
+        /// </summary>
+        /// <param name="msg"></param>
+        public void MessageBoxClosed(ConfirmationMessage msg)
+        {
+            string TAG = "MessageBoxClosed";
+            string dbMsg = "";
+            try
+            {
+                dbMsg += ",ConfirmationMessage=" + msg.Response;
+                if (msg.Response == null)
+                {
+                    dbMsg += "null>>Cancel";
+                } else if (msg.Response.Value){     //true
+                    dbMsg += ">>Yes";
+                }else{                              //false
+                    dbMsg += ">>No";
+                }
+                MyLog(TAG, dbMsg);
+            }
+            catch (Exception er)
+            {
+                MyErrorLog(TAG, dbMsg, er);
+            }
+        }
+
+        /// <summary>
+        /// ボタン内で表示させたConfirmからのコールバック
+        /// 》OKボタンで現在日時算出
+        /// </summary>
+        /// <param name="message"></param>
+        public void ConfirmFromView(ConfirmationMessage message)
+        {
+            string TAG = "ConfirmFromView";
+            string OutputMessage = $"{DateTime.Now}: ConfirmFromView: {message.Response ?? false}";
+            string dbMsg = "OutputMessage=" + OutputMessage;
+            MyLog(TAG, dbMsg);
+        }
+
+
+
+        private ViewModelCommand _ViewModelConfirmFrom;
+        public ViewModelCommand ViewModelConfirmFrom
+        {
+            get {
+                string TAG = "ViewModelConfirmFrom";
+                string dbMsg = "";
+                try
+                {
+                    if (_ViewModelConfirmFrom == null)
+                    {
+                        dbMsg += ">>起動時";
+                        _ViewModelConfirmFrom = new ViewModelCommand(ConfirmFromViewModel);
+
+                    }
+                    MyLog(TAG, dbMsg);
+                }
+                catch (Exception er)
+                {
+                    MyErrorLog(TAG, dbMsg, er);
+                }
+                return _FileNameInputShow;
+            }
+        }
+
+        public async void ConfirmFromViewModel()
+        {
+            string TAG = "ConfirmFromView";
+            ConfirmationMessage message = new ConfirmationMessage("これはテスト用メッセージです。", "テスト", "MessageKey_Confirm")
+            {
+                Button = MessageBoxButton.OKCancel,
+            };
+            await Messenger.RaiseAsync(message);
+            string OutputMessage = $"{DateTime.Now}: ConfirmFromViewModel: {message.Response ?? false}";
+            string dbMsg = "OutputMessage=" + OutputMessage;
+            MyLog(TAG, dbMsg);
+        }
+
+#endregion
+
+
+        private ViewModelCommand _FileNameInputShow;
         public ViewModelCommand FileNameInputShow
         {
-            get { return new Livet.Commands.ViewModelCommand(ShowFileNameInput); }
-        }
-        public void ShowFileNameInput()
-        {
-            NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
+            get {
+                string TAG = "FileNameInputShow";
+                string dbMsg = "";
+                try
+                {
+                    if (_FileNameInputShow == null)
+                    {
+                        dbMsg += ">>起動時";
+                        _FileNameInputShow = new ViewModelCommand(MakeNewPlayListFileAsync);
 
-            Messenger.Raise(new TransitionMessage(new FileNameInputViewModel() { NeedHideOwner = true,
-                PathStr = NowSelectedPath,
-                FileNameStr = String.Format("{0:yyyyMM_ss}", DateTime.Now),
-                ExtStr = ".m3u8"
-            },
-            "MessageKey2"));
+                    }
+                    MyLog(TAG, dbMsg);
+                }
+                catch (Exception er)
+                {
+                    MyErrorLog(TAG, dbMsg, er);
+                }
+                return _FileNameInputShow;
+            }
         }
+
+        public string DResult { get; private set; }
+
         /// <summary>
         /// 新規プレイリストを作成する
         /// </summary>
-        public void MakeNewPlayListFile()
+        public async void MakeNewPlayListFileAsync()
         {
             string TAG = "MakeNewPlayListFile";
             string dbMsg = "";
             try
             {
-                System.Windows.Forms.OpenFileDialog ofDialog = new System.Windows.Forms.OpenFileDialog();
-                if (CurrentPlayListFileName.Equals(""))
-                {
-                    CurrentPlayListFileName = "C;";
-                }
                 NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
-                dbMsg += ",NowSelectedPath=" + NowSelectedPath;
-                ofDialog.InitialDirectory = @NowSelectedPath;
-                //③ダイアログのタイトルを指定する
-                ofDialog.Title = "新規プレイリスト作成";
-                ofDialog.FileName = String.Format("{0:yyyyMM_ss}", DateTime.Now) + ".m3u8";
-                //  ofDialog.RestoreDirectory=true:
-                ofDialog.DefaultExt = ".m3u*";
-                //ダイアログを表示する
-                System.Windows.Forms.DialogResult Result =ofDialog.ShowDialog();
-                dbMsg += ",Result=" + Result;
-
-                if (Result == System.Windows.Forms.DialogResult.OK)
+                FileNameInputViewModel VM =  new FileNameInputViewModel()
                 {
-                    string nSelectedFile = ofDialog.FileName;
+                    NeedHideOwner = true,
+                    PathStr = NowSelectedPath,
+                    FileNameStr = String.Format("{0:yyyyMM_ss}", DateTime.Now),
+                    ExtStr = ".m3u8"
+                };
+                TransitionMessage message = new TransitionMessage(VM, "FileNameInputShow");
+                await Messenger.RaiseAsync(message);
+                dbMsg += ",Response=" + message.Response;
+                dbMsg += ",Result=" + VM.DialogResult;
+                if (VM.DialogResult != null){
+                    string nSelectedFile = VM.DialogResult;
                     dbMsg += ">>" + nSelectedFile;
-                    if (File.Exists(nSelectedFile))
-                    {
+                    if (File.Exists(nSelectedFile)){
                         string titolStr = "既に存在するファイルです";
                         string msgStr = "再度、ファイル作成ができるダイアログを開きますか";
                         MessageBoxResult result = MessageShowWPF(titolStr, msgStr, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                         dbMsg += ",result=" + result;
-                        if (result== MessageBoxResult.Yes)
-                        {
-                            MakeNewPlayListFile();
-                        }
-                        else
-                        {
+                        if (result == MessageBoxResult.Yes){
+                            MakeNewPlayListFileAsync();
+                        }else{
                             return;
                         }
-                    }
-                    else
-                    {
+                    }else{
                         dbMsg += "新規作成";
                         NowSelectedPath = System.IO.Path.GetDirectoryName(nSelectedFile);
-                        string newFileName = System.IO.Path.GetFileName(nSelectedFile)+".m3u8";
-                        CurrentPlayListFileName = NowSelectedPath + "\\" + newFileName;
+                        string newFileName = System.IO.Path.GetFileName(nSelectedFile);
+                        CurrentPlayListFileName = NowSelectedPath + newFileName;
                         dbMsg += ">>CurrentPlayListFileName=" + CurrentPlayListFileName;
 
                         StreamWriter sw = File.CreateText(CurrentPlayListFileName);
-                        //sw.WriteLine("NEC");
-                        //sw.WriteLine("SONY");
-                        //sw.WriteLine("DELL");
                         sw.Close();
 
                         //設定ファイル更新
                         Properties.Settings.Default.Save();
                         AddPlayListCombo(CurrentPlayListFileName);
                     }
-                }
-                else
-                {
+                }else{
                     dbMsg += "キャンセルされました";
                 }
-                // オブジェクトを破棄する
-                ofDialog.Dispose();
+
+
+
+
+                //Messenger.Raise(new TransitionMessage(new FileNameInputViewModel()
+                //{
+                //    NeedHideOwner = true,
+                //    PathStr = NowSelectedPath,
+                //    FileNameStr = String.Format("{0:yyyyMM_ss}", DateTime.Now),
+                //    ExtStr = ".m3u8"
+                //}, "FileNameInputShow"));
+
+
+
+                //System.Windows.Forms.OpenFileDialog ofDialog = new System.Windows.Forms.OpenFileDialog();
+                //if (CurrentPlayListFileName.Equals(""))
+                //{
+                //    CurrentPlayListFileName = "C;";
+                //}
+                //NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
+                //dbMsg += ",NowSelectedPath=" + NowSelectedPath;
+                //ofDialog.InitialDirectory = @NowSelectedPath;
+                ////③ダイアログのタイトルを指定する
+                //ofDialog.Title = "新規プレイリスト作成";
+                //ofDialog.FileName = String.Format("{0:yyyyMM_ss}", DateTime.Now) + ".m3u8";
+                ////  ofDialog.RestoreDirectory=true:
+                //ofDialog.DefaultExt = ".m3u*";
+                ////ダイアログを表示する
+                //System.Windows.Forms.DialogResult Result =ofDialog.ShowDialog();
+                //dbMsg += ",Result=" + Result;
+                //if (Result == System.Windows.Forms.DialogResult.OK)
+                //{
+                //    string nSelectedFile = ofDialog.FileName;
+                //    dbMsg += ">>" + nSelectedFile;
+                //    if (File.Exists(nSelectedFile))
+                //    {
+                //        string titolStr = "既に存在するファイルです";
+                //        string msgStr = "再度、ファイル作成ができるダイアログを開きますか";
+                //        MessageBoxResult result = MessageShowWPF(titolStr, msgStr, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                //        dbMsg += ",result=" + result;
+                //        if (result== MessageBoxResult.Yes)
+                //        {
+                //            MakeNewPlayListFile();
+                //        }
+                //        else
+                //        {
+                //            return;
+                //        }
+                //    }
+                //    else
+                //    {
+                //        dbMsg += "新規作成";
+                //        NowSelectedPath = System.IO.Path.GetDirectoryName(nSelectedFile);
+                //        string newFileName = System.IO.Path.GetFileName(nSelectedFile)+".m3u8";
+                //        CurrentPlayListFileName = NowSelectedPath + "\\" + newFileName;
+                //        dbMsg += ">>CurrentPlayListFileName=" + CurrentPlayListFileName;
+
+                //        StreamWriter sw = File.CreateText(CurrentPlayListFileName);
+                //        //sw.WriteLine("NEC");
+                //        //sw.WriteLine("SONY");
+                //        //sw.WriteLine("DELL");
+                //        sw.Close();
+
+                //        //設定ファイル更新
+                //        Properties.Settings.Default.Save();
+                //        AddPlayListCombo(CurrentPlayListFileName);
+                //    }
+                //}
+                //else
+                //{
+                //    dbMsg += "キャンセルされました";
+                //}
+                //// オブジェクトを破棄する
+                //ofDialog.Dispose();
                 MyLog(TAG, dbMsg);
                 //  Messenger.Raise(new WindowActionMessage(WindowAction.Close, "Close"));
             }
