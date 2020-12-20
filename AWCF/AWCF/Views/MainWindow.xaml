@@ -77,9 +77,9 @@
 
     <behaviors:Interaction.Triggers>
         <!--VMからダイアログサンプル①-->
-        <l:InteractionMessageTrigger MessageKey="MessageKey_Confirm" Messenger="{Binding Messenger}">
+        <!--<l:InteractionMessageTrigger MessageKey="MessageKey_Confirm" Messenger="{Binding Messenger}">
             <l:ConfirmationDialogInteractionMessageAction />
-        </l:InteractionMessageTrigger>
+        </l:InteractionMessageTrigger>-->
         
         
         <behaviors:EventTrigger EventName="Closed">
@@ -155,7 +155,7 @@
                       />
 
                     <!--メッセージボックス；三択サンプル②-->
-                    <Button Content="三択" 
+                    <!--<Button Content="三択" 
          						Grid.Column="4" 
                                 VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Height="30" >
                         <behaviors:Interaction.Triggers>
@@ -170,28 +170,13 @@
                                 </l:ConfirmationDialogInteractionMessageAction>
                             </behaviors:EventTrigger>
                         </behaviors:Interaction.Triggers>
-                    </Button>
+                    </Button>-->
 
                     <!--inputダイアログサンプル　https://github.com/runceel/Livet　①-->
-                    <Button Content="VMからConfirm"
+                    <!--<Button Content="VMからConfirm"
                              Command="{Binding ViewModelConfirmFrom}"
   						Grid.Column="5" 
-                      />
-
-                    <!--メッセージボックス；Confirmサンプル　https://github.com/runceel/Livet　②-->
-                    <!--<Button Content="ConfirmFromView"
-                            Width="120"
-                             Grid.Column="5" >
-                        <behaviors:Interaction.Triggers>
-                            <behaviors:EventTrigger EventName="Click">
-                                <l:ConfirmationDialogInteractionMessageAction>
-                                    <l:DirectInteractionMessage CallbackMethodName="ConfirmFromView" CallbackMethodTarget="{Binding}">
-                                        <l:ConfirmationMessage Caption="テスト" Text="これはテスト用メッセージです。" />
-                                    </l:DirectInteractionMessage>
-                                </l:ConfirmationDialogInteractionMessageAction>
-                            </behaviors:EventTrigger>
-                        </behaviors:Interaction.Triggers>
-                    </Button>-->
+                      />-->
 
 
                     <StackPanel  Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Right">

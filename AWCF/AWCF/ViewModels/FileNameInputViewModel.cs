@@ -79,14 +79,12 @@ namespace AWCF.ViewModels
             }
         }
         /// <summary>
-        /// フォルダ選択ダイアログから選択されたフォルダのファイルリストをファイルをアイコン化処理に渡す
+        /// フォルダ選択ダイアログから選択されたフォルダを記録する
         /// </summary>
-        private void ShowFolderDlog()
-        {
-            string TAG = "Folder_bt_Click";
+        private void ShowFolderDlog(){
+            string TAG = "ShowFolderDlog";
             string dbMsg = "";
-            try
-            {
+            try{
                 //①
                 System.Windows.Forms.FolderBrowserDialog fbDialog = new System.Windows.Forms.FolderBrowserDialog();
                 // ダイアログの説明文を指定する
@@ -97,21 +95,22 @@ namespace AWCF.ViewModels
                 // 「新しいフォルダーの作成する」ボタンを表示しない
                 fbDialog.ShowNewFolderButton = false;
                 //フォルダを選択するダイアログを表示する
-                if (fbDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
+                if (fbDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK){
                     PathStr = fbDialog.SelectedPath;
+                    if (!PathStr.EndsWith("\\")){
+                        PathStr += "\\";
+                    }
                     RaisePropertyChanged("PathStr");
                     dbMsg += ">>" + PathStr;
                     string[] files = System.IO.Directory.GetFiles(@PathStr, "*", System.IO.SearchOption.AllDirectories);
                     dbMsg += ">>" + files.Length + "件";
                     //設定ファイル更新
-                }
-                else
-                {
+                }else{
                     dbMsg += "キャンセルされました";
                 }
                 // オブジェクトを破棄する
                 fbDialog.Dispose();
+                RaisePropertyChanged();
                 MyLog(TAG, dbMsg);
             }
             catch (Exception er)

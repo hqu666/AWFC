@@ -838,7 +838,7 @@ namespace AWCF.ViewModels
                         dbMsg += "新規作成";
                         NowSelectedPath = System.IO.Path.GetDirectoryName(nSelectedFile);
                         string newFileName = System.IO.Path.GetFileName(nSelectedFile);
-                        CurrentPlayListFileName = NowSelectedPath + newFileName;
+                        CurrentPlayListFileName = nSelectedFile;
                         dbMsg += ">>CurrentPlayListFileName=" + CurrentPlayListFileName;
 
                         StreamWriter sw = File.CreateText(CurrentPlayListFileName);
@@ -852,81 +852,7 @@ namespace AWCF.ViewModels
                     dbMsg += "キャンセルされました";
                 }
 
-
-
-
-                //Messenger.Raise(new TransitionMessage(new FileNameInputViewModel()
-                //{
-                //    NeedHideOwner = true,
-                //    PathStr = NowSelectedPath,
-                //    FileNameStr = String.Format("{0:yyyyMM_ss}", DateTime.Now),
-                //    ExtStr = ".m3u8"
-                //}, "FileNameInputShow"));
-
-
-
-                //System.Windows.Forms.OpenFileDialog ofDialog = new System.Windows.Forms.OpenFileDialog();
-                //if (CurrentPlayListFileName.Equals(""))
-                //{
-                //    CurrentPlayListFileName = "C;";
-                //}
-                //NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
-                //dbMsg += ",NowSelectedPath=" + NowSelectedPath;
-                //ofDialog.InitialDirectory = @NowSelectedPath;
-                ////③ダイアログのタイトルを指定する
-                //ofDialog.Title = "新規プレイリスト作成";
-                //ofDialog.FileName = String.Format("{0:yyyyMM_ss}", DateTime.Now) + ".m3u8";
-                ////  ofDialog.RestoreDirectory=true:
-                //ofDialog.DefaultExt = ".m3u*";
-                ////ダイアログを表示する
-                //System.Windows.Forms.DialogResult Result =ofDialog.ShowDialog();
-                //dbMsg += ",Result=" + Result;
-                //if (Result == System.Windows.Forms.DialogResult.OK)
-                //{
-                //    string nSelectedFile = ofDialog.FileName;
-                //    dbMsg += ">>" + nSelectedFile;
-                //    if (File.Exists(nSelectedFile))
-                //    {
-                //        string titolStr = "既に存在するファイルです";
-                //        string msgStr = "再度、ファイル作成ができるダイアログを開きますか";
-                //        MessageBoxResult result = MessageShowWPF(titolStr, msgStr, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                //        dbMsg += ",result=" + result;
-                //        if (result== MessageBoxResult.Yes)
-                //        {
-                //            MakeNewPlayListFile();
-                //        }
-                //        else
-                //        {
-                //            return;
-                //        }
-                //    }
-                //    else
-                //    {
-                //        dbMsg += "新規作成";
-                //        NowSelectedPath = System.IO.Path.GetDirectoryName(nSelectedFile);
-                //        string newFileName = System.IO.Path.GetFileName(nSelectedFile)+".m3u8";
-                //        CurrentPlayListFileName = NowSelectedPath + "\\" + newFileName;
-                //        dbMsg += ">>CurrentPlayListFileName=" + CurrentPlayListFileName;
-
-                //        StreamWriter sw = File.CreateText(CurrentPlayListFileName);
-                //        //sw.WriteLine("NEC");
-                //        //sw.WriteLine("SONY");
-                //        //sw.WriteLine("DELL");
-                //        sw.Close();
-
-                //        //設定ファイル更新
-                //        Properties.Settings.Default.Save();
-                //        AddPlayListCombo(CurrentPlayListFileName);
-                //    }
-                //}
-                //else
-                //{
-                //    dbMsg += "キャンセルされました";
-                //}
-                //// オブジェクトを破棄する
-                //ofDialog.Dispose();
                 MyLog(TAG, dbMsg);
-                //  Messenger.Raise(new WindowActionMessage(WindowAction.Close, "Close"));
             }
             catch (Exception er)
             {
