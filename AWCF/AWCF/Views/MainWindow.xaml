@@ -207,7 +207,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="URL"
                                             Binding="{Binding UrlStr }" 
-                                            Width="*">
+                                            Width="Auto">
                             <DataGridTextColumn.ElementStyle>
                                 <Style>
                                     <Setter Property="TextBlock.HorizontalAlignment" Value="Right"/>
@@ -216,6 +216,7 @@
                         </DataGridTextColumn>
                         <DataGridTextColumn Header="名" 
                                             Binding="{Binding Summary }" 
+                                            Width="*"
                                              />
                     </DataGrid.Columns>
                 </DataGrid>

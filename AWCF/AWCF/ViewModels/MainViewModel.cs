@@ -265,7 +265,7 @@ namespace AWCF.ViewModels
 				if (-1 < Array.IndexOf(videoFiles, extention)) {
 					//	if (-1 < list.IndexOf(extention)) {
 					playListModel.UrlStr = url;
-					string[] urls = url.Split('/');
+					string[] urls = url.Split(Path.DirectorySeparatorChar);
 					playListModel.Summary = urls[urls.Length - summaryCol];
 				} else {
 					dbMsg += ",extention=" + extention;
@@ -275,7 +275,7 @@ namespace AWCF.ViewModels
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
 			}
-			return playListModel
+			return playListModel;
 		}
 
 
@@ -704,24 +704,6 @@ namespace AWCF.ViewModels
         }
 
         #endregion
-
-
-        //public ViewModelCommand FileNameInputShow
-        //{
-        //    get { return new Livet.Commands.ViewModelCommand(ShowFileNameInput); }
-        //}
-        //public void ShowFileNameInput()
-        //{
-        //    NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
-
-        //    Messenger.Raise(new TransitionMessage(new FileNameInputViewModel() { NeedHideOwner = true,
-        //        PathStr = NowSelectedPath,
-        //        FileNameStr = String.Format("{0:yyyyMM_ss}", DateTime.Now),
-        //        ExtStr = ".m3u8"
-        //    },
-        //    "MessageKey2"));
-        //}
-
         #region inputダイアログのサンプル
         /// <summary>
         /// 三択ダイアログのコールバック
@@ -910,7 +892,7 @@ namespace AWCF.ViewModels
                     if (InsertTo == -1){
                         InsertTo = ListItemCount;
                     }
-                    dbMsg += "[" + InsertTo + "/" + ListItemCount + "番目]" + FilsName;
+                    dbMsg += "[" + InsertTo + "/" + ListItemCount + "番目]" + url;
 					PlayListModel playListModel = MakeOneItem(url);
 					if (playListModel.UrlStr != null) {
 						PLList.Insert(InsertTo, playListModel);
@@ -940,9 +922,19 @@ namespace AWCF.ViewModels
 			string TAG = "AddToPlayList";
 			string dbMsg = "";
 			try {
-					ListItemCount = PLList.Count();
-					dbMsg += "\r\n" + ListItemCount + "件";
+				ListItemCount = PLList.Count();
+				dbMsg += "\r\n" + ListItemCount + "件";
+				string text = "AAA BBB\r\n CCC\r\n";
+				foreach (PlayListModel One in PLList) {
+					text += One.UrlStr + "\r\n";
+				}
+				//for (int i=0; i < ListItemCount;i++) {
+				//	text += "AAA BBB\r\n CCC\r\n";
+				//}
 
+				StreamWriter sw = new StreamWriter(CurrentPlayListFileName, false, Encoding.UTF8);
+				sw.Write(text);
+				sw.Close();
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -983,8 +975,10 @@ namespace AWCF.ViewModels
                 {
                     CurrentPlayListFileName = "C;";
                 }
-                NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
-                dbMsg += ",NowSelectedPath=" + NowSelectedPath;
+				if (NowSelectedPath==null || NowSelectedPath.Equals("")) {
+					NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
+				}
+				dbMsg += ",NowSelectedPath=" + NowSelectedPath;
                 ofDialog.InitialDirectory = @NowSelectedPath;
                 //③ダイアログのタイトルを指定する
                 ofDialog.Title = "添付ファイル選択";
@@ -995,8 +989,9 @@ namespace AWCF.ViewModels
                     dbMsg += ">>" + NowSelectedFile;
                     NowSelectedPath = System.IO.Path.GetDirectoryName(NowSelectedFile);
                     dbMsg += ">>NowSelectedPath=" + NowSelectedPath;
-                    //設定ファイル更新
-                    Properties.Settings.Default.Save();
+					RaisePropertyChanged("NowSelectedPath");
+					//設定ファイル更新
+					Properties.Settings.Default.Save();
                     string extention = System.IO.Path.GetExtension(NowSelectedFile);
                     if (extention.Contains("m3u"))
                     {
