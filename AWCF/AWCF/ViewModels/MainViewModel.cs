@@ -144,15 +144,34 @@ namespace AWCF.ViewModels
                 MakePlayListComboMenu();
                 MyLog(TAG, dbMsg);
                 CallWeb();
-            }
-            catch (Exception er)
+				PlayListSaveBTVisble = "Hidden";
+				RaisePropertyChanged();
+			} catch (Exception er)
             {
                 MyErrorLog(TAG, dbMsg, er);
             }
         }
 
+		public void BeforeClose() {
+			string TAG = "BeforeClose";
+			string dbMsg = "";
+			try {
+				if (PlayListSaveBTVisble.Equals("Visible")) {
+					string titolStr = "プレイリストが変更されています";
+					string msgStr = "保存しますか？";
+					MessageBoxResult result = MessageShowWPF(titolStr, msgStr, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+					dbMsg += ",result=" + result;
+					if (result == MessageBoxResult.Yes) {
+						SavePlayList();
+					}
+				}
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
 
-        public void CallWeb()
+
+		public void CallWeb()
         {
             FrameSource = "WebPage.xaml";
         }
@@ -251,7 +270,11 @@ namespace AWCF.ViewModels
 
         }
 
-
+		/// <summary>
+		/// 動画ファイルのURLからプレイリスト1行分を作成
+		/// </summary>
+		/// <param name="item"></param>
+		/// <returns></returns>
 		private PlayListModel MakeOneItem(string item) {
 			string TAG = "MakeOneItem";
 			string dbMsg = "";
@@ -814,10 +837,17 @@ namespace AWCF.ViewModels
 
         public string DResult { get; private set; }
 
-        /// <summary>
-        /// 新規プレイリストを作成する
-        /// </summary>
-        public async void MakeNewPlayListFileAsync()
+		#region playList　/////////////////////////////////////////////////////////////
+		/// <summary>
+		/// 保存ボタンの表示
+		/// </summary>
+		public string PlayListSaveBTVisble { get; set; }
+
+
+		/// <summary>
+		/// 新規プレイリストを作成する
+		/// </summary>
+		public async void MakeNewPlayListFileAsync()
         {
             string TAG = "MakeNewPlayListFile";
             string dbMsg = "";
@@ -902,10 +932,11 @@ namespace AWCF.ViewModels
 					RaisePropertyChanged("ListItemCount");
 					dbMsg += "\r\n" + ListItemCount + "件";
 					retBool = true;
-				} else{
+					PlayListSaveBTVisble = "Visible";
+					RaisePropertyChanged("PlayListSaveBTVisble");
+				} else {
 					dbMsg += ">>映像ではない";
 				}
-
 
 				MyLog(TAG, dbMsg);
             }catch (Exception er){
@@ -914,35 +945,46 @@ namespace AWCF.ViewModels
 			return retBool;
         }
 
+
+
+		private ViewModelCommand _PlayListSave;
+
+		public ViewModelCommand PlayListSave {
+			get {
+				if (_PlayListSave == null) {
+					_PlayListSave = new ViewModelCommand(SavePlayList);
+				}
+				return _PlayListSave;
+			}
+		}
+
 		/// <summary>
 		/// 表示されてるプレイリストを保存する
 		/// </summary>
 		/// <param name="url"></param>
 		public void SavePlayList() {
-			string TAG = "AddToPlayList";
+			string TAG = "SavePlayList";
 			string dbMsg = "";
 			try {
 				ListItemCount = PLList.Count();
 				dbMsg += "\r\n" + ListItemCount + "件";
-				string text = "AAA BBB\r\n CCC\r\n";
+				string text = "";
 				foreach (PlayListModel One in PLList) {
 					text += One.UrlStr + "\r\n";
 				}
-				//for (int i=0; i < ListItemCount;i++) {
-				//	text += "AAA BBB\r\n CCC\r\n";
-				//}
-
 				StreamWriter sw = new StreamWriter(CurrentPlayListFileName, false, Encoding.UTF8);
 				sw.Write(text);
 				sw.Close();
+				PlayListSaveBTVisble = "Hidden";
+				RaisePropertyChanged("PlayListSaveBTVisble");
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
 			}
 		}
 
-
-		//        //playList///////////////////////////////////////////////////////////連続再生//
+		#endregion
+		//ファイル選択///////////////////////////////////////////////////////////playList//
 		//        //プレイリスト///////////////////////////////////////////////////////////FileListVewの操作//
 
 
@@ -1002,7 +1044,7 @@ namespace AWCF.ViewModels
                     {
                         dbMsg += "現在のプレイリストの先頭に追加";
 						if(AddToPlayList(NowSelectedFile, 0)) {
-							SavePlayList();
+			//				SavePlayList();
 						}
 					}
                 }

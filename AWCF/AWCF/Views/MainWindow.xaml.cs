@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using AWCF.ViewModels;
 
 namespace AWCF.Views
 {
@@ -19,13 +20,18 @@ namespace AWCF.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+		MainViewModel VM;
+
+		public MainWindow()
         {
             InitializeComponent();
-        }
+			VM = new MainViewModel();
+			this.DataContext = VM;
+
+		}
 
 
-        private void ButtonGo_Click(object sender, RoutedEventArgs e)
+		private void ButtonGo_Click(object sender, RoutedEventArgs e)
         {
             //	CoreWebView2 がnull
             //if (webView != null && webView.CoreWebView2 != null) {
@@ -39,5 +45,11 @@ namespace AWCF.Views
             //webWindow.Show();
         }
 
-    }
+		private void Window_Closed(object sender, EventArgs e) {
+		}
+
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+			VM.BeforeClose();
+		}
+	}
 }

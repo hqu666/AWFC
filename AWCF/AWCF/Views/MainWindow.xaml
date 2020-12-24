@@ -16,7 +16,8 @@
 		mc:Ignorable="d"
 		Topmost="true"
         Title="MainWindow" Height="1080" Width="1920"
-        Top="10" Left="10"
+        Top="10" Left="10" 
+        Closing="Window_Closing"
         >
     <Window.DataContext>
         <vm:MainViewModel/>
@@ -113,7 +114,7 @@
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" />
-                        <ColumnDefinition  Width="Auto" />
+                        <ColumnDefinition  Width="*" />
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition  Width="Auto" />
@@ -151,8 +152,8 @@
                     </Button>
                     <Button Content="新規プレイリスト"
                              Command="{Binding FileNameInputShow}"
-  						Grid.Column="3" 
-                      />
+  						    Grid.Column="3" 
+                          />
 
                     <!--メッセージボックス；三択サンプル②-->
                     <!--<Button Content="三択" 
@@ -177,6 +178,12 @@
                              Command="{Binding ViewModelConfirmFrom}"
   						Grid.Column="5" 
                       />-->
+                    <Button Content="保存"
+                             Command="{Binding PlayListSave}"
+                            Visibility="{Binding PlayListSaveBTVisble}"
+  						    Grid.Column="5" 
+                            HorizontalAlignment="Right"
+                            />
 
 
                     <StackPanel  Grid.Column="6" Orientation="Horizontal" HorizontalAlignment="Right">
