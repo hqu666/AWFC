@@ -301,6 +301,39 @@ namespace AWCF.ViewModels
 			return playListModel;
 		}
 
+		/// <summary>
+		/// ファイル名配列からプレイリストに一連登録
+		/// </summary>
+		/// <param name="files"></param>
+		private void FilesAdd(string[] files) {
+			string TAG = "FilesAdd";
+			string dbMsg = "";
+			try {
+				dbMsg += ",files=" + files.Length + "件";
+				dbMsg += ">PLList>" + PLList.Count + "件";
+				foreach (string url in files) {
+					dbMsg += "\r\n" + url;
+					if (File.Exists(url)) {
+						PlayListModel playListModel = MakeOneItem(url);
+						if (playListModel.UrlStr != null) {
+							PLList.Add(playListModel);
+						}
+					} else if (Directory.Exists(url)) {
+						//フォルダなら中身の全ファイルで再起する
+						string[] rfiles = System.IO.Directory.GetFiles(url , "*", SearchOption.AllDirectories);
+						FilesAdd(files);
+					}
+				}
+				RaisePropertyChanged("PLList");
+				ListItemCount = PLList.Count();
+				RaisePropertyChanged("ListItemCount");
+				dbMsg += "\r\n" + ListItemCount + "件";
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
 
 		//        /// <summary>
 		//        /// 指定フォルダ内の指定TypeファイルをPlayListにリストアップ
@@ -1109,7 +1142,8 @@ namespace AWCF.ViewModels
                     dbMsg += ">>" + files.Length + "件";
                     //設定ファイル更新
                     Properties.Settings.Default.Save();
-                }
+					FilesAdd(files);
+				}
                 else
                 {
                     dbMsg += "キャンセルされました";
@@ -1124,6 +1158,8 @@ namespace AWCF.ViewModels
             }
         }
         #endregion
+
+
 
         #region ExploreShow	　エクスプローラー表示
         private ViewModelCommand _ExploreShow;
