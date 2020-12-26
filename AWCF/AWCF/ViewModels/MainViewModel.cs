@@ -142,6 +142,7 @@ namespace AWCF.ViewModels
                 AddPlayListCombo("");
                 RaisePropertyChanged(); //	"dataManager"
                 MakePlayListComboMenu();
+				MakePlayListMenu();
                 MyLog(TAG, dbMsg);
                 CallWeb();
 				PlayListSaveBTVisble = "Hidden";
@@ -615,7 +616,6 @@ namespace AWCF.ViewModels
                 PlayListComboItemDelete.Header = "削除";
                 //コンテキストメニュー表示時に発生するイベントを追加
                 PlayListComboItemDelete.Click += PlayListComboItemDelete_Click;
-             //   PlayListComboItemMenu.Height = 40;
                 PlayListComboItemMenu.Items.Add(PlayListComboItemDelete);
                 RaisePropertyChanged("PlayListComboItemMenu");
                 MyLog(TAG, dbMsg);
@@ -995,7 +995,7 @@ namespace AWCF.ViewModels
 		/// 表示されてるプレイリストを保存する
 		/// </summary>
 		/// <param name="url"></param>
-		public void SavePlayList() {
+		private void SavePlayList() {
 			string TAG = "SavePlayList";
 			string dbMsg = "";
 			try {
@@ -1015,6 +1015,205 @@ namespace AWCF.ViewModels
 				MyErrorLog(TAG, dbMsg, er);
 			}
 		}
+
+		#region プレイリストのコンテキストメニュー
+		public ContextMenu PlayListMenu { get; set; }
+		public MenuItem PlayListItemViewExplore;
+		public MenuItem PlayListItemMove;
+		public MenuItem PlayListItemMoveTop;
+		public MenuItem PlayListItemMoveBottom;
+		public MenuItem PlayListDeleteCannotRead;
+		public MenuItem PlayListDeleteDoubling;
+		public MenuItem PlayListDeleteFrontDoubling;
+		public MenuItem PlayListDeleteAfterDoubling;
+		public MenuItem PlayListSaveRoot;
+		public MenuItem PlayListSaveMenu;
+		public MenuItem PlayListSaveAsMenu;
+		/// <summary>
+		/// コンボボックスにコンテキストメニューを追加する
+		/// </summary>
+		public void MakePlayListMenu() {
+			string TAG = "MakePlayListoMenu";
+			string dbMsg = "";
+			try {
+				//  dbMsg += ",PLComboSelectedIndex=" + PLComboSelectedIndex;
+				PlayListMenu = new ContextMenu();
+
+				PlayListItemViewExplore = new MenuItem();
+				PlayListItemViewExplore.Header = "エクスプローラーで開く";
+				//コンテキストメニュー表示時に発生するイベントを追加
+				PlayListItemViewExplore.Click += PlayListItemViewExplore_Click;
+				PlayListMenu.Items.Add(PlayListItemViewExplore);
+
+				PlayListItemMove = new MenuItem();
+				PlayListItemMove.Header = "移動...";
+
+				PlayListItemMoveTop = new MenuItem();
+				PlayListItemMoveTop.Header = "先頭へ移動";
+				PlayListItemMoveTop.Click += PlayListItemMoveTop_Click;
+				PlayListItemMove.Items.Add(PlayListItemMoveTop);
+
+				PlayListItemMoveBottom = new MenuItem();
+				PlayListItemMoveBottom.Header = "末尾へ移動";
+				PlayListItemMoveBottom.Click += PlayListItemMoveBottom_Click;
+				PlayListItemMove.Items.Add(PlayListItemMoveBottom);
+				PlayListMenu.Items.Add(PlayListItemMove);
+
+				PlayListDeleteCannotRead = new MenuItem();
+				PlayListDeleteCannotRead.Header = "読めないファイルを削除";
+				PlayListDeleteCannotRead.Click += PlayListDeleteCannotRead_Click;
+				PlayListMenu.Items.Add(PlayListDeleteCannotRead);
+
+				PlayListDeleteDoubling = new MenuItem();
+				PlayListDeleteDoubling.Header = "重複アイテムを削除...";
+
+				PlayListDeleteFrontDoubling = new MenuItem();
+				PlayListDeleteFrontDoubling.Header = "先頭側";
+				PlayListDeleteFrontDoubling.Click += PlayListDeleteFrontDoubling_Click;
+				PlayListDeleteDoubling.Items.Add(PlayListDeleteFrontDoubling);
+
+				PlayListDeleteAfterDoubling = new MenuItem();
+				PlayListDeleteAfterDoubling.Header = "末尾側";
+				PlayListDeleteAfterDoubling.Click += PlayListDeleteAfterDoubling_Click;
+				PlayListDeleteDoubling.Items.Add(PlayListDeleteAfterDoubling);
+				PlayListMenu.Items.Add(PlayListDeleteDoubling);
+
+				PlayListSaveRoot = new MenuItem();
+				PlayListSaveRoot.Header = "このプレイリストを保存...";
+
+				PlayListSaveMenu = new MenuItem();
+				PlayListSaveMenu.Header = "上書き";
+				PlayListSaveMenu.Click += PlayListSaveMenu_Click;
+				PlayListSaveRoot.Items.Add(PlayListSaveMenu);
+
+				PlayListSaveAsMenu = new MenuItem();
+				PlayListSaveAsMenu.Header = "名前を付けて保存";
+				PlayListSaveAsMenu.Click += PlayListSaveAsMenu_Click;
+				PlayListSaveRoot.Items.Add(PlayListSaveAsMenu);
+				PlayListMenu.Items.Add(PlayListSaveRoot);
+
+				RaisePropertyChanged("PlayListMenu");
+				MyLog(TAG, dbMsg);
+				//  Messenger.Raise(new WindowActionMessage(WindowAction.Close, "Close"));
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		private void PlayListItemViewExplore_Click(object sender, RoutedEventArgs e) {
+			string TAG = "PlayListItemViewExplore_Click";
+			string dbMsg = "";
+			try {
+
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		private void PlayListItemMoveTop_Click(object sender, RoutedEventArgs e) {
+			string TAG = "PlayListItemMoveTop_Click";
+			string dbMsg = "";
+			try {
+
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		private void PlayListItemMoveBottom_Click(object sender, RoutedEventArgs e) {
+			string TAG = "PlayListItemMoveBottom_Click";
+			string dbMsg = "";
+			try {
+
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		private void PlayListDeleteCannotRead_Click(object sender, RoutedEventArgs e) {
+			string TAG = "PlayListDeleteCannotRead_Click";
+			string dbMsg = "";
+			try {
+
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		private void PlayListDeleteFrontDoubling_Click(object sender, RoutedEventArgs e) {
+			string TAG = "DeletePlayListComboItem";
+			string dbMsg = "";
+			try {
+				dbMsg += ",現在のプレイリストは[ " + PLComboSelectedIndex + "]" + CurrentPlayListFileName;
+				if (!CurrentPlayListFileName.Equals(ComboLastItemKey)) {
+					if (PLComboSource.ContainsKey(CurrentPlayListFileName)) {
+						//Binding変更
+						PLComboSource.Remove(CurrentPlayListFileName);
+						RaisePropertyChanged("PLComboSource");
+						//設定ファイル更新
+						string rPlayListStr = "";
+						string kVal = "";
+						foreach (KeyValuePair<string, string> item in PLComboSource) {
+							kVal = item.Key;
+							if (!kVal.Equals(ComboLastItemKey)) {
+								rPlayListStr += kVal;
+							}
+						}
+						CurrentPlayListFileName = kVal;
+						PlayListStr = rPlayListStr;
+						Properties.Settings.Default.Save();
+					} else {
+						dbMsg += ",該当なし ";
+					}
+				} else {
+					dbMsg += ",固定メニュー";
+				}
+
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		private void PlayListDeleteAfterDoubling_Click(object sender, RoutedEventArgs e) {
+			string TAG = "PlayListDeleteAfterDoubling_Click";
+			string dbMsg = "";
+			try {
+
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		private void PlayListSaveMenu_Click(object sender, RoutedEventArgs e) {
+			string TAG = "PlayListSaveMwnu_Click";
+			string dbMsg = "";
+			try {
+				SavePlayList();
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		private void PlayListSaveAsMenu_Click(object sender, RoutedEventArgs e) {
+			string TAG = "PlayListSaveAsMenu_Click";
+			string dbMsg = "";
+			try {
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		#endregion
+
+
 
 		#endregion
 		//ファイル選択///////////////////////////////////////////////////////////playList//

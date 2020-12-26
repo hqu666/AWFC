@@ -205,6 +205,7 @@
                 <DataGrid  x:Name="MyCalendar"
 						Grid.Row="1" Grid.Column="0"
 						ItemsSource="{Binding PLList}"
+                        ContextMenu="{Binding PlayListMenu}"
 						SelectionMode="Single"
 						 CanUserAddRows="False" 
 						 CanUserDeleteRows="False"
@@ -227,45 +228,6 @@
                                              />
                     </DataGrid.Columns>
                 </DataGrid>
-                <!--<Grid Grid.Row="2" Background="#FFF1EBEB" >
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition  Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Button Command="{Binding FileDlogShow}"
-						AutomationProperties.HelpText="ファイル選択" 
-							Width="Auto"  
-							Grid.Column="0" 
-							HorizontalAlignment="Left"  VerticalAlignment="Center" MinWidth="26" MinHeight="26" Margin="20,5" 
-							 >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/AWCF;component/Resources/file_icon.png"/>
-                        </Button.Background>
-                    </Button>
-                    <Button Command="{Binding FolderDlogShow}"
-							AutomationProperties.HelpText="フォルダ選択" 
-							Grid.Column="1" 
-							 VerticalAlignment="Center" Panel.ZIndex="26" MinWidth="26" 
-							 HorizontalAlignment="Center" Margin="20,5" Height="26"
-							>
-                        <Button.Background>
-                            <ImageBrush ImageSource="/AWCF;component/Resources/folder_icon.png" Stretch="UniformToFill"/>
-                        </Button.Background>
-                    </Button>
-                    <Button Command="{Binding ExploreShow}"
-							AutomationProperties.HelpText="エクスプローラーからDorp" 
-						Grid.Column="2" 
-							HorizontalAlignment="Right"  VerticalAlignment="Top" MinWidth="26" Panel.ZIndex="26" Height="26" Margin="20,5" 
-							 >
-                        <Button.Background>
-                            <ImageBrush ImageSource="/AWCF;component/Resources/explore_icon.png" Stretch="UniformToFill"/>
-                        </Button.Background>
-                    </Button>
-
-
-                </Grid>-->
                 </Grid>
         </Grid>
         <GridSplitter Grid.Column="1"
