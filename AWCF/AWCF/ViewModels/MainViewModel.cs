@@ -1175,6 +1175,25 @@ namespace AWCF.ViewModels
 			string TAG = "PlayListDeleteCannotRead_Click";
 			string dbMsg = "";
 			try {
+				dbMsg += "ListItemCount=" + ListItemCount + "件";
+				ObservableCollection<PlayListModel> DeleteList = new ObservableCollection<PlayListModel>();
+				foreach (PlayListModel item in PLList) {
+					if (File.Exists(item.UrlStr)) {
+					} else {
+						dbMsg += "不在=" + item.UrlStr;
+						DeleteList.Add(item);
+					}
+				}
+				dbMsg += ">削除待ち>" + DeleteList.Count + "件";
+				if (0<DeleteList.Count) {
+					foreach (PlayListModel item in DeleteList) {
+						PLList.Remove(item);
+					}
+					RaisePropertyChanged("PLList");
+					ListItemCount = PLList.Count();
+					RaisePropertyChanged("ListItemCount");
+					dbMsg += ">>" + ListItemCount + "件";
+				}
 
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
