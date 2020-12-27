@@ -62,7 +62,26 @@ namespace AWCF.ViewModels
         //public string PlsyListFileURL;
         public string ComboLastItemKey = "AddNew";
         public string ComboLastItemVal = "新規リスト";
-        public int ListItemCount { get; set; }
+		private int _ListItemCount;
+	   public int ListItemCount {
+			get { return _ListItemCount; }
+			set { if (_ListItemCount == value)
+					return;
+					_ListItemCount = value;
+				if (0<value) {
+					PlayListItemViewExplore.IsEnabled = true;
+					PlayListItemMove.IsEnabled = true;
+					PlayListDeleteCannotRead.IsEnabled = true;
+					PlayListDeleteDoubling.IsEnabled = true;
+					PlayListSaveRoot.IsEnabled = true;
+				} else {
+					PlayListItemViewExplore.IsEnabled = false;
+					PlayListItemMove.IsEnabled = false;
+					PlayListDeleteCannotRead.IsEnabled = false;
+					PlayListDeleteDoubling.IsEnabled = false;
+				}
+			}
+		}
         #region 設定ファイルの項目
         public string[] PlayLists;
         /// <summary>
@@ -133,7 +152,12 @@ namespace AWCF.ViewModels
             string dbMsg = "";
             try
             {
-                PLList = new ObservableCollection<PlayListModel>();
+				MakePlayListMenu();
+				PlayListItemViewExplore.IsEnabled = false;
+				PlayListItemMove.IsEnabled = false;
+				PlayListDeleteCannotRead.IsEnabled = false;
+				PlayListDeleteDoubling.IsEnabled = false;
+				PLList = new ObservableCollection<PlayListModel>();
                 // ICommandの場合
                 //	EditCommand = CreateCommand(t_events => MyDoubleClickCommand(t_events));
                 PLComboSource = new Dictionary<string, string>();
@@ -142,10 +166,11 @@ namespace AWCF.ViewModels
                 AddPlayListCombo("");
                 RaisePropertyChanged(); //	"dataManager"
                 MakePlayListComboMenu();
-				MakePlayListMenu();
                 MyLog(TAG, dbMsg);
                 CallWeb();
 				PlayListSaveBTVisble = "Hidden";
+				PlayListSaveRoot.IsEnabled = false;
+			//	ListItemCount=PLList.Count();
 				RaisePropertyChanged();
 			} catch (Exception er)
             {
@@ -967,6 +992,7 @@ namespace AWCF.ViewModels
 					retBool = true;
 					PlayListSaveBTVisble = "Visible";
 					RaisePropertyChanged("PlayListSaveBTVisble");
+					PlayListSaveRoot.IsEnabled = true;
 				} else {
 					dbMsg += ">>映像ではない";
 				}
@@ -1010,6 +1036,7 @@ namespace AWCF.ViewModels
 				sw.Close();
 				PlayListSaveBTVisble = "Hidden";
 				RaisePropertyChanged("PlayListSaveBTVisble");
+				PlayListSaveRoot.IsEnabled = false;
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
