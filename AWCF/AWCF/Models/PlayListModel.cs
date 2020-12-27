@@ -39,14 +39,26 @@ namespace AWCF.Models
         }
 
 
+		private bool _ActionFlag;
+		public bool ActionFlag {
+			get => _ActionFlag;
+			set {
+				if (_ActionFlag == value)
+					return;
+				_ActionFlag = value;
+				RaisePropertyChanged();
+			}
+		}
 
-        object ICloneable.Clone()
+
+		object ICloneable.Clone()
         {
             return new PlayListModel()
             {
                 UrlStr = this.UrlStr,
                 Summary = this.Summary,
-            };
+				ActionFlag = this.ActionFlag,
+			};
         }
 
     }

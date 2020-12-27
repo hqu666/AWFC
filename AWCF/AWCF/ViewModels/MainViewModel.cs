@@ -1205,31 +1205,31 @@ namespace AWCF.ViewModels
 			string TAG = "DeletePlayListComboItem";
 			string dbMsg = "";
 			try {
-				dbMsg += ",現在のプレイリストは[ " + PLComboSelectedIndex + "]" + CurrentPlayListFileName;
-				if (!CurrentPlayListFileName.Equals(ComboLastItemKey)) {
-					if (PLComboSource.ContainsKey(CurrentPlayListFileName)) {
-						//Binding変更
-						PLComboSource.Remove(CurrentPlayListFileName);
-						RaisePropertyChanged("PLComboSource");
-						//設定ファイル更新
-						string rPlayListStr = "";
-						string kVal = "";
-						foreach (KeyValuePair<string, string> item in PLComboSource) {
-							kVal = item.Key;
-							if (!kVal.Equals(ComboLastItemKey)) {
-								rPlayListStr += kVal;
+				dbMsg += "ListItemCount=" + ListItemCount + "件";
+				ObservableCollection<PlayListModel> DeleteList = new ObservableCollection<PlayListModel>();
+				foreach (PlayListModel checkItem in PLList) {
+					int checkIndex = PLList.IndexOf(checkItem);
+					foreach (PlayListModel tItem in PLList) {
+						int tIndex = PLList.IndexOf(tItem);
+						if (checkIndex < tIndex) {
+							if (tItem.UrlStr.Equals(checkItem.UrlStr)) {
+								dbMsg += ">重複>=" + tItem.UrlStr;
+								checkItem.ActionFlag = true;
+								DeleteList.Add(checkItem);
 							}
 						}
-						CurrentPlayListFileName = kVal;
-						PlayListStr = rPlayListStr;
-						Properties.Settings.Default.Save();
-					} else {
-						dbMsg += ",該当なし ";
 					}
-				} else {
-					dbMsg += ",固定メニュー";
 				}
-
+				dbMsg += ">削除待ち>" + DeleteList.Count + "件";
+				if (0 < DeleteList.Count) {
+					foreach (PlayListModel item in DeleteList) {
+						PLList.Remove(item);
+					}
+					RaisePropertyChanged("PLList");
+					ListItemCount = PLList.Count();
+					RaisePropertyChanged("ListItemCount");
+					dbMsg += ">>" + ListItemCount + "件";
+				}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -1240,7 +1240,32 @@ namespace AWCF.ViewModels
 			string TAG = "PlayListDeleteAfterDoubling_Click";
 			string dbMsg = "";
 			try {
-
+				dbMsg += "ListItemCount=" + ListItemCount + "件";
+				ObservableCollection<PlayListModel> DeleteList = new ObservableCollection<PlayListModel>();
+				foreach (PlayListModel checkItem in PLList) {
+					int checkIndex = PLList.IndexOf(checkItem);
+					foreach (PlayListModel tItem in PLList) {
+						int tIndex = PLList.IndexOf(tItem);
+						if (checkIndex < tIndex) {
+							if (tItem.UrlStr.Equals(checkItem.UrlStr)) {
+								dbMsg += ">重複>=" + tItem.UrlStr;
+								tItem.ActionFlag=true;
+								DeleteList.Add(tItem);
+							}
+						}
+					}
+				}
+				dbMsg += ">削除待ち>" + DeleteList.Count + "件";
+				if (0 < DeleteList.Count) {
+					while (0<DeleteList.Count) {
+						PLList.Remove(DeleteList[0]);
+						DeleteList.Remove(DeleteList[0]);
+					}
+					RaisePropertyChanged("PLList");
+					ListItemCount = PLList.Count();
+					RaisePropertyChanged("ListItemCount");
+					dbMsg += ">>" + ListItemCount + "件";
+				}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -1262,6 +1287,8 @@ namespace AWCF.ViewModels
 			string TAG = "PlayListSaveAsMenu_Click";
 			string dbMsg = "";
 			try {
+				NowSelectedFile = PLListSelectedItem.UrlStr;
+				dbMsg += "urlStr=" + NowSelectedFile;
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
