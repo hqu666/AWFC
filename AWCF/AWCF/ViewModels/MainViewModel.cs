@@ -56,14 +56,16 @@ namespace AWCF.ViewModels
         /// プレイリスト本体
         /// </summary>
         public ObservableCollection<PlayListModel> PLList { get; set; }
-        ///// <summary>
-        ///// 選択されている
-        ///// </summary>
-        //public string PlsyListFileURL;
-        public string ComboLastItemKey = "AddNew";
+		public PlayListModel PLListSelectedItem { get; set; }
+		
+		///// <summary>
+		///// 選択されている
+		///// </summary>
+		//public string PlsyListFileURL;
+		public string ComboLastItemKey = "AddNew";
         public string ComboLastItemVal = "新規リスト";
 		private int _ListItemCount;
-	   public int ListItemCount {
+		public int ListItemCount {
 			get { return _ListItemCount; }
 			set { if (_ListItemCount == value)
 					return;
@@ -162,7 +164,6 @@ namespace AWCF.ViewModels
                 //	EditCommand = CreateCommand(t_events => MyDoubleClickCommand(t_events));
                 PLComboSource = new Dictionary<string, string>();
                 PLComboSelectedItem = new List<string>();
-          //      PLComboSelectedIndex = -1;
                 AddPlayListCombo("");
                 RaisePropertyChanged(); //	"dataManager"
                 MakePlayListComboMenu();
@@ -170,7 +171,6 @@ namespace AWCF.ViewModels
                 CallWeb();
 				PlayListSaveBTVisble = "Hidden";
 				PlayListSaveRoot.IsEnabled = false;
-			//	ListItemCount=PLList.Count();
 				RaisePropertyChanged();
 			} catch (Exception er)
             {
@@ -1131,7 +1131,13 @@ namespace AWCF.ViewModels
 			string TAG = "PlayListItemViewExplore_Click";
 			string dbMsg = "";
 			try {
+				NowSelectedFile = PLListSelectedItem.UrlStr;
+				dbMsg += "urlStr=" + NowSelectedFile;
+				System.Diagnostics.Process.Start(
+					"EXPLORER.EXE", @"/select," + NowSelectedFile + "");
 
+				//System.Diagnostics.Process.Start(
+				//	"EXPLORER.EXE", @"/e,""C:\My Documents\My Pictures""");
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -1406,7 +1412,6 @@ namespace AWCF.ViewModels
         private void ShowExplore()
         {
             string TAG = "ShowExplore";
-            //	Process.Start("EXPLORER.EXE", @"c:\");
             //最近表示した場所	をシェルなら
             //	explorer.exe shell:::{ 22877A6D - 37A1 - 461A - 91B0 - DBDA5AAEBC99}
             System.Diagnostics.Process.Start("EXPLORER.EXE", @"{ 22877A6D - 37A1 - 461A - 91B0 - DBDA5AAEBC99}");

@@ -205,6 +205,7 @@
                 <DataGrid  x:Name="MyCalendar"
 						Grid.Row="1" Grid.Column="0"
 						ItemsSource="{Binding PLList}"
+                           SelectedItem="{Binding PLListSelectedItem}"
                         ContextMenu="{Binding PlayListMenu}"
 						SelectionMode="Single"
 						 CanUserAddRows="False" 
