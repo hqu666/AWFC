@@ -1135,9 +1135,6 @@ namespace AWCF.ViewModels
 				dbMsg += "urlStr=" + NowSelectedFile;
 				System.Diagnostics.Process.Start(
 					"EXPLORER.EXE", @"/select," + NowSelectedFile + "");
-
-				//System.Diagnostics.Process.Start(
-				//	"EXPLORER.EXE", @"/e,""C:\My Documents\My Pictures""");
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -1148,7 +1145,11 @@ namespace AWCF.ViewModels
 			string TAG = "PlayListItemMoveTop_Click";
 			string dbMsg = "";
 			try {
-
+				NowSelectedFile = PLListSelectedItem.UrlStr;
+				dbMsg += "urlStr=" + NowSelectedFile;
+				int oldIndex = PLList.IndexOf(PLListSelectedItem);
+				dbMsg += ",oldIndex=" + oldIndex;
+				PLList.Move(oldIndex, 0);
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -1159,7 +1160,11 @@ namespace AWCF.ViewModels
 			string TAG = "PlayListItemMoveBottom_Click";
 			string dbMsg = "";
 			try {
-
+				NowSelectedFile = PLListSelectedItem.UrlStr;
+				dbMsg += "urlStr=" + NowSelectedFile;
+				int oldIndex = PLList.IndexOf(PLListSelectedItem);
+				dbMsg += ",oldIndex=" + oldIndex;
+				PLList.Move(oldIndex, PLList.Count - 1);
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
