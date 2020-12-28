@@ -1287,8 +1287,47 @@ namespace AWCF.ViewModels
 			string TAG = "PlayListSaveAsMenu_Click";
 			string dbMsg = "";
 			try {
+				dbMsg += "\r\n" + ListItemCount + "件";
+				string text = "";
+				foreach (PlayListModel One in PLList) {
+					text += One.UrlStr + "\r\n";
+				}
+
+
 				NowSelectedFile = PLListSelectedItem.UrlStr;
-				dbMsg += "urlStr=" + NowSelectedFile;
+				dbMsg += ",FileName=" + CurrentPlayListFileName;
+				SaveFileDialog dialog = new SaveFileDialog();
+				dialog.InitialDirectory = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
+				//	dialog.DefaultExt = ".m3u*";
+				dialog.Filter = "プレイリスト (*.m3u*)|*.m3u*|すべて (*.*)|*.*";
+				dialog.FilterIndex = 1;
+				dialog.FileName = System.IO.Path.GetFileNameWithoutExtension(CurrentPlayListFileName) + "のコピー";
+
+
+				//	Nullable<bool> 
+				DialogResult result = dialog.ShowDialog();
+				if (result.Equals(DialogResult.OK)) {
+					CurrentPlayListFileName = dialog.FileName;
+					dbMsg += ">>" + CurrentPlayListFileName;
+					CurrentPlayListFileName += ".m3u8";
+					dbMsg += ">>" + CurrentPlayListFileName;
+					File.WriteAllText(CurrentPlayListFileName, text, Encoding.UTF8);
+
+					//using (Stream fileStream = dialog.OpenFile())
+					//using (StreamWriter sr = new StreamWriter(fileStream)) {
+					//	sr.Write(text);
+					//}
+
+					AddPlayListCombo(CurrentPlayListFileName);
+
+					NowSelectedPath = System.IO.Path.GetDirectoryName(CurrentPlayListFileName);
+					dbMsg += ">>NowSelectedPath=" + NowSelectedPath;
+					RaisePropertyChanged("CurrentPlayListFileName");
+					RaisePropertyChanged("NowSelectedPath");
+					//設定ファイル更新
+					Properties.Settings.Default.Save();
+					string extention = System.IO.Path.GetExtension(NowSelectedFile);
+				}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
