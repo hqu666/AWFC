@@ -81,8 +81,8 @@
         <!--<l:InteractionMessageTrigger MessageKey="MessageKey_Confirm" Messenger="{Binding Messenger}">
             <l:ConfirmationDialogInteractionMessageAction />
         </l:InteractionMessageTrigger>-->
-        
-        
+
+
         <behaviors:EventTrigger EventName="Closed">
             <l:DataContextDisposeAction/>
         </behaviors:EventTrigger>
@@ -93,7 +93,7 @@
         </l:InteractionMessageTrigger>
 
     </behaviors:Interaction.Triggers>
-    
+
     <!--<UniformGrid Columns="3">-->
     <Grid Background = "Black">
         <Grid.ColumnDefinitions>
@@ -202,17 +202,35 @@
                             />
                 </Grid>
 
-                <DataGrid  x:Name="MyCalendar"
-						Grid.Row="1" Grid.Column="0"
-						ItemsSource="{Binding PLList}"
-                           SelectedItem="{Binding PLListSelectedItem}"
-                        ContextMenu="{Binding PlayListMenu}"
-						SelectionMode="Single"
-						 CanUserAddRows="False" 
-						 CanUserDeleteRows="False"
-						RowDetailsVisibilityMode="Visible" 
-						AutoGenerateColumns="False" IsReadOnly="True"
+                <DataGrid  x:Name="PlayList"
+						    Grid.Row="1" Grid.Column="0"
+						    ItemsSource="{Binding PLList}"
+                            SelectedItem="{Binding PLListSelectedItem}"
+                            ContextMenu="{Binding PlayListMenu}"
+                            AllowDrop="true"
+						    SelectionMode="Single"
+						    CanUserAddRows="False" 
+						    CanUserDeleteRows="False"
+						    RowDetailsVisibilityMode="Visible" 
+						    AutoGenerateColumns="False" 
+                            IsReadOnly="True" 
+                           BeginningEdit="OnBeginEdit"
+                           CellEditEnding="OnEndEdit"
+                           PreviewMouseLeftButtonDown="OnMouseLeftButtonDown"
+                            MouseDown="PlayList_MouseDown" 
+                            MouseMove="PlayList_MouseMove" 
+                            MouseUp="PlayList_MouseUp"
 						>
+                    <!--DragEnter="PlayList_DragEnter" 
+                           DragLeave="PlayList_DragLeave" 
+                           DragOver="PlayList_DragOver" 
+                           Drop="PlayList_Drop" 
+                           PreviewDragEnter="PlayList_PreviewDragEnter" 
+                           PreviewDragLeave="PlayList_PreviewDragLeave" 
+                           PreviewDragOver="PlayList_PreviewDragOver" 
+                           PreviewDrop="PlayList_PreviewDrop" 
+                    -->
+
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="URL"
                                             Binding="{Binding UrlStr }" 
@@ -229,7 +247,25 @@
                                              />
                     </DataGrid.Columns>
                 </DataGrid>
-                </Grid>
+                <!-- Drag and Drop Popup -->
+                <Popup x:Name="popup1" IsHitTestVisible="False" Placement="RelativePoint"
+                   PlacementTarget="{Binding ElementName=me}" AllowsTransparency="True">
+                    <Border
+                    BorderBrush="LightSteelBlue"
+                    BorderThickness="2" Background="White" Opacity="0.75">
+                        <StackPanel
+                        Orientation="Horizontal" Margin="4,3,8,3">
+                            <Image Source="/AWCF;component/Resources/drag.png"
+                               Width="16" Height="16" OpacityMask="Black" />
+                            <TextBlock
+                            FontSize="14" FontWeight="Bold"
+                            VerticalAlignment="Center" Margin="8,0,0,0" 
+                            Text="{Binding ElementName=me, Path=DraggedItem.Name}" />
+                        </StackPanel>
+                    </Border>
+                </Popup>
+
+            </Grid>
         </Grid>
         <GridSplitter Grid.Column="1"
                           Width="5"

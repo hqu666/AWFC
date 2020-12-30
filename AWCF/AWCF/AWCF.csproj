@@ -158,5 +158,8 @@
     <Resource Include="Resources\pousebtn.png" />
     <Resource Include="Resources\rewbtn.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\drag.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
