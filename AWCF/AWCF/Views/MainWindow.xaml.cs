@@ -78,141 +78,141 @@ namespace AWCF.Views
 		/// State flag which indicates whether the grid is in edit
 		/// mode or not.
 		/// </summary>
-		public void OnBeginEdit(object sender, DataGridBeginningEditEventArgs e) {
-			string TAG = "[OnBeginEdit]";
-			string dbMsg = "";
-			try {
-				_isEditing = true;
-				if (_isDragging) ResetDragDrop();
-				MyLog(TAG, dbMsg);
-			} catch (Exception er) {
-				MyErrorLog(TAG, dbMsg, er);
-			}
-		}
+		//public void OnBeginEdit(object sender, DataGridBeginningEditEventArgs e) {
+		//	string TAG = "[OnBeginEdit]";
+		//	string dbMsg = "";
+		//	try {
+		//		_isEditing = true;
+		//		if (_isDragging) ResetDragDrop();
+		//		MyLog(TAG, dbMsg);
+		//	} catch (Exception er) {
+		//		MyErrorLog(TAG, dbMsg, er);
+		//	}
+		//}
 
-		public void OnEndEdit(object sender, DataGridCellEditEndingEventArgs e) {
-			string TAG = "[OnEndEdit]";
-			string dbMsg = "";
-			try {
-				_isEditing = false;
-				MyLog(TAG, dbMsg);
-			} catch (Exception er) {
-				MyErrorLog(TAG, dbMsg, er);
-			}
-		}
+		//public void OnEndEdit(object sender, DataGridCellEditEndingEventArgs e) {
+		//	string TAG = "[OnEndEdit]";
+		//	string dbMsg = "";
+		//	try {
+		//		_isEditing = false;
+		//		MyLog(TAG, dbMsg);
+		//	} catch (Exception er) {
+		//		MyErrorLog(TAG, dbMsg, er);
+		//	}
+		//}
 
-		/// <summary>
-		/// Initiates a drag action if the grid is not in edit mode.
-		/// </summary>
-		private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			string TAG = "[OnMouseLeftButtonDown]";
-			string dbMsg = "";
-			try {
-				DataGrid droplist = (DataGrid)sender;
-				dbMsg += ",AllowDrop=" + droplist.AllowDrop;
-				dbMsg += "[" + droplist.SelectedIndex + "]";
-				PlayListModel selectedItem = (PlayListModel)droplist.SelectedItem;
-				dbMsg += ",Summary=" + selectedItem.Summary;
-				dbMsg += ",UrlStr=" + selectedItem.UrlStr;
-				//if (_isEditing) return;
+		///// <summary>
+		///// Initiates a drag action if the grid is not in edit mode.
+		///// </summary>
+		//private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+		//	string TAG = "[OnMouseLeftButtonDown]";
+		//	string dbMsg = "";
+		//	try {
+		//		DataGrid droplist = (DataGrid)sender;
+		//		dbMsg += ",AllowDrop=" + droplist.AllowDrop;
+		//		dbMsg += "[" + droplist.SelectedIndex + "]";
+		//		PlayListModel selectedItem = (PlayListModel)droplist.SelectedItem;
+		//		dbMsg += ",Summary=" + selectedItem.Summary;
+		//		dbMsg += ",UrlStr=" + selectedItem.UrlStr;
+		//		//if (_isEditing) return;
 
-				//				var row = UIHelpers.TryFindFromPoint<DataGridRow>((UIElement)sender, e.GetPosition(shareGrid));
-			//	if (row == null || row.IsEditing) return;
+		//		//				var row = UIHelpers.TryFindFromPoint<DataGridRow>((UIElement)sender, e.GetPosition(shareGrid));
+		//	//	if (row == null || row.IsEditing) return;
 
-				//set flag that indicates we're capturing mouse movements
-				_isDragging = true;
-				DraggedItem = (PlayListModel)droplist.SelectedItem;
-				//				DraggedItem = (PlayListModel)row.Item;
-				MyLog(TAG, dbMsg);
-			} catch (Exception er) {
-				MyErrorLog(TAG, dbMsg, er);
-			}
-		}
+		//		//set flag that indicates we're capturing mouse movements
+		//		_isDragging = true;
+		//		DraggedItem = (PlayListModel)droplist.SelectedItem;
+		//		//				DraggedItem = (PlayListModel)row.Item;
+		//		MyLog(TAG, dbMsg);
+		//	} catch (Exception er) {
+		//		MyErrorLog(TAG, dbMsg, er);
+		//	}
+		//}
 
 		/// <summary>
 		/// Completes a drag/drop operation.
 		/// </summary>
-		private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
-			string TAG = "[OnMouseLeftButtonUp]";
-			string dbMsg = "";
-			try {
-				DataGrid droplist = (DataGrid)sender;
-				dbMsg += ",AllowDrop=" + droplist.AllowDrop;
-				dbMsg += "[" + droplist.SelectedIndex + "]";
-				PlayListModel selectedItem = (PlayListModel)droplist.SelectedItem;
-				dbMsg += ",Summary=" + selectedItem.Summary;
-				dbMsg += ",UrlStr=" + selectedItem.UrlStr;
-				if (!_isDragging || _isEditing) {
-					return;
-				}
+		//private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e) {
+		//	string TAG = "[OnMouseLeftButtonUp]";
+		//	string dbMsg = "";
+		//	try {
+		//		DataGrid droplist = (DataGrid)sender;
+		//		dbMsg += ",AllowDrop=" + droplist.AllowDrop;
+		//		dbMsg += "[" + droplist.SelectedIndex + "]";
+		//		PlayListModel selectedItem = (PlayListModel)droplist.SelectedItem;
+		//		dbMsg += ",Summary=" + selectedItem.Summary;
+		//		dbMsg += ",UrlStr=" + selectedItem.UrlStr;
+		//		if (!_isDragging || _isEditing) {
+		//			return;
+		//		}
 
-				//get the target item
-				PlayListModel targetItem = (PlayListModel)droplist.SelectedItem;
+		//		//get the target item
+		//		PlayListModel targetItem = (PlayListModel)droplist.SelectedItem;
 
-				if (targetItem == null || !ReferenceEquals(DraggedItem, targetItem)) {
+		//		if (targetItem == null || !ReferenceEquals(DraggedItem, targetItem)) {
 
-					//// create tempporary row
-					//var temp = DraggedItem.Row.Table.NewRow();
-					//temp.ItemArray = DraggedItem.Row.ItemArray;
-					//int tempIndex = _shareTable.Rows.IndexOf(DraggedItem.Row);
+		//			//// create tempporary row
+		//			//var temp = DraggedItem.Row.Table.NewRow();
+		//			//temp.ItemArray = DraggedItem.Row.ItemArray;
+		//			//int tempIndex = _shareTable.Rows.IndexOf(DraggedItem.Row);
 
-					////remove the source from the list
-					//_shareTable.Rows.Remove(DraggedItem.Row);
+		//			////remove the source from the list
+		//			//_shareTable.Rows.Remove(DraggedItem.Row);
 
-					////get target index
-					//var targetIndex = _shareTable.Rows.IndexOf(targetItem.Row);
+		//			////get target index
+		//			//var targetIndex = _shareTable.Rows.IndexOf(targetItem.Row);
 
-					////insert temporary at the target's location
-					//_shareTable.Rows.InsertAt(temp, targetIndex);
+		//			////insert temporary at the target's location
+		//			//_shareTable.Rows.InsertAt(temp, targetIndex);
 
-					////select the dropped item
-					//shareGrid.SelectedItem = shareGrid.Items[targetIndex];
-				}
+		//			////select the dropped item
+		//			//shareGrid.SelectedItem = shareGrid.Items[targetIndex];
+		//		}
 
-				//reset
-				ResetDragDrop();
-				MyLog(TAG, dbMsg);
-			} catch (Exception er) {
-				MyErrorLog(TAG, dbMsg, er);
-			}
-		}
+		//		//reset
+		//		ResetDragDrop();
+		//		MyLog(TAG, dbMsg);
+		//	} catch (Exception er) {
+		//		MyErrorLog(TAG, dbMsg, er);
+		//	}
+		//}
 
-		/// <summary>
-		/// Updates the popup's position in case of a drag/drop operation.
-		/// </summary>
-		private void OnMouseMove(object sender, MouseEventArgs e) {
-			string TAG = "[OnMouseMove]";
-			string dbMsg = "";
-			try {
-				DataGrid droplist = (DataGrid)sender;
-				dbMsg += ",AllowDrop=" + droplist.AllowDrop;
-				dbMsg += "[" + droplist.SelectedIndex + "]";
-				PlayListModel selectedItem = (PlayListModel)droplist.SelectedItem;
-				dbMsg += ",Summary=" + selectedItem.Summary;
-				dbMsg += ",UrlStr=" + selectedItem.UrlStr;
-				if (!_isDragging || e.LeftButton != MouseButtonState.Pressed) return;
+		///// <summary>
+		///// Updates the popup's position in case of a drag/drop operation.
+		///// </summary>
+		//private void OnMouseMove(object sender, MouseEventArgs e) {
+		//	string TAG = "[OnMouseMove]";
+		//	string dbMsg = "";
+		//	try {
+		//		DataGrid droplist = (DataGrid)sender;
+		//		dbMsg += ",AllowDrop=" + droplist.AllowDrop;
+		//		dbMsg += "[" + droplist.SelectedIndex + "]";
+		//		PlayListModel selectedItem = (PlayListModel)droplist.SelectedItem;
+		//		dbMsg += ",Summary=" + selectedItem.Summary;
+		//		dbMsg += ",UrlStr=" + selectedItem.UrlStr;
+		//		if (!_isDragging || e.LeftButton != MouseButtonState.Pressed) return;
 
-				//display the popup if it hasn't been opened yet
-				if (!popup1.IsOpen) {
-					//switch to read-only mode
-				//	PlayList.IsReadOnly = true;
+		//		//display the popup if it hasn't been opened yet
+		//		if (!popup1.IsOpen) {
+		//			//switch to read-only mode
+		//		//	PlayList.IsReadOnly = true;
 
-					//make sure the popup is visible
-					popup1.IsOpen = true;
-				}
+		//			//make sure the popup is visible
+		//			popup1.IsOpen = true;
+		//		}
 
-				Size popupSize = new Size(popup1.ActualWidth, popup1.ActualHeight);
-				popup1.PlacementRectangle = new Rect(e.GetPosition(this), popupSize);
+		//		Size popupSize = new Size(popup1.ActualWidth, popup1.ActualHeight);
+		//		popup1.PlacementRectangle = new Rect(e.GetPosition(this), popupSize);
 
-				//make sure the row under the grid is being selected
-				Point position = e.GetPosition(PlayList);
-			//	var row = UIHelpers.TryFindFromPoint<DataGridRow>(PlayList, position);
-			//	if (row != null) PlayList.SelectedItem = droplist.SelectedItem;
-				MyLog(TAG, dbMsg);
-			} catch (Exception er) {
-				MyErrorLog(TAG, dbMsg, er);
-			}
-		}
+		//		//make sure the row under the grid is being selected
+		//		Point position = e.GetPosition(PlayList);
+		//	//	var row = UIHelpers.TryFindFromPoint<DataGridRow>(PlayList, position);
+		//	//	if (row != null) PlayList.SelectedItem = droplist.SelectedItem;
+		//		MyLog(TAG, dbMsg);
+		//	} catch (Exception er) {
+		//		MyErrorLog(TAG, dbMsg, er);
+		//	}
+		//}
 
 		/// <summary>
 		/// Closes the popup and resets the
@@ -222,9 +222,9 @@ namespace AWCF.Views
 			string TAG = "[ResetDragDrop]";
 			string dbMsg = "";
 			try {
+				DraggedItem = null;
 				_isDragging = false;
 				popup1.IsOpen = false;
-		//		PlayList.IsReadOnly = false;
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -241,45 +241,6 @@ namespace AWCF.Views
 			string TAG = "[PlayListBox_DragEnter]";
 			string dbMsg = "";
 			try {
-				//dbMsg += "(" + e.X + "," + e.Y + ")";
-				//dbMsg += "dragFrom=" + dragFrom;
-				//dbMsg += ",dragSouceUrl=" + dragSouceUrl;
-				//dbMsg += "(前;" + b_dragSouceUrl + ")";
-				//if (dragFrom == playListBox.Name) {
-				//	dbMsg += ";playList内;";
-				//	ListBox list = (ListBox)sender;                                 //playListが参照される
-				//	PlaylistDragEnterNo = list.SelectedIndex;
-				//	dbMsg += "(DragEnter;" + PlaylistDragEnterNo + ")";
-				//	(DragEnter; 0)M:\\sample\123.flvfile:\\\M:\\sample\123.flvfile:\\\M:\\sample\media.flv
-
-				//				string listSelectValue = list.SelectedValue.ToString();
-				//	dbMsg += listSelectValue;
-				//	DDEfect = DragDropEffects.Move;//ドラッグ＆ドロップの効果を、Moveに設定
-				//								   /*		} else if (dragFrom == FilelistView.Name) {
-				//											   dbMsg += ";playListBoxkから;";
-				//											   DDEfect = DragDropEffects.Copy;*/
-				//								   //		playListBox.DoDragDrop(dragSouceUrl, DragDropEffects.Copy);
-				//} else if (dragFrom == fileTree.Name ||
-				//		dragFrom == FilelistView.Name
-				//		) {
-				//	dbMsg += ";fileTreeから;";
-				//	DDEfect = DragDropEffects.Copy;
-				//} else {                                //エクスプローラー？ if(dragSouceUrl!= b_dragSouceUrl || b_dragSouceUrl =="")
-				//	if (DragURLs.Count < 1) {
-				//		DragURLs = new List<string>();
-				//		foreach (string item in (string[])e.Data.GetData(DataFormats.FileDrop)) {       //エクスプローラーから	http://www.itlab51.com/?p=2904	
-				//			dbMsg += ",=" + item.ToString();
-				//			DragURLs.Add(item.ToString());
-				//		}
-				//		dbMsg += ",=" + DragURLs.Count + "件";
-				//		dragFrom = "other";
-				//		dragSouceUrl = DragURLs[0];
-				//		//		b_dragSouceUrl = "";
-				//		DDEfect = DragDropEffects.Copy;
-				//	}
-				//}
-				//e.Effect = DDEfect;             //		e.Effect = DragDropEffects.All;     //http://www.itlab51.com/?p=2904
-				//dbMsg += ",DDEfect=" + e.Effect;
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -296,10 +257,6 @@ namespace AWCF.Views
 			string TAG = "[PlayList_DragLeave]";// + fileName;
 			string dbMsg = "";
 			try {
-
-				//dbMsg += "dragFrom=" + dragFrom;
-				//dbMsg += ",dragSouceUrl=" + dragSouceUrl;
-				//dbMsg += ",DDEfect=" + DDEfect;
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -458,44 +415,6 @@ namespace AWCF.Views
 			string TAG = "[PlayList_Drop]";
 			string dbMsg = "";
 			try {
-				//TreeView tv = (TreeView)sender;
-				//dbMsg += "dragFrom=" + dragFrom;
-				//dbMsg += ",dragSouceUrl=" + dragSouceUrl;
-				//dbMsg += ",DDEfect=" + DDEfect;
-				//dbMsg += " , Effect(" + e.Effect + ")" + e.Effect.ToString();
-				//if (e.Effect != DragDropEffects.None && dragFrom != "") {
-				//	dbMsg += ">Drop開始>";
-				//	dbMsg += ">source=null";
-				//	fileTreeDropNode = tv.GetNodeAt(tv.PointToClient(new Point(e.X, e.Y))); //ドロップ先のTreeNodeを取得する
-				//	tv.SelectedNode = fileTreeDropNode;
-				//	dbMsg += " Drop先は" + tv.SelectedNode.FullPath;
-				//	string dropSouce = fileTreeDropNode.FullPath.ToString();
-				//	dbMsg += ",dropSouce=" + dropSouce;
-				//	DropPeast(copySouce, cutSouce, dragSouceUrl, dropSouce);
-				//	/*表示だけの書き換えなら
-				//		TreeNode cln = ( TreeNode ) source.Clone();                             //ドロップされたNodeのコピーを作成
-				//		target.Nodes.Add( cln );												//Nodeを追加
-				//		target.Expand();														//ドロップ先のNodeを展開
-				//		tv.SelectedNode = cln;                                                  //追加されたNodeを選択
-				//	*/
-				//	if (dragFrom == fileTree.Name) {                //同じtreeviewの中で
-				//		if (e.Effect.ToString() == "Move") {        //カット指定なら
-				//			cutSouce = fileTree.SelectedNode.FullPath;       //カットするアイテムのurl
-				//			dbMsg += " , 移動した時は、ドラッグしたノード=" + dragNode.Name.ToString();             //移動先に書き換わる
-				//			string dragNodeName = cutSouce.Replace(@":\\", @":\");
-				//			dbMsg += " , dragNodeName=" + dragNodeName + " を削除";
-				//			TreeNode dragParentNode = dragNode.Parent;
-				//			dbMsg += " , " + fileTreeDropNode + " を選択";
-				//			fileTree.Nodes.Remove(dragNode);
-				//			fileTree.SelectedNode = fileTreeDropNode;
-				//		}
-				//	}
-				//} else {
-				//	dbMsg += ">Drop中断";
-				//}
-				//e.Effect = DragDropEffects.None;
-				//fileTreeDropNode = null;
-				//dragFrom = "";
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -555,48 +474,10 @@ namespace AWCF.Views
 				DataGrid droplist = (DataGrid)sender;
 				dbMsg += ",AllowDrop=" + droplist.AllowDrop;
 				dbMsg += "[" + droplist.SelectedIndex + "]";
-				PlayListModel selectedItem = (PlayListModel)droplist.SelectedItem;
-				dbMsg += ",Summary=" + selectedItem.Summary;
-				dbMsg += ",UrlStr=" + selectedItem.UrlStr;
-				//if (_isEditing) return;
-
-				//				var row = UIHelpers.TryFindFromPoint<DataGridRow>((UIElement)sender, e.GetPosition(shareGrid));
-				//	if (row == null || row.IsEditing) return;
-
-				//set flag that indicates we're capturing mouse movements
-				_isDragging = true;
 				DraggedItem = (PlayListModel)droplist.SelectedItem;
-				//				DraggedItem = (PlayListModel)row.Item;
-
-
-
-				//draglist = (ListBox)sender;
-				//PlayListMouseDownNo = draglist.SelectedIndex;
-				//dbMsg += "(Down;" + PlayListMouseDownNo + ")";
-				//if (e.Button == System.Windows.Forms.MouseButtons.Left) {                   //マウス左ボタン
-				//	dbMsg += ",選択モード切替；ModifierKeys=" + Control.ModifierKeys;
-				//	if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift) {                //シフト
-				//		playListBox.SelectionMode = SelectionMode.MultiExtended;               //3:		インデックスが配列の境界外です。?
-				//	} else if ((Control.ModifierKeys & Keys.Control) == Keys.Control) {     //コントロール
-				//		playListBox.SelectionMode = SelectionMode.MultiSimple;
-				//		2:	MultiSimple / MultiExtended   http://www.atmarkit.co.jp/fdotnet/chushin/introwinform_03/introwinform_03_02.html
-
-				//				} else {                                                                //無しなら
-				//		playListBox.SelectionMode = SelectionMode.One;                         //1:単一選択
-				//	}
-				//	dbMsg += " ,SelectionMode=" + draglist.SelectionMode;
-				//}
-				//if (-1 < PlayListMouseDownNo) {
-				//	PlayListMouseDownValue = draglist.SelectedValue.ToString();
-				//	dbMsg += PlayListMouseDownValue;
-				//	dragFrom = draglist.Name;
-				//	dragSouceIDl = draglist.SelectedIndex;
-				//	mouceDownPoint = Control.MousePosition;
-				//	mouceDownPoint = draglist.PointToClient(mouceDownPoint);//ドラッグ開始時のマウスの位置をクライアント座標に変換
-				//	dbMsg += "(mouceDownPoint;" + mouceDownPoint.X + "," + mouceDownPoint.Y + ")";
-				//	dragSouceIDP = draglist.IndexFromPoint(mouceDownPoint);//マウス下のListBoxのインデックスを得る
-				//	dbMsg += "(Pointから;" + dragSouceIDP + ")";
-				//}
+				dbMsg += ",Summary=" + DraggedItem.Summary;
+				dbMsg += ",UrlStr=" + DraggedItem.UrlStr;
+				_isDragging = true;
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -611,10 +492,6 @@ namespace AWCF.Views
 
 				//display the popup if it hasn't been opened yet
 				if (!popup1.IsOpen) {
-					//switch to read-only mode
-					//	PlayList.IsReadOnly = true;
-
-					//make sure the popup is visible
 					popup1.IsOpen = true;
 				}
 
@@ -623,65 +500,6 @@ namespace AWCF.Views
 
 				//make sure the row under the grid is being selected
 				Point position = e.GetPosition(PlayList);
-				//	var row = UIHelpers.TryFindFromPoint<DataGridRow>(PlayList, position);
-				//	if (row != null) PlayList.SelectedItem = droplist.SelectedItem;
-  
-				
-				
-				//	dbMsg += "(MovePoint;" + e.X + "," + e.Y + ")";
-				//	draglist = (ListBox)sender;
-				//	dbMsg += "draglist=" + draglist.Name;
-				//	dbMsg += ",Button=" + e.Button;
-				//	dbMsg += ",ModifierKeys=" + Control.ModifierKeys;
-				//	/*			if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift) {
-				//					draglist.SelectionMode = SelectionMode.MultiExtended;
-				//				} else if ((Control.ModifierKeys & Keys.Control) == Keys.Control) {
-				//					draglist.SelectionMode = SelectionMode.MultiSimple;
-				//				} else {
-				//					draglist.SelectionMode = SelectionMode.One;			//	MultiSimple/MultiExtended	http://www.atmarkit.co.jp/fdotnet/chushin/introwinform_03/introwinform_03_02.html
-				//*/
-				//	if (e.Button == System.Windows.Forms.MouseButtons.Left) {        //左ボタン
-				//																	 //	draglist.SelectionMode = SelectionMode.One;
-				//		if (mouceDownPoint != Point.Empty) {
-				//			dbMsg += "(DownPoint;" + mouceDownPoint.X + "," + mouceDownPoint.Y + ")";
-				//			int dx = mouceDownPoint.X - e.X;
-				//			int dy = mouceDownPoint.Y - e.Y;
-				//			dbMsg += "(d;" + dx + "," + dy + ")";
-				//			double dMove = Math.Sqrt(dx * dx + dy * dy);
-				//			dbMsg += ">>dMove=" + dMove;
-				//			if (draglist.ItemHeight < dMove) {    //一行以上の移動   //mouceDownPoint.X != e.X || mouceDownPoint.Y != e.Y
-				//				dbMsg += "(" + dragSouceIDP + ")";
-				//				if (-1 < dragSouceIDP) {
-				//					dbMsg += "(dragSouc;" + dragSouceIDl + ")";
-				//					dragSouceUrl = PlayListMouseDownValue;// playListBox.Items[dragSouceIDP].ToString();
-				//					dbMsg += "dragSouceUrl;" + dragSouceUrl;
-				//					dbMsg += ">playListBoxへ>";
-				//					DragURLs = new List<string>();
-				//					if (1 == draglist.SelectedItems.Count) {
-				//						draglist.SelectedIndex = dragSouceIDP;              //隣接への選択ずれ対策
-				//					}
-				//					for (int i = 0; i < draglist.SelectedItems.Count; ++i) {
-				//						dbMsg += "(" + i + ")";
-				//						PlayListItems itemxs = (PlayListItems)draglist.SelectedItems[i];
-				//						string SelectedItems = itemxs.FullPathStr;
-				//						dbMsg += SelectedItems;
-				//						DragURLs.Add(SelectedItems);
-				//					}
-				//					dbMsg += ">>" + DragURLs.Count + "件";
-
-				//					draglist.DoDragDrop(dragSouceUrl, DragDropEffects.Move);//ドラッグスタート
-				//					if (dragFrom == "") {
-				//						dragFrom = draglist.Name;
-				//					}
-				//					dbMsg += ">>DoDragDrop";
-				//					mouceDownPoint = Point.Empty;
-				//				}
-				//				MyLog(TAG, dbMsg);
-				//			}
-				//		}
-				//	} else {
-				//		b_dragSouceUrl = "";
-				//	}
 				//		MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -701,69 +519,27 @@ namespace AWCF.Views
 				DataGrid droplist = (DataGrid)sender;
 				dbMsg += ",AllowDrop=" + droplist.AllowDrop;
 				dbMsg += "[" + droplist.SelectedIndex + "]";
-				PlayListModel selectedItem = (PlayListModel)droplist.SelectedItem;
-				dbMsg += ",Summary=" + selectedItem.Summary;
-				dbMsg += ",UrlStr=" + selectedItem.UrlStr;
+				PlayListModel　targetItem = (PlayListModel)droplist.SelectedItem;
+				dbMsg += ",target=" + targetItem.Summary;
 				//get the target item
-				PlayListModel targetItem = (PlayListModel)droplist.SelectedItem;
+				if (DraggedItem != null) {
+					dbMsg += "<<Dragged=" + DraggedItem.Summary;
+					if (DraggedItem == targetItem) {
+						VM.PlayListToPlayer(targetItem);
+					} else {
+						VM.PlayListItemMoveTo(DraggedItem, targetItem);
+					}
+				} else {
 
-				if (targetItem == null || !ReferenceEquals(DraggedItem, targetItem)) {
+				}
 
-					//// create tempporary row
-					//var temp = DraggedItem.Row.Table.NewRow();
-					//temp.ItemArray = DraggedItem.Row.ItemArray;
-					//int tempIndex = _shareTable.Rows.IndexOf(DraggedItem.Row);
-
-					////remove the source from the list
-					//_shareTable.Rows.Remove(DraggedItem.Row);
-
-					////get target index
-					//var targetIndex = _shareTable.Rows.IndexOf(targetItem.Row);
-
-					////insert temporary at the target's location
-					//_shareTable.Rows.InsertAt(temp, targetIndex);
-
-					////select the dropped item
-					//shareGrid.SelectedItem = shareGrid.Items[targetIndex];
+				//　参考
+				if (targetItem == null || ReferenceEquals(DraggedItem, targetItem)) {
+					dbMsg += ">参考>ReferenceEquals";
 				}
 
 				//reset
 				ResetDragDrop();
-
-
-
-
-
-
-				//PlaylistMouseUp = droplist.SelectedIndex;
-				//dbMsg += "(MouseUp:" + PlaylistMouseUp + ")";
-				//string listSelectValue = "";
-				//if (-1 < PlaylistMouseUp) {
-				//	listSelectValue = droplist.SelectedValue.ToString();
-				//	dbMsg += listSelectValue;
-				//}
-
-
-				//if (this.FormBorderStyle == FormBorderStyle.None || this.WindowState == FormWindowState.Maximized) {                //フルスクリーン
-				//	通常サイズに戻すplToolStripMenuItem.Visible = true;
-				//} else {            //	this.FormBorderStyle = FormBorderStyle.Sizable; //this.WindowState = FormWindowState.Normal;              //通常サイズに戻す
-				//	通常サイズに戻すplToolStripMenuItem.Visible = false;
-				//}
-
-				//if (e.Button == System.Windows.Forms.MouseButtons.Right) {
-				//	dbMsg += "右ボタンを離した";
-				//	plIndex = playListBox.IndexFromPoint(e.Location);             //プレイリスト上のマウス座標から選択すべきアイテムのインデックスを取得
-				//	dbMsg += ",index=" + plIndex;
-				//	if (plIndex >= 0) {               // インデックスが取得できたら
-				//		plRightClickItemUrl = PlayListBoxItem[plIndex].FullPathStr;
-				//		dbMsg += ",plRightClickItemUrl=" + plRightClickItemUrl;
-				//		playListBox.ClearSelected();                    // すべての選択状態を解除してから
-				//		playListBox.SelectedIndex = index;                  // アイテムを選択
-				//		Point pos = playListBox.PointToScreen(e.Location);
-				//		dbMsg += ",pos=" + pos;
-				//		PlayListContextMenuStrip.Show(pos);                     // コンテキストメニューを表示
-				//	}
-				//}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);

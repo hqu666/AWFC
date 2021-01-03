@@ -214,9 +214,6 @@
 						    RowDetailsVisibilityMode="Visible" 
 						    AutoGenerateColumns="False" 
                             IsReadOnly="True" 
-                           BeginningEdit="OnBeginEdit"
-                           CellEditEnding="OnEndEdit"
-                           PreviewMouseLeftButtonDown="OnMouseLeftButtonDown"
                             MouseDown="PlayList_MouseDown" 
                             MouseMove="PlayList_MouseMove" 
                             MouseUp="PlayList_MouseUp"
@@ -230,7 +227,22 @@
                            PreviewDragOver="PlayList_PreviewDragOver" 
                            PreviewDrop="PlayList_PreviewDrop" 
                     -->
-
+                    <!--
+                        MouseMoveで座標情報を拾う方法が不明
+                        <behaviors:Interaction.Triggers>
+                        <behaviors:EventTrigger EventName="MouseDown">
+                            <behaviors:InvokeCommandAction Command="{Binding PlayListLeftClick}" 
+                                                           CommandParameter="{Binding ElementName=PlayList}"/>
+                        </behaviors:EventTrigger>
+                        <behaviors:EventTrigger EventName="MouseMove">
+                            <behaviors:InvokeCommandAction Command="{Binding PlayListMouseMove}" 
+                                                           CommandParameter="{Binding ElementName=PlayList}"/>
+                        </behaviors:EventTrigger>
+                        <behaviors:EventTrigger EventName="MouseUp">
+                            <behaviors:InvokeCommandAction Command="{Binding PlayListMouseUp}" 
+                                                           CommandParameter="{Binding ElementName=PlayList}"/>
+                        </behaviors:EventTrigger>
+                    </behaviors:Interaction.Triggers>-->
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="URL"
                                             Binding="{Binding UrlStr }" 

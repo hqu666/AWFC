@@ -695,47 +695,281 @@ namespace AWCF.ViewModels
             }
         }
 
-        /// <summary>
-        /// プレイリストコンボからの削除
-        /// </summary>
-        //public void DeletePlayListComboItem()
-        //{
-        //    string TAG = "DeletePlayListComboItem";
-        //    string dbMsg = "";
-        //    try
-        //    {
-        //        dbMsg += ",PLComboSelectedIndex=" + PLComboSelectedIndex;
+		/// <summary>
+		/// プレイリストコンボからの削除
+		/// </summary>
+		//public void DeletePlayListComboItem()
+		//{
+		//    string TAG = "DeletePlayListComboItem";
+		//    string dbMsg = "";
+		//    try
+		//    {
+		//        dbMsg += ",PLComboSelectedIndex=" + PLComboSelectedIndex;
 
-        //        MyLog(TAG, dbMsg);
-        //        //  Messenger.Raise(new WindowActionMessage(WindowAction.Close, "Close"));
-        //    }
-        //    catch (Exception er)
-        //    {
-        //        MyErrorLog(TAG, dbMsg, er);
-        //    }
-        //}
+		//        MyLog(TAG, dbMsg);
+		//        //  Messenger.Raise(new WindowActionMessage(WindowAction.Close, "Close"));
+		//    }
+		//    catch (Exception er)
+		//    {
+		//        MyErrorLog(TAG, dbMsg, er);
+		//    }
+		//}
 
-        //private ViewModelCommand _PlayListComboItemDelete;
+		//private ViewModelCommand _PlayListComboItemDelete;
 
-        //public ViewModelCommand PlayListComboItemDelete
-        //{
-        //    get {
-        //        if (_PlayListComboItemDelete == null)
-        //        {
-        //            _PlayListComboItemDelete = new ViewModelCommand(DeletePlayListComboItem);
-        //        }
-        //        return _PlayListComboItemDelete;
-        //    }
-        //}
+		//public ViewModelCommand PlayListComboItemDelete
+		//{
+		//    get {
+		//        if (_PlayListComboItemDelete == null)
+		//        {
+		//            _PlayListComboItemDelete = new ViewModelCommand(DeletePlayListComboItem);
+		//        }
+		//        return _PlayListComboItemDelete;
+		//    }
+		//}
 
-        #endregion
+		#endregion
+
+			/// <summary>
+		/// プレイリスト上での移動
+		/// </summary>
+		public void PlayListItemMoveTo(PlayListModel fromItem, PlayListModel targetItem) {
+			//int oldIndex,
+			string TAG = "PlayListItemMoveTo";
+			string dbMsg = "";
+			try {
+				dbMsg += "fromItem=" + fromItem.Summary;
+				PLList.Remove(fromItem);
+				int NewIndex = PLList.IndexOf(targetItem);
+				dbMsg += ">>[" + NewIndex + "]";
+				PLList.Insert(NewIndex, fromItem);
+				RaisePropertyChanged("PLList");
+				PLListSelectedItem = fromItem;
+				RaisePropertyChanged("PLListSelectedItem");
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
 
 
-        /// <summary>
-        /// PlayListComboBoxにアイテムを追加する
-        /// 未登録リストは追加する。
-        /// </summary>
-        public void AddPlayListCombo(string AddFlieName)
+	/// <summary>
+	/// プレイヤーへ
+	/// </summary>
+	/// <param name="targetItem"></param>
+		public void PlayListToPlayer( PlayListModel targetItem) {
+			//int oldIndex,
+			string TAG = "PlayListToPlayer";
+			string dbMsg = "";
+			try {
+				dbMsg += "targetItem=" + targetItem.Summary;
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+
+		///Drop/////////////////////////////////////////////////////////////
+		//#region PlayListアイテムでマウスダウン
+		//private ViewModelCommand _PlayListLeftClick;
+
+		//public ViewModelCommand PlayListLeftClick {
+		//	get {
+		//		if (_PlayListLeftClick == null) {
+		//			_PlayListLeftClick = new ViewModelCommand(PLMouseDown);
+		//		}
+		//		return _PlayListLeftClick;
+		//	}
+		//}
+		///// <summary>
+		///// 始めのマウスクリック
+		//// https://dobon.net/vb/dotnet/control/draganddrop.html
+		///// </summary>
+		///// <param name="sender"></param>
+		///// <param name="e"></param>
+		//private void PLMouseDown() {
+		//	string TAG = "[PlayList_MouseDown]";// + fileName;
+		//	string dbMsg = "";
+		//	try {
+		//		if (PLListSelectedItem != null) {
+		//			DraggedItem = PLListSelectedItem;
+		//			dbMsg += ",UrlStr=" + PLListSelectedItem.UrlStr;
+		//			int oldIndex = PLList.IndexOf(PLListSelectedItem);
+		//			dbMsg += "[" + oldIndex + "]";
+		//			_isDragging = true;
+		//			//				var row = UIHelpers.TryFindFromPoint<DataGridRow>((UIElement)sender, e.GetPosition(shareGrid));
+		//			//	if (row == null || row.IsEditing) return;
+
+		//			//set flag that indicates we're capturing mouse movements
+		//			//draglist = (ListBox)sender;
+		//			//PlayListMouseDownNo = draglist.SelectedIndex;
+		//			//dbMsg += "(Down;" + PlayListMouseDownNo + ")";
+		//			//if (e.Button == System.Windows.Forms.MouseButtons.Left) {                   //マウス左ボタン
+		//			//	dbMsg += ",選択モード切替；ModifierKeys=" + Control.ModifierKeys;
+		//			//	if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift) {                //シフト
+		//			//		playListBox.SelectionMode = SelectionMode.MultiExtended;               //3:		インデックスが配列の境界外です。?
+		//			//	} else if ((Control.ModifierKeys & Keys.Control) == Keys.Control) {     //コントロール
+		//			//		playListBox.SelectionMode = SelectionMode.MultiSimple;
+		//			//		2:	MultiSimple / MultiExtended   http://www.atmarkit.co.jp/fdotnet/chushin/introwinform_03/introwinform_03_02.html
+
+		//			//				} else {                                                                //無しなら
+		//			//		playListBox.SelectionMode = SelectionMode.One;                         //1:単一選択
+		//			//	}
+		//			//	dbMsg += " ,SelectionMode=" + draglist.SelectionMode;
+		//			//}
+		//			//if (-1 < PlayListMouseDownNo) {
+		//			//	PlayListMouseDownValue = draglist.SelectedValue.ToString();
+		//			//	dbMsg += PlayListMouseDownValue;
+		//			//	dragFrom = draglist.Name;
+		//			//	dragSouceIDl = draglist.SelectedIndex;
+		//			//	mouceDownPoint = Control.MousePosition;
+		//			//	mouceDownPoint = draglist.PointToClient(mouceDownPoint);//ドラッグ開始時のマウスの位置をクライアント座標に変換
+		//			//	dbMsg += "(mouceDownPoint;" + mouceDownPoint.X + "," + mouceDownPoint.Y + ")";
+		//			//	dragSouceIDP = draglist.IndexFromPoint(mouceDownPoint);//マウス下のListBoxのインデックスを得る
+		//			//	dbMsg += "(Pointから;" + dragSouceIDP + ")";
+		//			//}
+		//		} else {
+		//			dbMsg += "選択値無し";
+		//		}
+		//		MyLog(TAG, dbMsg);
+		//	} catch (Exception er) {
+		//		MyErrorLog(TAG, dbMsg, er);
+		//	}
+		//}
+		//#endregion
+
+		//#region PlayListアイテムでマウスムーブ
+		//private RelayCommand<DataGrid> _PlayListMouseMove;
+
+		//public ICommand PlayListMouseMove {
+		//	get {
+		//		if (_PlayListMouseMove == null) {
+		//			_PlayListMouseMove = new RelayCommand<DataGrid>(PLMouseMove);
+		//		}
+		//		return _PlayListMouseMove;
+		//	}
+		//}
+		///// <summary>
+		///// Updates the popup's position in case of a drag/drop operation.
+		///// </summary>
+		//private void PLMouseMove(DataGrid PL) {
+		//	string TAG = "[PLMouseMove]";
+		//	string dbMsg = "";
+		//	try {
+		//		if (DraggedItem != null) {
+		//			dbMsg += ",UrlStr=" + PLListSelectedItem.UrlStr;
+		//			int NowIndex = PLList.IndexOf(PLListSelectedItem);
+		//			dbMsg += "[" + NowIndex + "]" + PLListSelectedItem.Summary;
+		//			dbMsg += "SelectedIndex=" + PL.CurrentCell.Column.DisplayIndex;
+		//			_isDragging = true;
+		//			//	if (!_isDragging || e.LeftButton != MouseButtonState.Pressed) return;
+
+		//			//display the popup if it hasn't been opened yet
+		//			if (!PopupIsOpen) {
+		//				//switch to read-only mode
+		//				//	PlayList.IsReadOnly = true;
+
+		//				//make sure the popup is visible
+		//				PopupIsOpen = true;
+		//				RaisePropertyChanged("PopupIsOpen");
+		//			}
+
+		//			System.Windows.Size popupSize = new System.Windows.Size(PopupWidth, PopupHeight);
+		//			if (popupSize.Width == 0 || popupSize.Height == 0) {
+		//				PopupWidth = 20;
+		//				PopupHeight = 20;
+		//				dbMsg += "Popup[" + PopupWidth + "×" + PopupHeight + "]";
+		//				RaisePropertyChanged("PopupWidth");
+		//				RaisePropertyChanged("PopupHeight");
+		//			}
+		//			//			PopupPlacementRectangle = new Rect(e.GetPosition(this), popupSize);
+		//			////Size popupSize = new Size(popup1.ActualWidth, popup1.ActualHeight);
+		//			////popup1.PlacementRectangle = new Rect(e.GetPosition(this), popupSize);
+
+		//			////make sure the row under the grid is being selected
+		//			//Point position = e.GetPosition(PlayList);
+		//			////	var row = UIHelpers.TryFindFromPoint<DataGridRow>(PlayList, position);
+		//			////	if (row != null) PlayList.SelectedItem = droplist.SelectedItem;
+		//			MyLog(TAG, dbMsg);
+		//		} else {
+		//			dbMsg += "選択値無し";
+		//		}
+		//	} catch (Exception er) {
+		//		MyErrorLog(TAG, dbMsg, er);
+		//	}
+		//}
+		//#endregion
+
+		//#region PlayListアイテムでマウスアップ
+		//private ViewModelCommand _PlayListMouseUp;
+		//public ViewModelCommand PlayListMouseUp {
+		//	get {
+		//		if (_PlayListMouseUp == null) {
+		//			_PlayListMouseUp = new ViewModelCommand(PLMouseUp);
+		//		}
+		//		return _PlayListMouseUp;
+		//	}
+		//}
+
+		///// <summary>
+		///// Completes a drag/drop operation.
+		///// </summary>
+		//private void PLMouseUp() {
+		//	string TAG = "[PLMouseUp]";
+		//	string dbMsg = "";
+		//	try {
+		//		if (DraggedItem != null) {
+		//			//				DraggedItem = PLListSelectedItem;
+		//			dbMsg += ",UrlStr=" + PLListSelectedItem.UrlStr;
+		//			int oldIndex = PLList.IndexOf(PLListSelectedItem);
+		//			dbMsg += "[" + oldIndex + "]";
+		//			if (!_isDragging) {            //|| _isEditing
+		//				return;
+		//			}
+
+		//			//get the target item
+		//			PlayListModel targetItem = PLListSelectedItem;
+
+		//			if (targetItem == null) {           // || !ReferenceEquals(DraggedItem, targetItem)
+
+		//				//// create tempporary row
+		//				//var temp = DraggedItem.Row.Table.NewRow();
+		//				//temp.ItemArray = DraggedItem.Row.ItemArray;
+		//				//int tempIndex = _shareTable.Rows.IndexOf(DraggedItem.Row);
+
+		//				////remove the source from the list
+		//				//_shareTable.Rows.Remove(DraggedItem.Row);
+
+		//				////get target index
+		//				//var targetIndex = _shareTable.Rows.IndexOf(targetItem.Row);
+
+		//				////insert temporary at the target's location
+		//				//_shareTable.Rows.InsertAt(temp, targetIndex);
+
+		//				////select the dropped item
+		//				//shareGrid.SelectedItem = shareGrid.Items[targetIndex];
+		//			}
+
+		//			//reset
+		//			ResetDragDrop();
+		//		} else {
+		//			dbMsg += "選択値無し";
+		//		}
+		//		MyLog(TAG, dbMsg);
+		//	} catch (Exception er) {
+		//		MyErrorLog(TAG, dbMsg, er);
+		//	}
+		//}
+		//#endregion
+
+		/////////////////////////////////////////////////////////////Drop///
+
+		/// <summary>
+		/// PlayListComboBoxにアイテムを追加する
+		/// 未登録リストは追加する。
+		/// </summary>
+		public void AddPlayListCombo(string AddFlieName)
         {
             string TAG = "AddPlayListCombo";
             string dbMsg = "";
