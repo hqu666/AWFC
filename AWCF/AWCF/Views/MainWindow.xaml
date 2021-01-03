@@ -216,7 +216,7 @@
                             IsReadOnly="True" 
                             MouseDown="PlayList_MouseDown" 
                             MouseMove="PlayList_MouseMove" 
-                            MouseUp="PlayList_MouseUp"
+                            MouseUp="PlayList_MouseUp" DragEnter="PlayList_DragEnter" Drop="PlayList_Drop"
 						>
                     <!--DragEnter="PlayList_DragEnter" 
                            DragLeave="PlayList_DragLeave" 

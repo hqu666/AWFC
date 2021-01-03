@@ -331,7 +331,7 @@ namespace AWCF.ViewModels
 		/// ファイル名配列からプレイリストに一連登録
 		/// </summary>
 		/// <param name="files"></param>
-		private void FilesAdd(string[] files) {
+		public void FilesAdd(string[] files) {
 			string TAG = "FilesAdd";
 			string dbMsg = "";
 			try {
@@ -1624,13 +1624,10 @@ namespace AWCF.ViewModels
 					//設定ファイル更新
 					Properties.Settings.Default.Save();
                     string extention = System.IO.Path.GetExtension(NowSelectedFile);
-                    if (extention.Contains("m3u"))
-                    {
+                    if (extention.Contains("m3u"))                    {
                         dbMsg += "PLListに追加";
                         AddPlayListCombo(NowSelectedFile);
-                    }
-                    else
-                    {
+                    }else{
                         dbMsg += "現在のプレイリストの先頭に追加";
 						if(AddToPlayList(NowSelectedFile, 0)) {
 			//				SavePlayList();

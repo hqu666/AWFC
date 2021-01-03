@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -241,6 +242,70 @@ namespace AWCF.Views
 			string TAG = "[PlayListBox_DragEnter]";
 			string dbMsg = "";
 			try {
+				//// ファイルのドラッグアンドドロップのみを受け付けるようにしています。
+				//if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+				//	// ドロップされたファイルは、アプリケーション側に内容がコピーされるものとします。
+				//	//	e.Effect = DragDropEffects.Copy;
+				//}
+				//// ドラッグアンドドロップされたファイルのパス情報を取得します。
+
+				//foreach (String filename in (string[])e.Data.GetData(DataFormats.FileDrop)) {
+				//	dbMsg += "\r\n" + filename;
+				//}
+
+				//string[] rFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+				//if (0<rFiles.Count()) {
+				//	foreach (string url in rFiles) {
+				//		dbMsg += "\r\n" + url;
+				//		if (File.Exists(url)) {
+				//			if (VM.AddToPlayList(url, 0)) {
+				//				dbMsg += ">>格納" ;
+				//			}
+				//		} else if (Directory.Exists(url)) {
+				//			//フォルダなら中身の全ファイルで再起する
+				//			string[] r2files = System.IO.Directory.GetFiles(url, "*", SearchOption.AllDirectories);
+				//			VM.FilesAdd(r2files);
+				//		}
+				//	}
+				//}
+
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+
+		private void PlayList_Drop(object sender, DragEventArgs e) {
+			string TAG = "[PlayList_Drop]";
+			string dbMsg = "";
+			try {
+				// ファイルのドラッグアンドドロップのみを受け付けるようにしています。
+				if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
+					// ドロップされたファイルは、アプリケーション側に内容がコピーされるものとします。
+					//	e.Effect = DragDropEffects.Copy;
+				}
+				// ドラッグアンドドロップされたファイルのパス情報を取得します。
+
+				foreach (String filename in (string[])e.Data.GetData(DataFormats.FileDrop)) {
+					dbMsg += "\r\n" + filename;
+				}
+
+				string[] rFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+				if (0 < rFiles.Count()) {
+					foreach (string url in rFiles) {
+						dbMsg += "\r\n" + url;
+						if (File.Exists(url)) {
+							if (VM.AddToPlayList(url, 0)) {
+								dbMsg += ">>格納";
+							}
+						} else if (Directory.Exists(url)) {
+							//フォルダなら中身の全ファイルで再起する
+							string[] r2files = System.IO.Directory.GetFiles(url, "*", SearchOption.AllDirectories);
+							VM.FilesAdd(r2files);
+						}
+					}
+				}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -411,16 +476,6 @@ namespace AWCF.Views
 		//        }
 
 
-		private void PlayList_Drop(object sender, DragEventArgs e) {
-			string TAG = "[PlayList_Drop]";
-			string dbMsg = "";
-			try {
-				MyLog(TAG, dbMsg);
-			} catch (Exception er) {
-				MyErrorLog(TAG, dbMsg, er);
-			}
-		}
-
 		private void PlayList_PreviewDragEnter(object sender, DragEventArgs e) {
 			string TAG = "[PlayList_PreviewDragEnter]";
 			string dbMsg = "";
@@ -472,12 +527,16 @@ namespace AWCF.Views
 			string dbMsg = "";
 			try {
 				DataGrid droplist = (DataGrid)sender;
-				dbMsg += ",AllowDrop=" + droplist.AllowDrop;
-				dbMsg += "[" + droplist.SelectedIndex + "]";
-				DraggedItem = (PlayListModel)droplist.SelectedItem;
-				dbMsg += ",Summary=" + DraggedItem.Summary;
-				dbMsg += ",UrlStr=" + DraggedItem.UrlStr;
-				_isDragging = true;
+				if (droplist != null) {
+					dbMsg += ",AllowDrop=" + droplist.AllowDrop;
+					dbMsg += "[" + droplist.SelectedIndex + "]";
+					DraggedItem = (PlayListModel)droplist.SelectedItem;
+					dbMsg += ",Summary=" + DraggedItem.Summary;
+					dbMsg += ",UrlStr=" + DraggedItem.UrlStr;
+					_isDragging = true;
+				} else {
+					dbMsg += "droplist == null";
+				}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -517,29 +576,33 @@ namespace AWCF.Views
 			string dbMsg = "";
 			try {
 				DataGrid droplist = (DataGrid)sender;
-				dbMsg += ",AllowDrop=" + droplist.AllowDrop;
-				dbMsg += "[" + droplist.SelectedIndex + "]";
-				PlayListModel　targetItem = (PlayListModel)droplist.SelectedItem;
-				dbMsg += ",target=" + targetItem.Summary;
-				//get the target item
-				if (DraggedItem != null) {
-					dbMsg += "<<Dragged=" + DraggedItem.Summary;
-					if (DraggedItem == targetItem) {
-						VM.PlayListToPlayer(targetItem);
+				if (droplist != null) {
+					dbMsg += ",AllowDrop=" + droplist.AllowDrop;
+					dbMsg += "[" + droplist.SelectedIndex + "]";
+					PlayListModel targetItem = (PlayListModel)droplist.SelectedItem;
+					dbMsg += ",target=" + targetItem.Summary;
+					//get the target item
+					if (DraggedItem != null) {
+						dbMsg += "<<Dragged=" + DraggedItem.Summary;
+						if (DraggedItem == targetItem) {
+							VM.PlayListToPlayer(targetItem);
+						} else {
+							VM.PlayListItemMoveTo(DraggedItem, targetItem);
+						}
 					} else {
-						VM.PlayListItemMoveTo(DraggedItem, targetItem);
+
 					}
+
+					//　参考
+					if (targetItem == null || ReferenceEquals(DraggedItem, targetItem)) {
+						dbMsg += ">参考>ReferenceEquals";
+					}
+
+					//reset
+					ResetDragDrop();
 				} else {
-
+					dbMsg += "droplist == null";
 				}
-
-				//　参考
-				if (targetItem == null || ReferenceEquals(DraggedItem, targetItem)) {
-					dbMsg += ">参考>ReferenceEquals";
-				}
-
-				//reset
-				ResetDragDrop();
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -619,8 +682,6 @@ namespace AWCF.Views
 			CS_Util Util = new CS_Util();
 			return Util.MessageShowWPF(msgStr, titolStr, buttns, icon);
 		}
-
-
 
 	}
 }
