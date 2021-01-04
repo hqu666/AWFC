@@ -27,6 +27,9 @@ using Livet.EventListeners;
 using Livet.Messaging;
 using Livet.Messaging.IO;
 
+using AWCF.Views;
+
+
 ///WebBrowserコントロールを配置すると、IEのバージョン 7をIE11の Edgeモードに変更///
 ///WebBrowserコントロールを配置すると、IEのバージョン 7をIE11の Edgeモードに変更///
 using System.IO;
@@ -52,10 +55,12 @@ namespace AWCF.ViewModels
 {
     public class MainViewModel : ViewModel
     {
-        /// <summary>
-        /// プレイリスト本体
-        /// </summary>
-        public ObservableCollection<PlayListModel> PLList { get; set; }
+		public Views.MainWindow MyView { get; set; }
+
+		/// <summary>
+		/// プレイリスト本体
+		/// </summary>
+		public ObservableCollection<PlayListModel> PLList { get; set; }
 		public PlayListModel PLListSelectedItem { get; set; }
 		
 		///// <summary>
@@ -168,7 +173,11 @@ namespace AWCF.ViewModels
                 RaisePropertyChanged(); //	"dataManager"
                 MakePlayListComboMenu();
                 MyLog(TAG, dbMsg);
-                CallWeb();
+				//   CallWeb();
+				PlayListModel targetItem = new PlayListModel();
+				targetItem.UrlStr = "https://www.yahoo.co.jp/";
+				targetItem.Summary = "StartUp";
+				PlayListToPlayer(targetItem);
 				PlayListSaveBTVisble = "Hidden";
 				PlayListSaveRoot.IsEnabled = false;
 				RaisePropertyChanged();
@@ -817,6 +826,18 @@ namespace AWCF.ViewModels
 			string dbMsg = "";
 			try {
 				dbMsg += "targetItem=" + targetItem.Summary;
+				if (targetItem.UrlStr.StartsWith("https")) {
+					FrameSource = "WebPage.xaml";
+
+					//////var frame = new Frame();
+				//	MyView.MainFrame.Navigate(typeof(WebPage), targetItem.UrlStr);
+			//		MyView.MainFrame.Navigate(new Uri("WebPage.xaml"), targetItem.UrlStr);
+
+				}
+
+
+
+
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);

@@ -47,6 +47,18 @@ namespace AWCF.Views {
 			InitializeAsync();
 		}
 
+		private void this_loaded(object sender, RoutedEventArgs e) {
+			string TAG = "this_loaded";
+			string dbMsg = "";
+			try {
+				//			topPanel.Visibility = Visibility.Hidden;
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+
 		/// <summary>
 		/// 明示的な初期化
 		/// </summary>
@@ -66,6 +78,7 @@ namespace AWCF.Views {
 			}
 		}
 
+
 		/// <summary>
 		/// 読込んだページのURLにアドレスバーを更新
 		/// </summary>
@@ -79,17 +92,6 @@ namespace AWCF.Views {
 				dbMsg += ",uri=" + uri;
 				addressBar.Text = uri;
 				webView.CoreWebView2.PostWebMessageAsString(uri);
-				MyLog(TAG, dbMsg);
-			} catch (Exception er) {
-				MyErrorLog(TAG, dbMsg, er);
-			}
-		}
-
-		private void this_loaded(object sender, RoutedEventArgs e) {
-			string TAG = "this_loaded";
-			string dbMsg = "";
-			try {
-				//			topPanel.Visibility = Visibility.Hidden;
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);

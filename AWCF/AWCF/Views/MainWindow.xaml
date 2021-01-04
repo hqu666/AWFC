@@ -20,9 +20,9 @@
         >
     <!--xmlns:Controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"-->
 
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <vm:MainViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
 
     <Window.Resources>
         <!--<Style TargetType="StackPanel">
@@ -289,7 +289,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Frame x:Name="MainFrame"
+                <Frame Name="MainFrame"
 					   Source = "{Binding FrameSource}"
                        Margin="5,5,5,5"
                        Width="Auto" 

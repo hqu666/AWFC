@@ -29,9 +29,13 @@ namespace AWCF.Views
         {
             InitializeComponent();
 			VM = new MainViewModel();
+			VM.MyView = this;
 			this.DataContext = VM;
-
-	//		VM.PLList = new ObservableCollection<PlayListModel>();
+			this.Loaded += this_loaded;
+		}
+		//ViewModelのViewプロパティに自分のインスタンス（つまりViewのインスタンス）を渡しています。
+		private void this_loaded(object sender, RoutedEventArgs e) {
+			//	((ViewModels.MainViewModel)this.DataContext).MyView =this;
 
 		}
 

@@ -32,6 +32,7 @@ using System.Threading;
 namespace AWCF.ViewModels {
 	public class WebViewModel : ViewModel { //INotifyPropertyChanged
 		public string titolStr = "【WebViewModel】";
+
 		private Uri _TargetURI;
 		/// <summary>
 		/// 遷移先URL
@@ -117,6 +118,10 @@ namespace AWCF.ViewModels {
 				MyErrorLog(TAG, dbMsg, er);
 			}
 		}
+
+
+
+
 
 		#region Webエレメントの読み込み終了
 		//private ViewModelCommand _WebLoaded;
