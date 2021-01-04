@@ -331,7 +331,7 @@ namespace AWCF.ViewModels
 		/// ファイル名配列からプレイリストに一連登録
 		/// </summary>
 		/// <param name="files"></param>
-		public void FilesAdd(string[] files) {
+		public void FilesAdd(string[] files , int InsertTo) {
 			string TAG = "FilesAdd";
 			string dbMsg = "";
 			try {
@@ -342,12 +342,16 @@ namespace AWCF.ViewModels
 					if (File.Exists(url)) {
 						PlayListModel playListModel = MakeOneItem(url);
 						if (playListModel.UrlStr != null) {
-							PLList.Add(playListModel);
+							if (InsertTo == -1) {
+								PLList.Add(playListModel);
+							} else {
+								PLList.Insert(InsertTo, playListModel);
+							}
 						}
 					} else if (Directory.Exists(url)) {
 						//フォルダなら中身の全ファイルで再起する
 						string[] rfiles = System.IO.Directory.GetFiles(url , "*", SearchOption.AllDirectories);
-						FilesAdd(files);
+						FilesAdd(files, InsertTo);
 					}
 				}
 				RaisePropertyChanged("PLList");
@@ -359,6 +363,56 @@ namespace AWCF.ViewModels
 				MyErrorLog(TAG, dbMsg, er);
 			}
 		}
+
+
+		/// <summary>
+		/// プレイリストに1ファイルづつ追加する。
+		/// 0で先頭、-1で最後に追加
+		/// </summary>
+		/// <param name="FilsName"></param>
+		/// <param name="InsertTo"></param>
+		public bool AddToPlayList(string url, int InsertTo) {
+			string TAG = "AddToPlayList";
+			string dbMsg = "";
+			bool retBool = false;
+			try {
+
+				string extention = System.IO.Path.GetExtension(NowSelectedFile);
+				if (-1 < Array.IndexOf(videoFiles, extention)) {
+					//if (InsertTo == -1) {
+					//	InsertTo = ListItemCount;
+					//}
+					dbMsg += "[" + InsertTo + "/" + ListItemCount + "番目]" + url;
+					PlayListModel playListModel = MakeOneItem(url);
+					if (InsertTo == -1) {
+						PLList.Add(playListModel);
+					} else {
+						PLList.Insert(InsertTo, playListModel);
+					}
+
+					//if (playListModel.UrlStr != null) {
+					//	PLList.Insert(InsertTo, playListModel);
+					//}
+					RaisePropertyChanged("PLList");
+					ListItemCount = PLList.Count();
+					RaisePropertyChanged("ListItemCount");
+					dbMsg += "\r\n" + ListItemCount + "件";
+					retBool = true;
+					PlayListSaveBTVisble = "Visible";
+					RaisePropertyChanged("PlayListSaveBTVisble");
+					PlayListSaveRoot.IsEnabled = true;
+				} else {
+					dbMsg += ">>映像ではない";
+				}
+
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+			return retBool;
+		}
+
+
 
 
 		//        /// <summary>
@@ -1196,49 +1250,6 @@ namespace AWCF.ViewModels
             }
         }
 
-        /// <summary>
-        /// プレイリストに1ファイルづつ追加する。
-        /// 0で先頭、-1で最後に追加
-        /// </summary>
-        /// <param name="FilsName"></param>
-        /// <param name="InsertTo"></param>
-        public bool AddToPlayList(string url, int InsertTo)
-        {
-            string TAG = "AddToPlayList";
-            string dbMsg = "";
-			bool retBool = false;
-            try{
-
-                string extention = System.IO.Path.GetExtension(NowSelectedFile);
-                if (-1 < Array.IndexOf(videoFiles, extention)){
-                    if (InsertTo == -1){
-                        InsertTo = ListItemCount;
-                    }
-                    dbMsg += "[" + InsertTo + "/" + ListItemCount + "番目]" + url;
-					PlayListModel playListModel = MakeOneItem(url);
-					if (playListModel.UrlStr != null) {
-						PLList.Insert(InsertTo, playListModel);
-					}
-					RaisePropertyChanged("PLList");
-					ListItemCount = PLList.Count();
-					RaisePropertyChanged("ListItemCount");
-					dbMsg += "\r\n" + ListItemCount + "件";
-					retBool = true;
-					PlayListSaveBTVisble = "Visible";
-					RaisePropertyChanged("PlayListSaveBTVisble");
-					PlayListSaveRoot.IsEnabled = true;
-				} else {
-					dbMsg += ">>映像ではない";
-				}
-
-				MyLog(TAG, dbMsg);
-            }catch (Exception er){
-                MyErrorLog(TAG, dbMsg, er);
-            }
-			return retBool;
-        }
-
-
 
 		private ViewModelCommand _PlayListSave;
 
@@ -1695,7 +1706,7 @@ namespace AWCF.ViewModels
                     dbMsg += ">>" + files.Length + "件";
                     //設定ファイル更新
                     Properties.Settings.Default.Save();
-					FilesAdd(files);
+					FilesAdd(files,0);
 				}
                 else
                 {

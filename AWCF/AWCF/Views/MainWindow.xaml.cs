@@ -242,33 +242,6 @@ namespace AWCF.Views
 			string TAG = "[PlayListBox_DragEnter]";
 			string dbMsg = "";
 			try {
-				//// ファイルのドラッグアンドドロップのみを受け付けるようにしています。
-				//if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
-				//	// ドロップされたファイルは、アプリケーション側に内容がコピーされるものとします。
-				//	//	e.Effect = DragDropEffects.Copy;
-				//}
-				//// ドラッグアンドドロップされたファイルのパス情報を取得します。
-
-				//foreach (String filename in (string[])e.Data.GetData(DataFormats.FileDrop)) {
-				//	dbMsg += "\r\n" + filename;
-				//}
-
-				//string[] rFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-				//if (0<rFiles.Count()) {
-				//	foreach (string url in rFiles) {
-				//		dbMsg += "\r\n" + url;
-				//		if (File.Exists(url)) {
-				//			if (VM.AddToPlayList(url, 0)) {
-				//				dbMsg += ">>格納" ;
-				//			}
-				//		} else if (Directory.Exists(url)) {
-				//			//フォルダなら中身の全ファイルで再起する
-				//			string[] r2files = System.IO.Directory.GetFiles(url, "*", SearchOption.AllDirectories);
-				//			VM.FilesAdd(r2files);
-				//		}
-				//	}
-				//}
-
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -280,6 +253,11 @@ namespace AWCF.Views
 			string TAG = "[PlayList_Drop]";
 			string dbMsg = "";
 			try {
+				//DataGrid DG = (DataGrid)sender;
+				//// ドロップ先(dataGridView2)のクライアント位置からDataGridViewの位置情報を取得します。
+				//var point = DG.po.PointToClient(new Point(e.X, e.Y));
+				//var hitTest = DG.HitTest(point.X, point.Y);
+				int InsertTo = 0;   //挿入位置は先頭固定
 				// ファイルのドラッグアンドドロップのみを受け付けるようにしています。
 				if (e.Data.GetDataPresent(DataFormats.FileDrop)) {
 					// ドロップされたファイルは、アプリケーション側に内容がコピーされるものとします。
@@ -302,7 +280,7 @@ namespace AWCF.Views
 						} else if (Directory.Exists(url)) {
 							//フォルダなら中身の全ファイルで再起する
 							string[] r2files = System.IO.Directory.GetFiles(url, "*", SearchOption.AllDirectories);
-							VM.FilesAdd(r2files);
+							VM.FilesAdd(r2files, InsertTo);
 						}
 					}
 				}
