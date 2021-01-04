@@ -135,9 +135,6 @@
     <PackageReference Include="LivetExtensions">
       <Version>3.2.3.1</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView">
-      <Version>6.1.2</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.Web.WebView2">
       <Version>1.0.664.37</Version>
     </PackageReference>

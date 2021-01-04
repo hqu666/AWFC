@@ -39,7 +39,7 @@ using System.Runtime.InteropServices;
 //WMP//////////////////////////////////////
 using System.Xml;                       //flv
 using ListBox = System.Windows.Controls.ListBox;
-using Point = System.Drawing.Point;
+//using Point = System.Drawing.Point;
 using Path = System.IO.Path;
 //using WMPLib;
 //using System.Windows.Controls.MediaElement;
@@ -1883,7 +1883,7 @@ namespace AWCF.ViewModels
         int dragSouceIDP = -1;                          //ドラッグ開始時のマウスの位置から取得
         string dragSouceUrl = "";
         string b_dragSouceUrl = "";
-        private Point PlaylistMouseDownPoint = Point.Empty;     //マウスの押された位置
+   //     private Point PlaylistMouseDownPoint = Point.Empty;     //マウスの押された位置
                                                                 //アイコン
                                                                 /*	private Cursor noneCursor = new Cursor("none.cur");
 																	private Cursor moveCursor = new Cursor("move.cur");

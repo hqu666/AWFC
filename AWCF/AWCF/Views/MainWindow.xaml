@@ -1,5 +1,4 @@
 ﻿<Window x:Class="AWCF.Views.MainWindow"
-    xmlns:Controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"  
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -19,6 +18,8 @@
         Top="10" Left="10" 
         Closing="Window_Closing"
         >
+    <!--xmlns:Controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"-->
+
     <Window.DataContext>
         <vm:MainViewModel/>
     </Window.DataContext>
