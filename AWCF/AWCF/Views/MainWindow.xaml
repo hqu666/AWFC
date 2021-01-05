@@ -289,13 +289,18 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <!--<Grid Name="MainFrame">
+                    
+                </Grid>-->
                 <Frame Name="MainFrame"
-					   Source = "{Binding FrameSource}"
-                       Margin="5,5,5,5"
-                       Width="Auto" 
-                       Height="Auto"
-                       MinHeight="800"
-					   />
+				    Source = "{Binding FrameSource}"
+                    DataContext= "{Binding FrameDataContext}"
+                    Margin="5,5,5,5"
+                    Width="Auto" 
+                    Height="Auto"
+                    MinHeight="800" 
+                       Navigated="MainFrame_Navigated"
+					/>
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>

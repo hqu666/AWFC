@@ -18,13 +18,17 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Web.WebView2.Core;
 using Microsoft.Web.WebView2.Wpf;
+using AWCF.Models;
+using AWCF.ViewModels;
 
 
 namespace AWCF.Views { 
 	/// <summary>
 	/// W_1.xaml の相互作用ロジック
 	/// </summary>
-	public partial class WebPage : Page { 
+	public partial class WebPage : Page {
+		WebViewModel VM;
+
 		public static RoutedCommand InjectScriptCommand = new RoutedCommand();
 		public static RoutedCommand NavigateWithWebResourceRequestCommand = new RoutedCommand();
 		public static RoutedCommand DOMContentLoadedCommand = new RoutedCommand();
@@ -42,6 +46,8 @@ namespace AWCF.Views {
 
 		public WebPage() {
 			InitializeComponent();
+			VM = new WebViewModel();
+			this.DataContext = VM;
 			this.Loaded += this_loaded;
 			webView.NavigationStarting += EnsureHttps;
 			InitializeAsync();

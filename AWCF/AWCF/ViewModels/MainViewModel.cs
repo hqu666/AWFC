@@ -50,6 +50,7 @@ using Path = System.IO.Path;
 using AWCF.Models;
 using ContextMenu = System.Windows.Controls.ContextMenu;
 using MenuItem = System.Windows.Controls.MenuItem;
+using System.Threading;
 
 namespace AWCF.ViewModels
 {
@@ -148,7 +149,9 @@ namespace AWCF.ViewModels
         #endregion
 
         public string FrameSource { get; set; }
-        public MainViewModel()
+		public object FrameDataContext { get; set; }
+		
+		public MainViewModel()
         {
             Initialize();
         }
@@ -174,10 +177,6 @@ namespace AWCF.ViewModels
                 MakePlayListComboMenu();
                 MyLog(TAG, dbMsg);
 				//   CallWeb();
-				PlayListModel targetItem = new PlayListModel();
-				targetItem.UrlStr = "https://www.yahoo.co.jp/";
-				targetItem.Summary = "StartUp";
-				PlayListToPlayer(targetItem);
 				PlayListSaveBTVisble = "Hidden";
 				PlayListSaveRoot.IsEnabled = false;
 				RaisePropertyChanged();
@@ -826,18 +825,33 @@ namespace AWCF.ViewModels
 			string dbMsg = "";
 			try {
 				dbMsg += "targetItem=" + targetItem.Summary;
-				if (targetItem.UrlStr.StartsWith("https")) {
-					FrameSource = "WebPage.xaml";
+				if (MyView != null) {
+					if ( MyView.MainFrame.Source != null) {
+						MyView.MainFrame.Source = null;
+						//dbMsg += "既存=" + MyView.MainFrame.Children.Count + "件";
+						//MyView.MainFrame.Children.RemoveAt(0);
+					}
 
-					//////var frame = new Frame();
-				//	MyView.MainFrame.Navigate(typeof(WebPage), targetItem.UrlStr);
-			//		MyView.MainFrame.Navigate(new Uri("WebPage.xaml"), targetItem.UrlStr);
+					if (targetItem.UrlStr.StartsWith("https")) {
+						//FrameSource = "WebPage.xaml";
+						//RaisePropertyChanged("FrameSource");
+						//WebViewModel WVM = new WebViewModel();
+						//WVM.TargetURLStr = targetItem.UrlStr;
+						//FrameDataContext = new WebViewModel();
+						//FrameDataContext.TargetURLStr = targetItem.UrlStr;
+						//RaisePropertyChanged("FrameDataContext");
+						//Frame frame = new Frame();
+						//frame.Navigate(typeof(WebPage), targetItem.UrlStr);
+						//MyView.MainFrame.Children.Add(frame);
+						MyView.MainFrame.Navigate(typeof(WebPage), targetItem.UrlStr); //
+																					   //MyView.MainFrame.Navigate(new Uri("WebPage.xaml"), targetItem.UrlStr);
 
+					}
+				} else {
+					dbMsg += ">>MyView == null";
+					//Thread.Sleep(1000);
+					//PlayListToPlayer(targetItem);
 				}
-
-
-
-
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);

@@ -35,6 +35,12 @@ namespace AWCF.Views
 		}
 		//ViewModelのViewプロパティに自分のインスタンス（つまりViewのインスタンス）を渡しています。
 		private void this_loaded(object sender, RoutedEventArgs e) {
+			VM.MyView = this;
+			PlayListModel targetItem = new PlayListModel();
+			targetItem.UrlStr = "https://www.yahoo.co.jp/";
+			targetItem.Summary = "StartUp";
+			VM.PlayListToPlayer(targetItem);
+
 			//	((ViewModels.MainViewModel)this.DataContext).MyView =this;
 
 		}
@@ -644,6 +650,26 @@ namespace AWCF.Views
 		//						MyLog(TAG, dbMsg);
 		//					}
 		//				}*/
+		/// ///////////////////////////////////////////////////////////////////////
+		private void MainFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e) {
+			string TAG = "[MainFrame_Navigated]";
+			string dbMsg = "";
+			try {
+				Frame FR = (Frame)sender;
+				string targetUrl = e.ExtraData.ToString();
+				//string contentName = FR.Content.GetType().Name;
+				//if (contentName.Equals("WebPage")) {
+				//	dbMsg += contentName +"へ" + targetUrl;
+				//}
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+
+
+
 		public static void MyLog(string TAG, string dbMsg) {
 			dbMsg = "[MainWindow]" + dbMsg;
 			//dbMsg = "[" + MethodBase.GetCurrentMethod().Name + "]" + dbMsg;
