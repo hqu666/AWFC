@@ -110,7 +110,7 @@ namespace AWCF.ViewModels {
 			try {
 				RedirectUrl = "";
 				//			TargetURLStr = Constant.WebStratUrl;
-				TargetURLStr = "https://www.yahoo.co.jp/";
+	//			TargetURLStr = "https://www.yahoo.co.jp/";
 
 				RaisePropertyChanged("TargetURLStr");
 				MyLog(TAG, dbMsg);
@@ -275,7 +275,7 @@ namespace AWCF.ViewModels {
 			string dbMsg = "";
 			try {
 				dbMsg += ",TargetURLStr=" + TargetURLStr;
-				TargetURLStr = @"https://www.yahoo.co.jp/";
+			//	TargetURLStr = @"https://www.yahoo.co.jp/";
 				RaisePropertyChanged("TargetURLStr");
 				dbMsg += ">>" + TargetURLStr;
 				RequeryCommands();

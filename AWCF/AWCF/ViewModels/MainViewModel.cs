@@ -146,9 +146,10 @@ namespace AWCF.ViewModels
                                               "mpa",".mpe",".webm",  ".ogv",".3gp",  ".3g2",  ".asf",  ".asx",
                                                 ".dvr-ms",".ivf",".wax",".wmv", ".wvx",  ".wm",  ".wmx",  ".wmz",
                                              };
-        #endregion
+		public string[] WebVideo = new string[] {  ".webm",".flv",".f4v",".3gp",  ".rm", ".swf",".dvr-ms",".ivf"};
+		#endregion
 
-        public string FrameSource { get; set; }
+		public string FrameSource { get; set; }
 		public object FrameDataContext { get; set; }
 		
 		public MainViewModel()
@@ -826,27 +827,41 @@ namespace AWCF.ViewModels
 			try {
 				dbMsg += "targetItem=" + targetItem.Summary;
 				if (MyView != null) {
-					if ( MyView.MainFrame.Source != null) {
-						MyView.MainFrame.Source = null;
-						//dbMsg += "既存=" + MyView.MainFrame.Children.Count + "件";
-						//MyView.MainFrame.Children.RemoveAt(0);
+					if (0 < MyView.FrameGrid.Children.Count) {
+						dbMsg += "既存=" + MyView.FrameGrid.Children.Count + "件";
+						MyView.FrameGrid.Children.RemoveAt(0);
 					}
-
-					if (targetItem.UrlStr.StartsWith("https")) {
+					//if ( MyView.MainFrame.Source != null) {
+					//	MyView.MainFrame.Source = null;
+					//	//dbMsg += "既存=" + MyView.MainFrame.Children.Count + "件";
+					//	//MyView.MainFrame.Children.RemoveAt(0);
+					//}
+					string targetURLStr = targetItem.UrlStr;
+					string extention = System.IO.Path.GetExtension(targetURLStr);
+					dbMsg += "、拡張子=" + extention;
+					bool toWeb = false;
+					if (-1 < Array.IndexOf(WebVideo, extention) ||
+						targetURLStr.StartsWith("https")) {
+						toWeb = true;
+					}
+					Frame frame = new Frame();
+					dbMsg += "、Web=" + toWeb;
+					if (toWeb) {
+						WebViewModel WVM = new WebViewModel();
+						WVM.TargetURLStr = targetURLStr;
+						WebPage WP =new WebPage();
+						WP.DataContext = WVM;
+						frame.Navigate(WP);
 						//FrameSource = "WebPage.xaml";
 						//RaisePropertyChanged("FrameSource");
-						//WebViewModel WVM = new WebViewModel();
-						//WVM.TargetURLStr = targetItem.UrlStr;
 						//FrameDataContext = new WebViewModel();
 						//FrameDataContext.TargetURLStr = targetItem.UrlStr;
 						//RaisePropertyChanged("FrameDataContext");
-						//Frame frame = new Frame();
 						//frame.Navigate(typeof(WebPage), targetItem.UrlStr);
-						//MyView.MainFrame.Children.Add(frame);
-						MyView.MainFrame.Navigate(typeof(WebPage), targetItem.UrlStr); //
-																					   //MyView.MainFrame.Navigate(new Uri("WebPage.xaml"), targetItem.UrlStr);
-
+						//	MyView.MainFrame.Navigate(typeof(WebPage), targetItem.UrlStr); //
+					} else {
 					}
+					MyView.FrameGrid.Children.Add(frame);
 				} else {
 					dbMsg += ">>MyView == null";
 					//Thread.Sleep(1000);

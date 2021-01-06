@@ -38,11 +38,9 @@ namespace AWCF.Views
 			VM.MyView = this;
 			PlayListModel targetItem = new PlayListModel();
 			targetItem.UrlStr = "https://www.yahoo.co.jp/";
+		//	targetItem.UrlStr = "https://www.google.co.jp/maps/";
 			targetItem.Summary = "StartUp";
 			VM.PlayListToPlayer(targetItem);
-
-			//	((ViewModels.MainViewModel)this.DataContext).MyView =this;
-
 		}
 
 
