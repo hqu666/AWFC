@@ -19,7 +19,7 @@ using AWCF.ViewModels;
 namespace AWCF.Views
 {
     /// <summary>
-    /// MainWindow.xaml の相互作用ロジック
+    /// ベースになる画面
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -33,9 +33,16 @@ namespace AWCF.Views
 			this.DataContext = VM;
 			this.Loaded += this_loaded;
 		}
-		//ViewModelのViewプロパティに自分のインスタンス（つまりViewのインスタンス）を渡しています。
+
+		/// <summary>
+		/// リソースの読み込み後
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void this_loaded(object sender, RoutedEventArgs e) {
+			//ViewModelのViewプロパティに自分のインスタンス（つまりViewのインスタンス）を渡しています。
 			VM.MyView = this;
+			//初期表示
 			PlayListModel targetItem = new PlayListModel();
 			targetItem.UrlStr = "https://www.yahoo.co.jp/";
 		//	targetItem.UrlStr = "https://www.google.co.jp/maps/";
@@ -43,24 +50,14 @@ namespace AWCF.Views
 			VM.PlayListToPlayer(targetItem);
 		}
 
-
-		private void ButtonGo_Click(object sender, RoutedEventArgs e)
-        {
-            //	CoreWebView2 がnull
-            //if (webView != null && webView.CoreWebView2 != null) {
-            //	webView.CoreWebView2.Navigate(addressBar.Text);
-            //}
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //WebWindow webWindow = new WebWindow();
-            //webWindow.Show();
-        }
-
 		private void Window_Closed(object sender, EventArgs e) {
 		}
 
+		/// <summary>
+		/// クローズボックスなどで終了する場合
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
 			VM.BeforeClose();
 		}
@@ -666,8 +663,7 @@ namespace AWCF.Views
 		}
 
 
-
-
+/// /////////////////////////////////////////////////////////////////////////
 		public static void MyLog(string TAG, string dbMsg) {
 			dbMsg = "[MainWindow]" + dbMsg;
 			//dbMsg = "[" + MethodBase.GetCurrentMethod().Name + "]" + dbMsg;

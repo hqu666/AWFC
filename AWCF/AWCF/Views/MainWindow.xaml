@@ -13,12 +13,13 @@
 		xmlns:v="clr-namespace:AWCF.Views"
 		xmlns:vm="clr-namespace:AWCF.ViewModels"
 		mc:Ignorable="d"
-		Topmost="true"
         Title="MainWindow" Height="1080" Width="1920"
         Top="10" Left="10" 
         Closing="Window_Closing"
         >
-    <!--xmlns:Controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"-->
+    <!--xmlns:Controls="clr-namespace:Microsoft.Toolkit.Wpf.UI.Controls;assembly=Microsoft.Toolkit.Wpf.UI.Controls.WebView"
+    		Topmost="true"
+-->
 
     <!--<Window.DataContext>
         <vm:MainViewModel/>
@@ -289,9 +290,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid Name="FrameGrid">
-                    
-                </Grid>
+                <Grid Name="FrameGrid"/>
                 <!--<Frame Name="MainFrame"
 				    Source = "{Binding FrameSource}"
                     DataContext= "{Binding FrameDataContext}"

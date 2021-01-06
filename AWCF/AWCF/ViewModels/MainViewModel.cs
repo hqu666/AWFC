@@ -146,7 +146,7 @@ namespace AWCF.ViewModels
                                               "mpa",".mpe",".webm",  ".ogv",".3gp",  ".3g2",  ".asf",  ".asx",
                                                 ".dvr-ms",".ivf",".wax",".wmv", ".wvx",  ".wm",  ".wmx",  ".wmz",
                                              };
-		public string[] WebVideo = new string[] {  ".webm",".flv",".f4v",".3gp",  ".rm", ".swf",".dvr-ms",".ivf"};
+		public string[] WebVideo = new string[] { ".mp4", ".webm",".flv",".f4v",".3gp",  ".rm", ".swf",".dvr-ms",".ivf"};
 		#endregion
 
 		public string FrameSource { get; set; }
@@ -864,8 +864,6 @@ namespace AWCF.ViewModels
 					MyView.FrameGrid.Children.Add(frame);
 				} else {
 					dbMsg += ">>MyView == null";
-					//Thread.Sleep(1000);
-					//PlayListToPlayer(targetItem);
 				}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
