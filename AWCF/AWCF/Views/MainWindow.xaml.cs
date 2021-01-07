@@ -253,7 +253,11 @@ namespace AWCF.Views
 			}
 		}
 
-
+		/// <summary>
+		/// ファイルのドロップ
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void PlayList_Drop(object sender, DragEventArgs e) {
 			string TAG = "[PlayList_Drop]";
 			string dbMsg = "";

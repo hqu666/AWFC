@@ -161,6 +161,9 @@ namespace AWCF.ViewModels {
 		//	}
 		//}
 
+		/// <summary>
+		/// ソース変化後に発生するイベント
+		/// </summary>
 		public void SourceChanged() {
 			string TAG = "SourceChanged";
 			string dbMsg = "";

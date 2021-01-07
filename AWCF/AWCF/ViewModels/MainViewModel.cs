@@ -151,7 +151,14 @@ namespace AWCF.ViewModels
 
 		public string FrameSource { get; set; }
 		public object FrameDataContext { get; set; }
-		
+		/// <summary>
+		/// EXPLORERのプロセス
+		/// </summary>
+		public System.Diagnostics.Process pEXPLORER;
+
+/// <summary>
+/// メイン画面
+/// </summary>
 		public MainViewModel()
         {
             Initialize();
@@ -356,6 +363,10 @@ namespace AWCF.ViewModels
 							} else {
 								PLList.Insert(InsertTo, playListModel);
 							}
+							if (!PlayListSaveBTVisble.Equals("Visible")) {
+								PlayListSaveBTVisble = "Visible";
+								RaisePropertyChanged("PlayListSaveBTVisble");
+							}
 						}
 					} else if (Directory.Exists(url)) {
 						//フォルダなら中身の全ファイルで再起する
@@ -367,6 +378,10 @@ namespace AWCF.ViewModels
 				ListItemCount = PLList.Count();
 				RaisePropertyChanged("ListItemCount");
 				dbMsg += "\r\n" + ListItemCount + "件";
+				if (pEXPLORER.HasExited) {
+					pEXPLORER.Close();
+					dbMsg += ",EXPLORERを閉じた";
+				}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -1792,9 +1807,9 @@ namespace AWCF.ViewModels
         private void ShowExplore()
         {
             string TAG = "ShowExplore";
-            //最近表示した場所	をシェルなら
-            //	explorer.exe shell:::{ 22877A6D - 37A1 - 461A - 91B0 - DBDA5AAEBC99}
-            System.Diagnostics.Process.Start("EXPLORER.EXE", @"{ 22877A6D - 37A1 - 461A - 91B0 - DBDA5AAEBC99}");
+			//最近表示した場所	をシェルなら
+			//	explorer.exe shell:::{ 22877A6D - 37A1 - 461A - 91B0 - DBDA5AAEBC99}
+			pEXPLORER = System.Diagnostics.Process.Start("EXPLORER.EXE", @"{ 22877A6D - 37A1 - 461A - 91B0 - DBDA5AAEBC99}");
             string dbMsg = "";
             try
             {

@@ -116,7 +116,6 @@
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" />
-                        <ColumnDefinition  Width="*" />
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition  Width="Auto" />
@@ -183,7 +182,7 @@
                     <Button Content="保存"
                              Command="{Binding PlayListSave}"
                             Visibility="{Binding PlayListSaveBTVisble}"
-  						    Grid.Column="5" 
+  						    Grid.Column="4" 
                             HorizontalAlignment="Right"
                             />
 
