@@ -32,7 +32,11 @@ using System.Threading;
 namespace AWCF.ViewModels {
 	public class WebViewModel : ViewModel { //INotifyPropertyChanged
 		public string titolStr = "【WebViewModel】";
+		public Views.WebPage MyView;
+		public string TargeStr;
 
+		public double VWidth=1920;
+		public double VHeight=1080;
 		private Uri _TargetURI;
 		/// <summary>
 		/// 遷移先URL
@@ -97,7 +101,14 @@ namespace AWCF.ViewModels {
 		/// 基本的な遷移先
 		/// </summary>
 		public string BaceUrl { set; get; }
+		public string assemblyPath = "";               //実行デレクトリ
+		string assemblyName = "";       //実行ファイル名
+		public string MimeTypeStr = "video/x-ms-asf";     //.asf
 
+
+		/// <summary>
+		/// WebView2の表示
+		/// </summary>
 		public WebViewModel() {
 			TopPanelVisibility = "Hidden";
 			RaisePropertyChanged("TopPanelVisibility");
@@ -109,16 +120,62 @@ namespace AWCF.ViewModels {
 			string dbMsg = "";
 			try {
 				RedirectUrl = "";
-				//			TargetURLStr = Constant.WebStratUrl;
-	//			TargetURLStr = "https://www.yahoo.co.jp/";
-
-				RaisePropertyChanged("TargetURLStr");
+				assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;  //	+Path.AltDirectorySeparatorChar + "brows.htm";
+				dbMsg += "、実行デレクトリ= " + assemblyPath;
+				dbMsg += "targetURLStr= " + TargetURLStr;
+				dbMsg += "TargeStr= " + TargeStr;
+				SourceSelecter(TargeStr);
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
 			}
 		}
 
+		/// <summary>
+		/// URLによって処理を分岐
+		/// </summary>
+		/// <param name="targetURLStr"></param>
+		public void SourceSelecter(string targetURLStr) {
+			string TAG = "SourceSelecter";
+			string dbMsg = "";
+			try {
+
+				dbMsg += "targetURLStr= " + targetURLStr;
+				if (targetURLStr == null) {
+					dbMsg += "、URL未設定";
+				} else {
+					_isNavigating = true;
+					RedirectUrl = targetURLStr;
+					if (!targetURLStr.StartsWith("https")) {
+						TopPanelVisibility = "Hidden";
+						RaisePropertyChanged("TopPanelVisibility");
+						string extention = System.IO.Path.GetExtension(targetURLStr);
+						dbMsg += "、拡張子=" + extention;
+						if (extention.Equals(".flv")) {
+							MimeTypeStr = "	video/x-flv";
+						} else if (extention.Equals(".mp4") ||
+									 extention.Equals(".f4v")) {
+							MimeTypeStr = "	video/mp4";
+						} else {
+
+						}
+						if (extention.Equals(".flv") ||
+							extention.Equals(".f4v")) {
+							MakeWebSouceBody(targetURLStr);
+						} else {
+							TargetURLStr = targetURLStr;
+							RaisePropertyChanged("TargetURLStr");
+						}
+					} else {
+						TargetURLStr = targetURLStr;
+						RaisePropertyChanged("TargetURLStr");
+					}
+				}
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
 
 
 
@@ -143,6 +200,9 @@ namespace AWCF.ViewModels {
 			try {
 				TopPanelVisibility = "Visible";
 				RaisePropertyChanged("TopPanelVisibility");
+				dbMsg += "targetURLStr= " + TargetURLStr;
+				dbMsg += "TargeStr= " + TargeStr;
+				SourceSelecter(TargeStr);
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -168,28 +228,7 @@ namespace AWCF.ViewModels {
 			string TAG = "SourceChanged";
 			string dbMsg = "";
 			try {
-				dbMsg += "RedirectUrl= " + RedirectUrl;
-				dbMsg += " >>TargetURI= " + TargetURI;
-				TargetURLStr = TargetURI.ToString();
-				RaisePropertyChanged("TargetURLStr");
-		//		if (CanGoto(TargetURLStr)) {
-					_isNavigating = true;
-					RedirectUrl = TargetURI.ToString();
-				//	RequeryCommands();
-				//} else {
-				//	if (!RedirectUrl.Equals("")) {
-				//		dbMsg += " >Redirect>  " + RedirectUrl;
-				//		TargetURLStr = RedirectUrl;
-				//	} else {
-				//		dbMsg += " >Reset>  " + BaceUrl;
-				//		TargetURLStr = BaceUrl;
-				//	}
-				//	RaisePropertyChanged("TargetURLStr");
-				//	TargetURI = new Uri(TargetURLStr);
-				//	RaisePropertyChanged("TargetURI");
-				//}
-				//dbMsg += " >> " + TargetURLStr;
-				//RaisePropertyChanged();
+				SourceSelecter(TargetURLStr);
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -284,12 +323,257 @@ namespace AWCF.ViewModels {
 				RequeryCommands();
 				MyLog(TAG, dbMsg);
 				RaisePropertyChanged();
-
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
 			}
 		}
 		#endregion
+
+		//Flash/////////////////////////////////////////////////////////////////////////////web//
+		/// <summary>
+		/// webに埋め込むプレイヤーのID
+		/// </summary>
+		string wiPlayerID = "wiPlayer";
+
+
+		private void MakeWebSouceBody(string fileName) {
+			string TAG = "[MakeWebSouceBody]";
+			string dbMsg = TAG;
+			try {
+				dbMsg += ",fileName=" + fileName;
+				//VWidth = MyView.webView.Width;
+				//VHeight = MyView.webView.Height;
+				//dbMsg += "[" + VWidth + "×" + VHeight + "]";
+
+				//dbMsg += ",url=" + urlStr;
+				//dbMsg += ",this[" + this.Width + "×" + this.Height + "]";       //this[1936×751]
+				//dbMsg += ",ファイルブラウザ[" + FileBrowserSplitContainer.Width + "×" + FileBrowserSplitContainer.Height + "]"; 
+				////ファイルブラウザ[586×712],Collapsed=False
+				//dbMsg += ",Collapsed=" + baseSplitContainer.Panel1Collapsed;
+				///*	if (!baseSplitContainer.Panel1Collapsed) {//ファイルブラウザopen
+				//		webWidth -= FileBrowserSplitContainer.Width;
+				//		dbMsg += ",ファイルブラウザ>" + webWidth;
+				//	}*/
+				//dbMsg += ",プレイリスト[" + PlayListsplitContainer.Width + "×" + PlayListsplitContainer.Height + "]";//,プレイリスト[235×712],
+				//dbMsg += ",Collapsed=" + viewSplitContainer.Panel1Collapsed;
+				///*	if (!viewSplitContainer.Panel1Collapsed) {
+				//	//	webWidth -= PlayListsplitContainer.Width;
+				//		dbMsg += ",プレイリスト>" + PlayListsplitContainer.Width;
+				//	}*/
+				//dbMsg += ",MediaPlayerPanel[" + this.MediaPlayerPanel.Width + "×" + this.MediaPlayerPanel.Height + "]"; //MediaPlayerPanel[1091×625]
+				//int webWidth = this.MediaPlayerPanel.Width - 18;     //this.Width - 44;   //  playerWebBrowser.Width - 28;
+				//int webHeight = this.MediaPlayerPanel.Height - 72;   // playerWebBrowser.Height - 60;
+				//dbMsg += ",web[" + webWidth + "×" + webHeight + "]";                                                    //web[1057×553]
+				//string[] extStrs = fileName.Split('.');
+				//string extentionStr = "." + extStrs[extStrs.Length - 1].ToLower();
+
+				string contlolPart = @"<!DOCTYPE html>
+		<html>
+			<head>
+				<meta charset = " + '"' + "UTF-8" + '"' + " >\n";
+				//キャッシュを残さない；HTTP1.0プロトコル
+				contlolPart += "\t\t<meta http-equiv = " + '"' + "Pragma" + '"' + " content =  " + '"' + "no-cache" + '"' + " />\n";
+				contlolPart += "\t\t<meta http-equiv = " + '"' + "Cache-Control" + '"' + " content =  " + '"' + "no-cache" + '"' + " />\n"; 
+				//キャッシュを残さない；HTTP1.1プロトコル
+				contlolPart += "\t\t<meta http-equiv = " + '"' + "X-UA-Compatible" + '"' + " content =  " + '"' + "requiresActiveX =true" + '"' + " />\n";
+				////	contlolPart += "\n\t\t\t<link rel = " + '"' + "stylesheet" + '"' + " type = " + '"' + "text/css" + '"' + " href = " + '"' + "brows.css" + '"' + "/>\n";
+				//string retType = GetFileTypeStr(fileName);
+				//dbMsg += ",retType=" + retType;
+				//if (retType == "video" ||
+				//	 retType == "image" ||
+				//	retType == "audio"
+				//	) {
+				//} else {
+				//	contlolPart += "\t</head>\n";
+				//	contlolPart += "\t<body>\n\t\t";
+				//}
+				//dbMsg += ",fileName=" + fileName;
+				//if (lsFullPathName != fileName) {       //8/31;仮対応；書き換わり対策
+				//	dbMsg += ",***書き換わり発生***" + fileName;
+				//	fileName = lsFullPathName;
+				//}
+
+				contlolPart=LoadFladance( fileName,  contlolPart);
+
+				//if (retType == "video") {
+				//	contlolPart += MakeVideoSouce(fileName, webWidth, webHeight);
+				//} else if (retType == "image") {
+				//	contlolPart += MakeImageSouce(fileName, webWidth, webHeight);
+				//} else if (retType == "audio") {
+				//	contlolPart += MakeAudioSouce(fileName, webWidth, webHeight);
+				//} else if (retType == "text") {
+				//	contlolPart += MakeTextSouce(fileName, webWidth, webHeight);
+				//} else if (retType == "application") {
+				//	contlolPart += MakeApplicationeSouce(fileName, webWidth, webHeight);
+				//}
+				//if (debug_now) {
+				//	contlolPart += "\t\t<div>,urlStr=" + urlStr;
+				//	contlolPart += "<br>\n\t\t" + ",playerUrl=" + playerUrl + "</div>\n";
+				//}
+				contlolPart += "\t</body>\n</html>\n\n";
+				dbMsg += ",contlolPart=" + contlolPart;
+
+				string[] urlStrs = assemblyPath.Split(System.IO.Path.DirectorySeparatorChar);
+				assemblyName = urlStrs[urlStrs.Length - 1];
+				string urlStr = assemblyPath.Replace(assemblyName, "brows.htm");//	urlStr = urlStr.Substring( 0, urlStr.IndexOf( "bin" ) ) + "brows.htm";
+				dbMsg += ",url=" + urlStr;
+
+				if (File.Exists(urlStr)) {
+					dbMsg += "既存ファイル有り";
+					System.IO.File.Delete(urlStr);                //20170818;ここで停止？
+					dbMsg += ">Exists=" + File.Exists(urlStr);
+				}
+				////UTF-8でテキストファイルを作成する
+				System.IO.StreamWriter sw = new System.IO.StreamWriter(urlStr, false, System.Text.Encoding.UTF8);
+				sw.Write(contlolPart);
+				sw.Close();
+				dbMsg += ">Exists=" + File.Exists(urlStr);
+				Uri nextUri = new Uri("file://" + urlStr);
+				dbMsg += ",nextUri=" + nextUri;
+				//try {
+				//	MakeWebPlayer();
+				//	playerWebBrowser.Navigate(nextUri);
+				//} catch (System.UriFormatException er) {
+				//	dbMsg += "<<playerWebBrowser.Navigateでエラー発生>>" + er.Message;
+				//}
+
+
+
+				TargetURLStr = urlStr;
+				RaisePropertyChanged("TargetURLStr");
+
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				dbMsg += "<<以降でエラー発生>>" + er.Message;
+				MyLog(TAG, dbMsg);
+			}
+		}//形式に合わせたhtml作成
+
+
+
+
+		/// <summary>
+		/// ふらだんす   https://www.streaming.jp/fladance/
+		/// </summary>
+		/// <param name="fileName"></param>
+		private string LoadFladance(string fileName , string contlolPart) {
+			string TAG = "[LoadFladance]" + fileName;
+			string dbMsg = TAG;
+			try {
+				dbMsg += "[" + VWidth + "×" + VHeight + "]";
+				string[] urlStrs = assemblyPath.Split(System.IO.Path.DirectorySeparatorChar);					//パスセパレータで切り分け
+				string assemblyName = urlStrs[urlStrs.Length - 1];
+				string urlStr = assemblyPath.Replace(assemblyName, "brows.htm");//	urlStr = urlStr.Substring( 0, urlStr.IndexOf( "bin" ) ) + "brows.htm";
+				dbMsg += ",url=" + urlStr;
+				string playerUrl = "";
+				playerUrl = assemblyPath.Replace(assemblyName, "fladance.swf");       //☆デバッグ用を\bin\Debugにコピーしておく
+                                                                                      //		string nextMove = assemblyPath.Replace( assemblyName, "tonext.htm" );
+                string flashVvars = "fms_app=&video_file=" + fileName + "&" +       // & amp;
+                                                                                    //								"link_url ="+ nextMove + "&" +
+                                         "image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + '"';
+
+				//dbMsg += ",assemblyPath=" + assemblyPath + ",assemblyName=" + assemblyName;
+				//dbMsg += ",playerUrl=" + playerUrl;//,playerUrl=C:\Users\博臣\source\repos\file_tree_clock_web1\file_tree_clock_web1\bin\Debug\fladance.swf 
+				string clsId = "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000";       //ブラウザーの ActiveX コントロール
+				string codeBase = "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0";
+				string pluginspage = "http://www.macromedia.com/go/getflashplayer";
+				//dbMsg += "[" + webWidth + "×" + webHeight + "]";        //4/3=1.3		1478/957=1.53  801/392=2.04
+
+				contlolPart += "\t</head>\n";
+                contlolPart += "\t<body style = " + '"' + "background-color: #000000;color:#ffffff;" + '"' + " >\n\t\t";
+                contlolPart += "<object id=" + '"' + wiPlayerID + '"' +
+                                    " classid=" + '"' + clsId + '"' +
+                                " codebase=" + '"' + codeBase + '"' +
+                                " width=" + '"' + VWidth + '"' + " height=" + '"' + VHeight + '"' +
+                                 ">\n";
+                contlolPart += "\t\t\t<param name=" + '"' + "FlashVars" + '"' + " value=" + '"' + flashVvars + '"' + "/>\n";                        //常にバーを表示する
+                contlolPart += "\t\t\t<param name= " + '"' + "allowFullScreen" + '"' + " value=" + '"' + "true" + '"' + "/>\n";
+                contlolPart += "\t\t\t<param name =" + '"' + "movie" + '"' + " value=" + '"' + playerUrl + '"' + "/>\n";
+                contlolPart += "\t\t\t\t<embed name=" + '"' + wiPlayerID + '"' +
+                                                " src=" + '"' + playerUrl + '"' +            // "file://" + fileName
+                                                                                             //		"left=-10 width=100% height= auto" +            // '"' + webWidth + '"'
+                                                " width=" + '"' + VWidth + '"' + " height= " + '"' + VHeight + '"' +            // '"' + webWidth + '"'
+                                                " type=" + '"' + MimeTypeStr + '"' +
+                                                " allowfullscreen=" + '"' + " true= " + '"' +
+                                                " flashvars=" + '"' + flashVvars + '"' +
+                                                " type=" + '"' + "application/x-shockwave-flash" + '"' +
+                                                " pluginspage=" + '"' + pluginspage + '"' +
+                                       "/>\n";
+				playerUrl = assemblyPath.Replace("AWSFileBroeser.exe", "fladance.swf");       //
+				dbMsg += ",playerUrl=" + playerUrl;
+				AxShockwaveFlashObjects.AxShockwaveFlash SFPlayer =new AxShockwaveFlashObjects.AxShockwaveFlash();
+				SFPlayer.LoadMovie(0, playerUrl);
+				Uri urlObj = new Uri(fileName);
+				if (urlObj.IsFile) {             //Uriオブジェクトがファイルを表していることを確認する
+					fileName = urlObj.AbsoluteUri;                 //Windows形式のパス表現に変換する
+					dbMsg += "Path=" + fileName;
+				}
+				string[] strs = { "fms_app=&video_file=", @"""", fileName };
+				string flashVvarsStr = strs[0] + strs[1] + strs[2] + strs[1];          //flvmov= M:\sample\123.flv
+																					   //string flashVvarsStr = @"fms_app=&video_file=" + fileName + '"';// + "&autoplay = true";             //&quot;	&#34;	&#x22;	'"' "fms_app=&video_file=\"M:\\sample\\123.flv\""
+																					   //string flashVvars = "fms_app=&video_file=" + fileName + "&" + "image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + '"';
+				dbMsg += ",flashVvars=" + flashVvarsStr;
+				SFPlayer.FlashVars = flashVvarsStr;
+				/*
+								string clsId = "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000";
+								this.SFPlayer.SetVariable("classid", clsId);
+								string codeBase = "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0";
+								this.SFPlayer.SetVariable("codebase", codeBase);
+								//<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+								//codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="横幅" height="高さ">
+								this.SFPlayer.SetVariable("src", fileName);
+								this.SFPlayer.SetVariable("video_file", fileName);
+
+								string MimeTypeStr = "application/x-shockwave-flash";       //video/x-flv ?  application/x-shockwave-flash  ?   mineType.Text;
+								System.IO.FileInfo fi = new System.IO.FileInfo(fileName);
+								if (fi.Extension.Equals(".f4v"))
+								{
+									MimeTypeStr = "video/mp4";       // mineType.Text;
+								}
+								dbMsg += ",MimeTypeStr=" + MimeTypeStr;
+								string pluginspage = "http://www.macromedia.com/go/getflashplayer";
+								//contlolPart += "<param name= " + '"' + "allowFullScreen" + '"' + " value=" + '"' + "true" + '"' + "/>";
+								//                    this.SFPlayer.Movie = fileName;    //contlolPart += "<param name =" + '"' + "movie" + '"' + " value=" + '"' + fileName + '"' + "/>";
+								//   string EmbedStr =  "fms_app=" + '"' + playerUrl + '"' +           //ストリーミング再生の場合のみ設定可能
+								//  string EmbedStr = '"' + wiPlayerID + '"' + " src=" + '"' + playerUrl + '"' +
+
+								string EmbedStr = " video_file=" + '"' + fileName + '"' +
+																" width=" + '"' + this.MediaPlayerPanel.Width + '"' + " height= " + '"' + this.MediaPlayerPanel.Height + '"' +            // '"' + webWidth + '"'
+																" type=" + '"' + MimeTypeStr + '"' +
+																" allowfullscreen=" + '"' + " true= " + '"' +
+																" flashvars=" + '"' + flashVvars + '"' +
+																" type=" + '"' + "application/x-shockwave-flash" + '"' +
+																" pluginspage=" + '"' + pluginspage + '"' +
+																//                " autoplay=" + true +
+																"/>";
+
+								//     this.SFPlayer.EmbedMovie = true;
+								//           this.SFPlayer. = true;
+								this.SFPlayer.SetVariable("src", playerUrl);
+								this.SFPlayer.SetVariable("type", MimeTypeStr);
+								this.SFPlayer.SetVariable("flashvars", flashVvars);
+								//this.SFPlayer.SetVariable("type", "application/x-shockwave-flash");
+								//this.SFPlayer.SetVariable("pluginspage", pluginspage);
+								//      LoadFLV(fileName);
+								//         this.SFPlayer.Validating = fileName;
+								//        this.SFPlayer.Visible = true;ではtrueにならない
+								//<param name = "flashvars" value = "fms_app=FMSアプリケーションディレクトリのパス&video_file=動画ファイルのパス
+								//                                    &image_file=サムネイル画像のパス&link_url=リンク先のURL&autoplay=オートプレイのON・OFF
+								//                                    &mute=ミュートのON・OFF&volume=音量&controller=操作パネルの表示・非表示&buffertime=バッファ時間" />
+								//<param name="allowFullScreen" value="フルスクリーン化を可能にするかどうか" />
+								//<param name="movie" value="ふらだんすswfファイルのパス" />
+
+								//<embed src="ふらだんすswfファイルのパス" width="横幅" height="高さ" allowFullScreen="フルスクリーン化を可能にするかどうか" flashvars="fms_app=FMSアプリケーションディレクトリのパス&video_file=動画ファイルのパス&image_file=サムネイル画像のパス&link_url=リンク先のURL&autoplay=オートプレイのON・OFF&mute=ミュートのON・OFF&volume=音量&controller=操作パネルの表示・非表示&buffertime=バッファ時間" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object>
+								this.SFPlayer.MovieData = fileName;
+								*/
+
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+			return contlolPart;
+		}
+
 
 		//Livet Messenger用///////////////////////
 		void RequeryCommands() {
@@ -314,15 +598,15 @@ namespace AWCF.ViewModels {
 			Dispose(true);
 		}
 		///////////////////////Livet Messenger用//
-		public static void MyLog(string TAG, string dbMsg) {
-			dbMsg = "[W_1ViewModel ]" + dbMsg;
+		public void MyLog(string TAG, string dbMsg) {
+			dbMsg = titolStr + dbMsg;
 			//dbMsg = "[" + MethodBase.GetCurrentMethod().Name + "]" + dbMsg;
 			CS_Util Util = new CS_Util();
 			Util.MyLog(TAG, dbMsg);
 		}
 
-		public static void MyErrorLog(string TAG, string dbMsg, Exception err) {
-			dbMsg = "[W_1ViewModel ]" + dbMsg;
+		public void MyErrorLog(string TAG, string dbMsg, Exception err) {
+			dbMsg = titolStr + dbMsg;
 			CS_Util Util = new CS_Util();
 			Util.MyErrorLog(TAG, dbMsg, err);
 		}
@@ -375,13 +659,6 @@ namespace AWCF.ViewModels {
 			SetURl();
 		}
 
-		public void SetURl()
-		{
-			WebUrl = "https://www.yahoo.co.jp/";
-
-		}
-
-
 
         //        /// <summary>
         //        /// System.Windows.Forms.WebBrowser()でWebBrowserを生成する
@@ -429,119 +706,7 @@ namespace AWCF.ViewModels {
 //            }
 //        }
 
-//        private void MakeWebSouceBody(string fileName, string urlStr)
-//        {
-//            string TAG = "[MakeWebSouceBody]";
-//            string dbMsg = TAG;
-//            try
-//            {
-//                dbMsg += ",fileName=" + fileName;
-//                dbMsg += ",url=" + urlStr;
-//                dbMsg += ",this[" + this.Width + "×" + this.Height + "]";       //this[1936×751]
-//                dbMsg += ",ファイルブラウザ[" + FileBrowserSplitContainer.Width + "×" + FileBrowserSplitContainer.Height + "]";     //ファイルブラウザ[586×712],Collapsed=False
-//                dbMsg += ",Collapsed=" + baseSplitContainer.Panel1Collapsed;
-//                /*	if (!baseSplitContainer.Panel1Collapsed) {//ファイルブラウザopen
-//						webWidth -= FileBrowserSplitContainer.Width;
-//						dbMsg += ",ファイルブラウザ>" + webWidth;
-//					}*/
-//                dbMsg += ",プレイリスト[" + PlayListsplitContainer.Width + "×" + PlayListsplitContainer.Height + "]";//,プレイリスト[235×712],
-//                dbMsg += ",Collapsed=" + viewSplitContainer.Panel1Collapsed;
-//                /*	if (!viewSplitContainer.Panel1Collapsed) {
-//					//	webWidth -= PlayListsplitContainer.Width;
-//						dbMsg += ",プレイリスト>" + PlayListsplitContainer.Width;
-//					}*/
-//                dbMsg += ",MediaPlayerPanel[" + this.MediaPlayerPanel.Width + "×" + this.MediaPlayerPanel.Height + "]"; //MediaPlayerPanel[1091×625]
-//                int webWidth = this.MediaPlayerPanel.Width - 18;     //this.Width - 44;   //  playerWebBrowser.Width - 28;
-//                int webHeight = this.MediaPlayerPanel.Height - 72;   // playerWebBrowser.Height - 60;
-//                dbMsg += ",web[" + webWidth + "×" + webHeight + "]";                                                    //web[1057×553]
-//                string[] extStrs = fileName.Split('.');
-//                string extentionStr = "." + extStrs[extStrs.Length - 1].ToLower();
 
-//                string contlolPart = @"<!DOCTYPE html>
-//<html>
-//	<head>
-//		<meta charset = " + '"' + "UTF-8" + '"' + " >\n";
-//                contlolPart += "\t\t<meta http-equiv = " + '"' + "Pragma" + '"' + " content =  " + '"' + "no-cache" + '"' + " />\n";          //キャッシュを残さない；HTTP1.0プロトコル
-//                contlolPart += "\t\t<meta http-equiv = " + '"' + "Cache-Control" + '"' + " content =  " + '"' + "no-cache" + '"' + " />\n"; //キャッシュを残さない；HTTP1.1プロトコル
-//                contlolPart += "\t\t<meta http-equiv = " + '"' + "X-UA-Compatible" + '"' + " content =  " + '"' + "requiresActiveX =true" + '"' + " />\n";
-//                //	contlolPart += "\n\t\t\t<link rel = " + '"' + "stylesheet" + '"' + " type = " + '"' + "text/css" + '"' + " href = " + '"' + "brows.css" + '"' + "/>\n";
-//                string retType = GetFileTypeStr(fileName);
-//                dbMsg += ",retType=" + retType;
-//                if (retType == "video" ||
-//                     retType == "image" ||
-//                    retType == "audio"
-//                    )
-//                {
-//                }
-//                else
-//                {
-//                    contlolPart += "\t</head>\n";
-//                    contlolPart += "\t<body>\n\t\t";
-//                }
-//                dbMsg += ",fileName=" + fileName;
-//                if (lsFullPathName != fileName)
-//                {       //8/31;仮対応；書き換わり対策
-//                    dbMsg += ",***書き換わり発生***" + fileName;
-//                    fileName = lsFullPathName;
-//                }
-
-//                if (retType == "video")
-//                {
-//                    contlolPart += MakeVideoSouce(fileName, webWidth, webHeight);
-//                }
-//                else if (retType == "image")
-//                {
-//                    contlolPart += MakeImageSouce(fileName, webWidth, webHeight);
-//                }
-//                else if (retType == "audio")
-//                {
-//                    contlolPart += MakeAudioSouce(fileName, webWidth, webHeight);
-//                }
-//                else if (retType == "text")
-//                {
-//                    contlolPart += MakeTextSouce(fileName, webWidth, webHeight);
-//                }
-//                else if (retType == "application")
-//                {
-//                    contlolPart += MakeApplicationeSouce(fileName, webWidth, webHeight);
-//                }
-//                if (debug_now)
-//                {
-//                    contlolPart += "\t\t<div>,urlStr=" + urlStr;
-//                    contlolPart += "<br>\n\t\t" + ",playerUrl=" + playerUrl + "</div>\n";
-//                }
-//                contlolPart += "\t</body>\n</html>\n\n";
-//                dbMsg += ",contlolPart=" + contlolPart;
-//                if (File.Exists(urlStr))
-//                {
-//                    dbMsg += "既存ファイル有り";
-//                    System.IO.File.Delete(urlStr);                //20170818;ここで停止？
-//                    dbMsg += ">Exists=" + File.Exists(urlStr);
-//                }
-//                ////UTF-8でテキストファイルを作成する
-//                System.IO.StreamWriter sw = new System.IO.StreamWriter(urlStr, false, System.Text.Encoding.UTF8);
-//                sw.Write(contlolPart);
-//                sw.Close();
-//                dbMsg += ">Exists=" + File.Exists(urlStr);
-//                Uri nextUri = new Uri("file://" + urlStr);
-//                dbMsg += ",nextUri=" + nextUri;
-//                try
-//                {
-//                    MakeWebPlayer();
-//                    playerWebBrowser.Navigate(nextUri);
-//                }
-//                catch (System.UriFormatException er)
-//                {
-//                    dbMsg += "<<playerWebBrowser.Navigateでエラー発生>>" + er.Message;
-//                }
-//                //		MyLog(TAG, dbMsg);
-//            }
-//            catch (Exception er)
-//            {
-//                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(TAG, dbMsg);
-//            }
-//        }//形式に合わせたhtml作成
 
 //        private void MakeWebSouce(string fileName)
 //        {
@@ -630,96 +795,7 @@ namespace AWCF.ViewModels {
 
 //        #endregion
 
-//        //Flash/////////////////////////////////////////////////////////////////////////////web//
-//        #region FlashBlock
-//        /// <summary>
-//        /// ふらだんす   https://www.streaming.jp/fladance/
-//        /// error : video_fileが設定されていません。
-//        /// </summary>
-//        /// <param name="fileName"></param>
-//        private void LoadFladance(string fileName)
-//        {
-//            string TAG = "[LoadFladance]" + fileName;
-//            string dbMsg = TAG;
-//            try
-//            {
-//                dbMsg += ",assemblyPath=" + assemblyPath;       // + ",assemblyName=" + assemblyName;
-//                playerUrl = assemblyPath.Replace("AWSFileBroeser.exe", "fladance.swf");       //
-//                dbMsg += ",playerUrl=" + playerUrl;
-//                this.SFPlayer.LoadMovie(0, playerUrl);
-//                Uri urlObj = new Uri(fileName);
-//                if (urlObj.IsFile)
-//                {             //Uriオブジェクトがファイルを表していることを確認する
-//                    fileName = urlObj.AbsoluteUri;                 //Windows形式のパス表現に変換する
-//                    dbMsg += "Path=" + fileName;
-//                }
-//                string[] strs = { "fms_app=&video_file=", @"""", fileName };
-//                string flashVvarsStr = strs[0] + strs[1] + strs[2] + strs[1];          //flvmov= M:\sample\123.flv
-//                //string flashVvarsStr = @"fms_app=&video_file=" + fileName + '"';// + "&autoplay = true";             //&quot;	&#34;	&#x22;	'"' "fms_app=&video_file=\"M:\\sample\\123.flv\""
-//                //string flashVvars = "fms_app=&video_file=" + fileName + "&" + "image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + '"';
-//                dbMsg += ",flashVvars=" + flashVvarsStr;
-//                this.SFPlayer.FlashVars = flashVvarsStr;
-//                /*
-//                                string clsId = "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000";
-//                                this.SFPlayer.SetVariable("classid", clsId);
-//                                string codeBase = "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0";
-//                                this.SFPlayer.SetVariable("codebase", codeBase);
-//                                //<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
-//                                //codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="横幅" height="高さ">
-//                                this.SFPlayer.SetVariable("src", fileName);
-//                                this.SFPlayer.SetVariable("video_file", fileName);
-
-//                                string mineTypeStr = "application/x-shockwave-flash";       //video/x-flv ?  application/x-shockwave-flash  ?   mineType.Text;
-//                                System.IO.FileInfo fi = new System.IO.FileInfo(fileName);
-//                                if (fi.Extension.Equals(".f4v"))
-//                                {
-//                                    mineTypeStr = "video/mp4";       // mineType.Text;
-//                                }
-//                                dbMsg += ",mineTypeStr=" + mineTypeStr;
-//                                string pluginspage = "http://www.macromedia.com/go/getflashplayer";
-//                                //contlolPart += "<param name= " + '"' + "allowFullScreen" + '"' + " value=" + '"' + "true" + '"' + "/>";
-//                                //                    this.SFPlayer.Movie = fileName;    //contlolPart += "<param name =" + '"' + "movie" + '"' + " value=" + '"' + fileName + '"' + "/>";
-//                                //   string EmbedStr =  "fms_app=" + '"' + playerUrl + '"' +           //ストリーミング再生の場合のみ設定可能
-//                                //  string EmbedStr = '"' + wiPlayerID + '"' + " src=" + '"' + playerUrl + '"' +
-
-//                                string EmbedStr = " video_file=" + '"' + fileName + '"' +
-//                                                                " width=" + '"' + this.MediaPlayerPanel.Width + '"' + " height= " + '"' + this.MediaPlayerPanel.Height + '"' +            // '"' + webWidth + '"'
-//                                                                " type=" + '"' + mineTypeStr + '"' +
-//                                                                " allowfullscreen=" + '"' + " true= " + '"' +
-//                                                                " flashvars=" + '"' + flashVvars + '"' +
-//                                                                " type=" + '"' + "application/x-shockwave-flash" + '"' +
-//                                                                " pluginspage=" + '"' + pluginspage + '"' +
-//                                                                //                " autoplay=" + true +
-//                                                                "/>";
-
-//                                //     this.SFPlayer.EmbedMovie = true;
-//                                //           this.SFPlayer. = true;
-//                                this.SFPlayer.SetVariable("src", playerUrl);
-//                                this.SFPlayer.SetVariable("type", mineTypeStr);
-//                                this.SFPlayer.SetVariable("flashvars", flashVvars);
-//                                //this.SFPlayer.SetVariable("type", "application/x-shockwave-flash");
-//                                //this.SFPlayer.SetVariable("pluginspage", pluginspage);
-//                                //      LoadFLV(fileName);
-//                                //         this.SFPlayer.Validating = fileName;
-//                                //        this.SFPlayer.Visible = true;ではtrueにならない
-//                                //<param name = "flashvars" value = "fms_app=FMSアプリケーションディレクトリのパス&video_file=動画ファイルのパス
-//                                //                                    &image_file=サムネイル画像のパス&link_url=リンク先のURL&autoplay=オートプレイのON・OFF
-//                                //                                    &mute=ミュートのON・OFF&volume=音量&controller=操作パネルの表示・非表示&buffertime=バッファ時間" />
-//                                //<param name="allowFullScreen" value="フルスクリーン化を可能にするかどうか" />
-//                                //<param name="movie" value="ふらだんすswfファイルのパス" />
-
-//                                //<embed src="ふらだんすswfファイルのパス" width="横幅" height="高さ" allowFullScreen="フルスクリーン化を可能にするかどうか" flashvars="fms_app=FMSアプリケーションディレクトリのパス&video_file=動画ファイルのパス&image_file=サムネイル画像のパス&link_url=リンク先のURL&autoplay=オートプレイのON・OFF&mute=ミュートのON・OFF&volume=音量&controller=操作パネルの表示・非表示&buffertime=バッファ時間" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object>
-//                                this.SFPlayer.MovieData = fileName;
-//                                */
-//                MyLog(TAG, dbMsg);
-//            }
-//            catch (Exception er)
-//            {
-//                this.mediaPlayer = null;
-//                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(TAG, dbMsg);
-//            }
-//        }
+//Flash/////////////////////////////////////////////////////////////////////////////web//
 
 //        /// <summary>
 //        /// Adobe Flash Player https://www.mi-j.com/service/FLASH/player/index.html　
@@ -755,13 +831,13 @@ namespace AWCF.ViewModels {
 //                //this.SFPlayer.SetVariable("codebase", codeBase);
 //                //   this.SFPlayer.SetVariable("src", fileName);
 //                //this.SFPlayer.SetVariable("video_file", fileName);
-//                //string mineTypeStr = "application/x-shockwave-flash";       //video/x-flv ?  application/x-shockwave-flash  ?   mineType.Text;
+//                //string MimeTypeStr = "application/x-shockwave-flash";       //video/x-flv ?  application/x-shockwave-flash  ?   mineType.Text;
 //                //System.IO.FileInfo fi = new System.IO.FileInfo(fileName);
 //                //if (fi.Extension.Equals(".f4v"))
 //                //{
-//                //    mineTypeStr = "video/mp4";       // mineType.Text;
+//                //    MimeTypeStr = "video/mp4";       // mineType.Text;
 //                //}
-//                //dbMsg += ",mineTypeStr=" + mineTypeStr;
+//                //dbMsg += ",MimeTypeStr=" + MimeTypeStr;
 //                //string pluginspage = "http://www.macromedia.com/go/getflashplayer";
 //                string ObjectStr = "<object width=" + '"' + this.MediaPlayerPanel.Width + '"' + " height= " + '"' + this.MediaPlayerPanel.Height + '"' +
 //                                         " classid=" + '"' + "clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" + '"' +
@@ -1037,8 +1113,8 @@ namespace AWCF.ViewModels {
 //            string dbMsg = TAG;
 //            try
 //            {
-//                string mineTypeStr = mineType.Text;
-//                dbMsg += ",mineTypeStr=" + mineTypeStr;
+//                string MimeTypeStr = mineType.Text;
+//                dbMsg += ",MimeTypeStr=" + MimeTypeStr;
 //                string pluginspage = "http://www.macromedia.com/go/getflashplayer";
 //                string flashVvars = "fms_app=&video_file=" + fileName + "&" +       // & amp;
 //                                                                                    //								"link_url ="+ nextMove + "&" +
@@ -1057,7 +1133,7 @@ namespace AWCF.ViewModels {
 //                contlolPart += "<embed name=" + '"' + wiPlayerID + '"' +
 //                                                " src=" + '"' + fileName + '"' +
 //                                                " width=" + '"' + this.MediaPlayerPanel.Width + '"' + " height= " + '"' + this.MediaPlayerPanel.Height + '"' +            // '"' + webWidth + '"'
-//                                                " type=" + '"' + mineTypeStr + '"' +
+//                                                " type=" + '"' + MimeTypeStr + '"' +
 //                                                " allowfullscreen=" + '"' + " true= " + '"' +
 //                                                " flashvars=" + '"' + flashVvars + '"' +
 //                                                " type=" + '"' + "application/x-shockwave-flash" + '"' +

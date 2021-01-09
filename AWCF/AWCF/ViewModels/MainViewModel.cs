@@ -864,7 +864,9 @@ namespace AWCF.ViewModels
 					if (toWeb) {
 						WebViewModel WVM = new WebViewModel();
 						WVM.TargetURLStr = targetURLStr;
-						WebPage WP =new WebPage();
+						WVM.TargeStr = targetURLStr;
+						
+							WebPage WP =new WebPage();
 						WP.DataContext = WVM;
 						frame.Navigate(WP);
 						//FrameSource = "WebPage.xaml";

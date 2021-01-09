@@ -158,5 +158,10 @@
   <ItemGroup>
     <Resource Include="Resources\drag.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="fladance.swf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

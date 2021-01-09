@@ -27,6 +27,7 @@ namespace AWCF.Views {
 	/// W_1.xaml の相互作用ロジック
 	/// </summary>
 	public partial class WebPage : Page {
+		public string titolStr = "【WebPage】";
 		WebViewModel VM;
 
 		public static RoutedCommand InjectScriptCommand = new RoutedCommand();
@@ -41,7 +42,6 @@ namespace AWCF.Views {
 		/// </summary>
 		bool _isNavigating = false;
 
-		string urlStr = "";
 		bool _isShowHttpsAlart = false;
 
 		public WebPage() {
@@ -57,7 +57,9 @@ namespace AWCF.Views {
 			string TAG = "this_loaded";
 			string dbMsg = "";
 			try {
+				VM.MyView = this;
 				//			topPanel.Visibility = Visibility.Hidden;
+				dbMsg += "[" + webView.Width + "×" + webView.Height + "]";
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -504,15 +506,15 @@ namespace AWCF.Views {
 		//	MessageBox.Show(messageBuilder.ToString(), caption);
 		//}
 		//////////////////////////////////////////////////////////////////////////////////////////
-		public static void MyLog(string TAG, string dbMsg) {
-			dbMsg = "[W_1 ]" + dbMsg;
+		public void MyLog(string TAG, string dbMsg) {
+			dbMsg = titolStr + dbMsg;
 			//dbMsg = "[" + MethodBase.GetCurrentMethod().Name + "]" + dbMsg;
 			CS_Util Util = new CS_Util();
 			Util.MyLog(TAG, dbMsg);
 		}
 
-		public static void MyErrorLog(string TAG, string dbMsg, Exception err) {
-			dbMsg = "[W_1 ]" + dbMsg;
+		public void MyErrorLog(string TAG, string dbMsg, Exception err) {
+			dbMsg = titolStr + dbMsg;
 			CS_Util Util = new CS_Util();
 			Util.MyErrorLog(TAG, dbMsg, err);
 		}
