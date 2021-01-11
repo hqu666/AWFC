@@ -35,8 +35,8 @@ namespace AWCF.ViewModels {
 		public Views.WebPage MyView;
 		public string TargeStr;
 
-		public double VWidth=1920;
-		public double VHeight=1080;
+		public double VWidth=960;
+		public double VHeight=540;
 		private Uri _TargetURI;
 		/// <summary>
 		/// 遷移先URL
@@ -104,6 +104,7 @@ namespace AWCF.ViewModels {
 		public string assemblyPath = "";               //実行デレクトリ
 		string assemblyName = "";       //実行ファイル名
 		public string MimeTypeStr = "video/x-ms-asf";     //.asf
+		public AxShockwaveFlashObjects.AxShockwaveFlash SFPlayer;
 
 
 		/// <summary>
@@ -366,17 +367,20 @@ namespace AWCF.ViewModels {
 				//dbMsg += ",web[" + webWidth + "×" + webHeight + "]";                                                    //web[1057×553]
 				//string[] extStrs = fileName.Split('.');
 				//string extentionStr = "." + extStrs[extStrs.Length - 1].ToLower();
+	//			string contlolPart = @"<!DOCTYPE html>
 
-				string contlolPart = @"<!DOCTYPE html>
-		<html>
-			<head>
-				<meta charset = " + '"' + "UTF-8" + '"' + " >\n";
+				string contlolPart = "<html>\n";
+				contlolPart += "\t<head>\n";
+				contlolPart += "\t\t<meta charset= " + '"' + "UTF-8" + '"' + " >\n";
 				//キャッシュを残さない；HTTP1.0プロトコル
-				contlolPart += "\t\t<meta http-equiv = " + '"' + "Pragma" + '"' + " content =  " + '"' + "no-cache" + '"' + " />\n";
-				contlolPart += "\t\t<meta http-equiv = " + '"' + "Cache-Control" + '"' + " content =  " + '"' + "no-cache" + '"' + " />\n"; 
+				contlolPart += "\t\t<meta http-equiv = " + '"' + "Pragma" + '"' + " content=" + '"' + "no-cache" + '"' + ">\n";
+				contlolPart += "\t\t<meta http-equiv = " + '"' + "Cache-Control" + '"' + " content=" + '"' + "no-cache" + '"' + ">\n"; 
 				//キャッシュを残さない；HTTP1.1プロトコル
-				contlolPart += "\t\t<meta http-equiv = " + '"' + "X-UA-Compatible" + '"' + " content =  " + '"' + "requiresActiveX =true" + '"' + " />\n";
+				contlolPart += "\t\t<meta http-equiv = " + '"' + "X-UA-Compatible" + '"' + " content=" + '"' + "requiresActiveX =true" + '"' + ">\n";
 				////	contlolPart += "\n\t\t\t<link rel = " + '"' + "stylesheet" + '"' + " type = " + '"' + "text/css" + '"' + " href = " + '"' + "brows.css" + '"' + "/>\n";
+				contlolPart += "\t</head>\n";
+				contlolPart += "\t<body style = " + '"' + "background-color: #000000;color:#ffffff;" + '"' + " >\n";
+				contlolPart = LoadFladance(fileName, contlolPart);
 				//string retType = GetFileTypeStr(fileName);
 				//dbMsg += ",retType=" + retType;
 				//if (retType == "video" ||
@@ -393,7 +397,6 @@ namespace AWCF.ViewModels {
 				//	fileName = lsFullPathName;
 				//}
 
-				contlolPart=LoadFladance( fileName,  contlolPart);
 
 				//if (retType == "video") {
 				//	contlolPart += MakeVideoSouce(fileName, webWidth, webHeight);
@@ -466,106 +469,59 @@ namespace AWCF.ViewModels {
 				string urlStr = assemblyPath.Replace(assemblyName, "brows.htm");//	urlStr = urlStr.Substring( 0, urlStr.IndexOf( "bin" ) ) + "brows.htm";
 				dbMsg += ",url=" + urlStr;
 				string playerUrl = "";
+				MimeTypeStr = "application/x-shockwave-flash";
 				playerUrl = assemblyPath.Replace(assemblyName, "fladance.swf");       //☆デバッグ用を\bin\Debugにコピーしておく
                                                                                       //		string nextMove = assemblyPath.Replace( assemblyName, "tonext.htm" );
-                string flashVvars = "fms_app=&video_file=" + fileName + "&" +       // & amp;
-                                                                                    //								"link_url ="+ nextMove + "&" +
-                                         "image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + '"';
+                string flashVvars = "fms_app=&amp;video_file=file:///" + fileName + "&" +  
+									"image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + '"';
 
 				//dbMsg += ",assemblyPath=" + assemblyPath + ",assemblyName=" + assemblyName;
 				//dbMsg += ",playerUrl=" + playerUrl;//,playerUrl=C:\Users\博臣\source\repos\file_tree_clock_web1\file_tree_clock_web1\bin\Debug\fladance.swf 
 				string clsId = "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000";       //ブラウザーの ActiveX コントロール
-				string codeBase = "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0";
+				string codeBase = "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,115,0"; 
+			//	string codeBase = "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0";
 				string pluginspage = "http://www.macromedia.com/go/getflashplayer";
 				//dbMsg += "[" + webWidth + "×" + webHeight + "]";        //4/3=1.3		1478/957=1.53  801/392=2.04
 
-				contlolPart += "\t</head>\n";
-                contlolPart += "\t<body style = " + '"' + "background-color: #000000;color:#ffffff;" + '"' + " >\n\t\t";
-                contlolPart += "<object id=" + '"' + wiPlayerID + '"' +
-                                    " classid=" + '"' + clsId + '"' +
-                                " codebase=" + '"' + codeBase + '"' +
-                                " width=" + '"' + VWidth + '"' + " height=" + '"' + VHeight + '"' +
+                contlolPart += "\t\t<object id=" + '"' + wiPlayerID + '"' +" \n"+
+								"\t\t\t\tclassid=" + '"' + clsId + '"' + " \n" +
+								"\t\t\t\tcodebase=" + '"' + codeBase + '"' + " \n" +
+								"\t\t\t\twidth=" + '"' + VWidth + '"' + " height=" + '"' + VHeight + '"' +
                                  ">\n";
                 contlolPart += "\t\t\t<param name=" + '"' + "FlashVars" + '"' + " value=" + '"' + flashVvars + '"' + "/>\n";                        //常にバーを表示する
-                contlolPart += "\t\t\t<param name= " + '"' + "allowFullScreen" + '"' + " value=" + '"' + "true" + '"' + "/>\n";
-                contlolPart += "\t\t\t<param name =" + '"' + "movie" + '"' + " value=" + '"' + playerUrl + '"' + "/>\n";
-                contlolPart += "\t\t\t\t<embed name=" + '"' + wiPlayerID + '"' +
-                                                " src=" + '"' + playerUrl + '"' +            // "file://" + fileName
-                                                                                             //		"left=-10 width=100% height= auto" +            // '"' + webWidth + '"'
-                                                " width=" + '"' + VWidth + '"' + " height= " + '"' + VHeight + '"' +            // '"' + webWidth + '"'
-                                                " type=" + '"' + MimeTypeStr + '"' +
-                                                " allowfullscreen=" + '"' + " true= " + '"' +
-                                                " flashvars=" + '"' + flashVvars + '"' +
-                                                " type=" + '"' + "application/x-shockwave-flash" + '"' +
-                                                " pluginspage=" + '"' + pluginspage + '"' +
-                                       "/>\n";
-				playerUrl = assemblyPath.Replace("AWSFileBroeser.exe", "fladance.swf");       //
-				dbMsg += ",playerUrl=" + playerUrl;
-				AxShockwaveFlashObjects.AxShockwaveFlash SFPlayer =new AxShockwaveFlashObjects.AxShockwaveFlash();
-				SFPlayer.LoadMovie(0, playerUrl);
-				Uri urlObj = new Uri(fileName);
-				if (urlObj.IsFile) {             //Uriオブジェクトがファイルを表していることを確認する
-					fileName = urlObj.AbsoluteUri;                 //Windows形式のパス表現に変換する
-					dbMsg += "Path=" + fileName;
-				}
-				string[] strs = { "fms_app=&video_file=", @"""", fileName };
-				string flashVvarsStr = strs[0] + strs[1] + strs[2] + strs[1];          //flvmov= M:\sample\123.flv
-																					   //string flashVvarsStr = @"fms_app=&video_file=" + fileName + '"';// + "&autoplay = true";             //&quot;	&#34;	&#x22;	'"' "fms_app=&video_file=\"M:\\sample\\123.flv\""
-																					   //string flashVvars = "fms_app=&video_file=" + fileName + "&" + "image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + '"';
-				dbMsg += ",flashVvars=" + flashVvarsStr;
-				SFPlayer.FlashVars = flashVvarsStr;
+                contlolPart += "\t\t\t<param name=" + '"' + "allowFullScreen" + '"' + " value=" + '"' + "true" + '"' + "/>\n";
+                contlolPart += "\t\t\t<param name=" + '"' + "movie" + '"' + " \n" +
+								"\t\t\t\tvalue=" + '"' + playerUrl + '"' + "/>\n";
+                contlolPart += "\t\t\t<embed name=" + '"' + wiPlayerID + '"' + " \n" +
+												"\t\t\t\t\t src=" + '"' + playerUrl + '"' + " \n" +
+												"\t\t\t\t\t width=" + '"' + VWidth + '"' + " height= " + '"' + VHeight + '"' + " \n" +
+												"\t\t\t\t\t type=" + '"' + MimeTypeStr + '"' + " \n" +
+												"\t\t\t\t\t allowfullscreen=" + '"' + " true= " + '"' + " \n" +
+												"\t\t\t\t\t flashvars=" + '"' + flashVvars + '"' + " \n" +
+												"\t\t\t\t\t type=" + '"' + "application/x-shockwave-flash" + '"' + " \n" +
+												"\t\t\t\t\t pluginspage=" + '"' + pluginspage + '"' + " \n"+
+									   "\t\t\t\t/>\n";
+				contlolPart += "\t\t</object>\n";
+
+
 				/*
-								string clsId = "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000";
-								this.SFPlayer.SetVariable("classid", clsId);
-								string codeBase = "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0";
-								this.SFPlayer.SetVariable("codebase", codeBase);
-								//<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
-								//codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="横幅" height="高さ">
-								this.SFPlayer.SetVariable("src", fileName);
-								this.SFPlayer.SetVariable("video_file", fileName);
-
-								string MimeTypeStr = "application/x-shockwave-flash";       //video/x-flv ?  application/x-shockwave-flash  ?   mineType.Text;
-								System.IO.FileInfo fi = new System.IO.FileInfo(fileName);
-								if (fi.Extension.Equals(".f4v"))
-								{
-									MimeTypeStr = "video/mp4";       // mineType.Text;
-								}
-								dbMsg += ",MimeTypeStr=" + MimeTypeStr;
-								string pluginspage = "http://www.macromedia.com/go/getflashplayer";
-								//contlolPart += "<param name= " + '"' + "allowFullScreen" + '"' + " value=" + '"' + "true" + '"' + "/>";
-								//                    this.SFPlayer.Movie = fileName;    //contlolPart += "<param name =" + '"' + "movie" + '"' + " value=" + '"' + fileName + '"' + "/>";
-								//   string EmbedStr =  "fms_app=" + '"' + playerUrl + '"' +           //ストリーミング再生の場合のみ設定可能
-								//  string EmbedStr = '"' + wiPlayerID + '"' + " src=" + '"' + playerUrl + '"' +
-
-								string EmbedStr = " video_file=" + '"' + fileName + '"' +
-																" width=" + '"' + this.MediaPlayerPanel.Width + '"' + " height= " + '"' + this.MediaPlayerPanel.Height + '"' +            // '"' + webWidth + '"'
-																" type=" + '"' + MimeTypeStr + '"' +
-																" allowfullscreen=" + '"' + " true= " + '"' +
-																" flashvars=" + '"' + flashVvars + '"' +
-																" type=" + '"' + "application/x-shockwave-flash" + '"' +
-																" pluginspage=" + '"' + pluginspage + '"' +
-																//                " autoplay=" + true +
-																"/>";
-
-								//     this.SFPlayer.EmbedMovie = true;
-								//           this.SFPlayer. = true;
-								this.SFPlayer.SetVariable("src", playerUrl);
-								this.SFPlayer.SetVariable("type", MimeTypeStr);
-								this.SFPlayer.SetVariable("flashvars", flashVvars);
-								//this.SFPlayer.SetVariable("type", "application/x-shockwave-flash");
-								//this.SFPlayer.SetVariable("pluginspage", pluginspage);
-								//      LoadFLV(fileName);
-								//         this.SFPlayer.Validating = fileName;
-								//        this.SFPlayer.Visible = true;ではtrueにならない
-								//<param name = "flashvars" value = "fms_app=FMSアプリケーションディレクトリのパス&video_file=動画ファイルのパス
-								//                                    &image_file=サムネイル画像のパス&link_url=リンク先のURL&autoplay=オートプレイのON・OFF
-								//                                    &mute=ミュートのON・OFF&volume=音量&controller=操作パネルの表示・非表示&buffertime=バッファ時間" />
-								//<param name="allowFullScreen" value="フルスクリーン化を可能にするかどうか" />
-								//<param name="movie" value="ふらだんすswfファイルのパス" />
-
-								//<embed src="ふらだんすswfファイルのパス" width="横幅" height="高さ" allowFullScreen="フルスクリーン化を可能にするかどうか" flashvars="fms_app=FMSアプリケーションディレクトリのパス&video_file=動画ファイルのパス&image_file=サムネイル画像のパス&link_url=リンク先のURL&autoplay=オートプレイのON・OFF&mute=ミュートのON・OFF&volume=音量&controller=操作パネルの表示・非表示&buffertime=バッファ時間" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object>
-								this.SFPlayer.MovieData = fileName;
-								*/
+					dbMsg += ",playerUrl=" + playerUrl;
+					AxShockwaveFlashObjects.AxShockwaveFlash SFPlayer =new AxShockwaveFlashObjects.AxShockwaveFlash();
+					if (SFPlayer != null) {
+						SFPlayer.LoadMovie(0, playerUrl);
+						Uri urlObj = new Uri(fileName);
+						if (urlObj.IsFile) {             //Uriオブジェクトがファイルを表していることを確認する
+							fileName = urlObj.AbsoluteUri;                 //Windows形式のパス表現に変換する
+							dbMsg += "Path=" + fileName;
+						}
+						string[] strs = { "fms_app=&video_file=", @"""", fileName };
+						string flashVvarsStr = strs[0] + strs[1] + strs[2] + strs[1];          //flvmov= M:\sample\123.flv
+																							   //string flashVvarsStr = @"fms_app=&video_file=" + fileName + '"';// + "&autoplay = true";             //&quot;	&#34;	&#x22;	'"' "fms_app=&video_file=\"M:\\sample\\123.flv\""
+																							   //string flashVvars = "fms_app=&video_file=" + fileName + "&" + "image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + '"';
+						dbMsg += ",flashVvars=" + flashVvarsStr;
+						SFPlayer.FlashVars = flashVvarsStr;
+					}
+					*/
 
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {

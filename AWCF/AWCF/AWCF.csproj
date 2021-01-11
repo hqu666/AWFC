@@ -159,6 +159,12 @@
     <Resource Include="Resources\drag.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AxInterop.ShockwaveFlashObjects.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="AxInterop.WMPLib.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="fladance.swf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -323,14 +323,20 @@ namespace AWCF.ViewModels
 			PlayListModel playListModel = new PlayListModel();
 			try {
 				dbMsg += "、FileURL=" + item;
+				string url = item;
 				//拡張部分を破棄してURLを読み出す
 				string[] items = item.Split(',');
-				string url = items[0];
+				if (1 < items.Length) {
+					url = items[0];
+				}
 				string extention = System.IO.Path.GetExtension(url);
 				if (-1 < Array.IndexOf(videoFiles, extention)) {
 					//	if (-1 < list.IndexOf(extention)) {
 					playListModel.UrlStr = url;
 					string[] urls = url.Split(Path.DirectorySeparatorChar);
+					if (urls.Length<summaryCol) {
+						urls = url.Split('/');
+					}
 					playListModel.Summary = urls[urls.Length - summaryCol];
 				} else {
 					dbMsg += ",extention=" + extention;
