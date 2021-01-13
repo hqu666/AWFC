@@ -46,7 +46,7 @@ using ListBox = System.Windows.Controls.ListBox;
 using Path = System.IO.Path;
 //using WMPLib;
 //using System.Windows.Controls.MediaElement;
-//using AxShockwaveFlashObjects;          //flv
+using AxShockwaveFlashObjects;          //flv
 using AWCF.Models;
 using ContextMenu = System.Windows.Controls.ContextMenu;
 using MenuItem = System.Windows.Controls.MenuItem;
@@ -146,7 +146,8 @@ namespace AWCF.ViewModels
                                               "mpa",".mpe",".webm",  ".ogv",".3gp",  ".3g2",  ".asf",  ".asx",
                                                 ".dvr-ms",".ivf",".wax",".wmv", ".wvx",  ".wm",  ".wmx",  ".wmz",
                                              };
-		public string[] WebVideo = new string[] { ".mp4", ".webm",".flv",".f4v",".3gp",  ".rm", ".swf",".dvr-ms",".ivf"};
+		public string[] WebVideo = new string[] { ".mp4", ".webm" ,".3gp",  ".rm",".dvr-ms",".ivf"};
+		public string[] FlashVideo = new string[] {  ".flv", ".f4v", ".swf" };
 		#endregion
 
 		public string FrameSource { get; set; }
@@ -155,14 +156,16 @@ namespace AWCF.ViewModels
 		/// EXPLORERのプロセス
 		/// </summary>
 		public System.Diagnostics.Process pEXPLORER;
+		public double VWidth = 960;
+		public double VHeight = 540;
 
-/// <summary>
-/// メイン画面
-/// </summary>
+		/// <summary>
+		/// メイン画面
+		/// </summary>
 		public MainViewModel()
-        {
-            Initialize();
-        }
+				{
+					Initialize();
+				}
 
         public void Initialize()
         {
@@ -183,7 +186,8 @@ namespace AWCF.ViewModels
                 AddPlayListCombo("");
                 RaisePropertyChanged(); //	"dataManager"
                 MakePlayListComboMenu();
-                MyLog(TAG, dbMsg);
+				dbMsg += "[" + VWidth + "×" + VHeight + "]";
+				MyLog(TAG, dbMsg);
 				//   CallWeb();
 				PlayListSaveBTVisble = "Hidden";
 				PlayListSaveRoot.IsEnabled = false;
@@ -871,26 +875,231 @@ namespace AWCF.ViewModels
 						WebViewModel WVM = new WebViewModel();
 						WVM.TargetURLStr = targetURLStr;
 						WVM.TargeStr = targetURLStr;
-						
-							WebPage WP =new WebPage();
+						WebPage WP =new WebPage();
 						WP.DataContext = WVM;
 						frame.Navigate(WP);
-						//FrameSource = "WebPage.xaml";
-						//RaisePropertyChanged("FrameSource");
-						//FrameDataContext = new WebViewModel();
-						//FrameDataContext.TargetURLStr = targetItem.UrlStr;
-						//RaisePropertyChanged("FrameDataContext");
-						//frame.Navigate(typeof(WebPage), targetItem.UrlStr);
-						//	MyView.MainFrame.Navigate(typeof(WebPage), targetItem.UrlStr); //
-					} else {
+						MyView.FrameGrid.Children.Add(frame);
+					} else if(-1 < Array.IndexOf(FlashVideo, extention)) {
+						MakeFlash(targetURLStr);
 					}
-					MyView.FrameGrid.Children.Add(frame);
 				} else {
 					dbMsg += ">>MyView == null";
 				}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		public AxShockwaveFlashObjects.AxShockwaveFlash SFPlayer;
+		//public WindowsMediaPlayer mediaPlayer;
+		//	public AxWMPLib.AxWindowsMediaPlayer mediaPlayer;           //AxWMPLib
+		/*
+			 FLV・SWFファイルの再生 http://www.geocities.co.jp/NatureLand/2023/reference/Multimedia/movie02.html
+			 Flash 4 で新しくサポートされたスクリプトメソッド       http://kb2.adobe.com/jp/cps/228/228681.html
+			 */
+		/// <summary>
+		/// Flashのmoveプレイヤーで渡されたファイルを再生
+		/// 
+		/// error : video_fileが設定されていません。
+		/// </summary>
+		/// <param name="fileName">再生ファイル名</param>
+		private void MakeFlash(string fileName) {
+			string TAG = "[MakeFlash]" + fileName;
+			string dbMsg = TAG;
+			try {
+		//		this.MediaPlayerPanel.Controls.RemoveAt(0);
+				this.SFPlayer = null;
+			//	this.playerWebBrowser = null;
+				//	this.mediaPlayer = null;
+				InitializeFLComponent();
+				try {
+					System.IO.FileInfo fi = new System.IO.FileInfo(fileName);
+					if (fi.Extension.Equals(".flv") || fi.Extension.Equals(".f4v")) {
+			//			LoadFladance(fileName);
+					} else if (fi.Extension.Equals(".swf")) {
+						this.SFPlayer.LoadMovie(0, fileName); //でthis.SFPlayer.Movieにセットされるが再生はされない
+															  //   Movie   "M:\\sample\\EmbedFlash.swf" 
+					}
+					dbMsg += ",Movie=" + this.SFPlayer.Movie;
+					dbMsg += ",MovieData=" + this.SFPlayer.MovieData;
+					dbMsg += ",FlashVars=" + this.SFPlayer.FlashVars;
+
+
+					this.SFPlayer.FlashCall += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FlashCallEventHandler(this.SFPlayer_FlashCall);
+					//          ((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();                   //必須
+					this.SFPlayer.Play();
+				} catch {
+					string titolStr = "Flash";
+					string msgStr = "Flashがインストールされていないようです";
+					MessageBoxResult result = MessageShowWPF(titolStr, msgStr, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+					dbMsg += ",result=" + result;
+				}
+
+
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		/// <summary>
+		/// ShockWaveObjewctを作成してGridに埋め込む
+		/// </summary>
+		private void InitializeFLComponent() {
+			string TAG = "[InitializeFLComponent]";
+			string dbMsg = TAG;
+			try {
+				//System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));   //?
+				this.SFPlayer = new AxShockwaveFlashObjects.AxShockwaveFlash();
+				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).BeginInit();   
+				//必須;http://bbs.wankuma.com/index.cgi?mode=al2&namber=9784&KLOG=22
+			//	this.SuspendLayout();           //必要？
+				this.SFPlayer.Dock = System.Windows.Forms.DockStyle.Fill;
+				this.SFPlayer.Enabled = true;
+	//0113		this.SFPlayer.Location = new System.Drawing.Point(0, 0);
+				this.SFPlayer.Name = "SFPlayer";
+				System.Windows.Forms.Panel MediaPlayerPanel = new System.Windows.Forms.Panel();
+				Frame frame = new Frame();
+				frame.Navigate(MediaPlayerPanel);
+				MyView.FrameGrid.Children.Add(frame);
+				VWidth = MyView.FrameGrid.ActualWidth;
+				VHeight = MyView.FrameGrid.ActualHeight;
+				dbMsg += "[" + VWidth + "×" + VHeight + "]";
+	//0113			this.SFPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("this.SFPlayer.OcxState")));
+				this.SFPlayer.Width = (int)VWidth;
+				this.SFPlayer.Height = (int)VHeight;	
+				dbMsg += "[" + this.SFPlayer.Width + "×" + this.SFPlayer.Height + "]";
+				this.SFPlayer.TabIndex = 0;
+				MediaPlayerPanel.Controls.Add(this.SFPlayer);
+				////this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
+				////this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
+				this.SFPlayer.FSCommand += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FSCommandEventHandler(this.SFPlayer_FSCommand);
+				this.SFPlayer.RegionChanged += new System.EventHandler(this.SFPlayer_RegionChanged);
+				this.SFPlayer.Move += new System.EventHandler(this.SFPlayer_Move);
+				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();                   //必須
+			//	this.ResumeLayout(false);
+
+				InitAxShockwaveFlash();
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				dbMsg += "<<以降でエラー発生>>" + er.Message;
+				MyLog(TAG, dbMsg);
+			}
+
+		}
+
+		private void SFPlayer_FSCommand(object sender, AxShockwaveFlashObjects._IShockwaveFlashEvents_FSCommandEvent e) {
+			string TAG = "[SFPlayer_FSCommand]";
+			string dbMsg = TAG;
+			try {
+				dbMsg += e.command + ";";
+				//switch (e.command)
+				//{
+				//    case 0:
+				//        dbMsg += "1";
+				//        //            PlayTitolLabel.Text = ("Undefined;WindowsMediaPlayerの状態が定義されていません");
+				//        break;
+				//}
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				dbMsg += "<<以降でエラー発生>>" + er.Message;
+				MyLog(TAG, dbMsg);
+			}
+		}
+
+		private void SFPlayer_Move(object sender, EventArgs e) {
+			string TAG = "[SFPlayer_Move]";
+			string dbMsg = TAG;
+			try {
+				dbMsg += e.ToString() + ";";
+				//switch (e.command)
+				//{
+				//    case 0:
+				//        dbMsg += "1";
+				//        //            PlayTitolLabel.Text = ("Undefined;WindowsMediaPlayerの状態が定義されていません");
+				//        break;
+				//}
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				dbMsg += "<<以降でエラー発生>>" + er.Message;
+				MyLog(TAG, dbMsg);
+			}
+		}
+
+		private void SFPlayer_RegionChanged(object sender, EventArgs e) {
+			string TAG = "[SFPlayer_RegionChanged]";
+			string dbMsg = TAG;
+			try {
+				dbMsg += e.ToString() + ";";
+				//switch (e.command)
+				//{
+				//    case 0:
+				//        dbMsg += "1";
+				//        //            PlayTitolLabel.Text = ("Undefined;WindowsMediaPlayerの状態が定義されていません");
+				//        break;
+				//}
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				dbMsg += "<<以降でエラー発生>>" + er.Message;
+				MyLog(TAG, dbMsg);
+			}
+		}
+
+		/// <summary>
+		/// AxShockwaveFlashの設定
+		/// </summary>
+		private void InitAxShockwaveFlash() {
+			string TAG = "[InitAxShockwaveFlash]";
+			string dbMsg = TAG;
+			try {
+				this.SFPlayer.AllowFullScreen = "false";
+				this.SFPlayer.BGColor = "000000";
+				this.SFPlayer.AllowNetworking = "all";
+
+				this.SFPlayer.CtlScale = "NoScale";
+				//this.SFPlayer.CtlScale = "NoBorder ";
+				//this.SFPlayer.CtlScale = "ExactFit";
+				//this.SFPlayer.CtlScale = "ShowAll";
+
+				this.SFPlayer.DeviceFont = false;
+				this.SFPlayer.EmbedMovie = true;
+
+				this.SFPlayer.FrameNum = -1;
+				this.SFPlayer.Loop = true;
+				this.SFPlayer.Playing = true;
+				this.SFPlayer.Profile = true;
+				this.SFPlayer.Quality2 = "High";
+				this.SFPlayer.SAlign = "LT";
+				this.SFPlayer.WMode = "Window";
+				this.SFPlayer.Dock = DockStyle.Fill;
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				dbMsg += "<<以降でエラー発生>>" + er.Message;
+				MyLog(TAG, dbMsg);
+			}
+		}
+
+		//C#でFLVファイルをお手軽再生   http://zecl.hatenablog.com/entry/20081119/p1///////////////////////////////
+		private void SFPlayer_FlashCall(object sender, _IShockwaveFlashEvents_FlashCallEvent e) {
+			string TAG = "[SFPlayer_FlashCall]";
+			string dbMsg = TAG;
+			try {
+				var document = new XmlDocument();
+				document.LoadXml(e.request);
+
+				XmlNodeList list = document.GetElementsByTagName("arguments");
+				//ResizePlayer(Convert.ToInt32(list[0].FirstChild.InnerText), Convert.ToInt32(list[0].ChildNodes[1].InnerText));
+
+				var width = int.Parse(list[0].ChildNodes[0].InnerText);
+				var height = int.Parse(list[0].ChildNodes[1].InnerText);
+
+				//this.ClientSize = new System.Drawing.Size(width, height);
+				//this.SFPlayer.ClientSize = this.SFPlayer.Size;
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				dbMsg += "<<以降でエラー発生>>" + er.Message;
+				MyLog(TAG, dbMsg);
 			}
 		}
 
@@ -1895,9 +2104,6 @@ namespace AWCF.ViewModels
         public System.ComponentModel.ComponentResourceManager resources;
         //	public SplitContainer MediaPlayerSplitter;
         public System.Windows.Forms.WebBrowser playerWebBrowser;
-        //	public WindowsMediaPlayer mediaPlayer;
-        //public AxWMPLib.AxWindowsMediaPlayer mediaPlayer;           //AxWMPLib
-        //public AxShockwaveFlashObjects.AxShockwaveFlash SFPlayer;
 
         string[] systemFiles = new string[] { "RECYCLE", ".bak", ".bdmv", ".blf", ".BIN", ".cab",  ".cfg",  ".cmd",".css",  ".dat",".dll",
                                                 ".inf",  ".inf", ".ini", ".lsi", ".iso",  ".lst", ".jar",  ".log", ".lock",".mis",

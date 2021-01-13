@@ -289,8 +289,13 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid Name="FrameGrid"/>
-                <!--<Frame Name="MainFrame"
+                <Grid Name="FrameGrid" />
+                <!--
+                
+                                      Width="{Binding Path=VWidth ,Mode=TwoWay }" 
+                      Height="{Binding Path=VHeight ,Mode=TwoWay }"                       
+
+                <Frame Name="MainFrame"
 				    Source = "{Binding FrameSource}"
                     DataContext= "{Binding FrameDataContext}"
                     Margin="5,5,5,5"

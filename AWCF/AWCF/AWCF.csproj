@@ -165,6 +165,9 @@
     <Content Include="AxInterop.WMPLib.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="EmbedFlash.swf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="fladance.swf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

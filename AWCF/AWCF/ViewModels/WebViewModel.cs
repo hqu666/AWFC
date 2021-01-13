@@ -478,8 +478,7 @@ namespace AWCF.ViewModels {
 				//dbMsg += ",assemblyPath=" + assemblyPath + ",assemblyName=" + assemblyName;
 				//dbMsg += ",playerUrl=" + playerUrl;//,playerUrl=C:\Users\博臣\source\repos\file_tree_clock_web1\file_tree_clock_web1\bin\Debug\fladance.swf 
 				string clsId = "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000";       //ブラウザーの ActiveX コントロール
-				string codeBase = "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,115,0"; 
-			//	string codeBase = "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0";
+				string codeBase = "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0";
 				string pluginspage = "http://www.macromedia.com/go/getflashplayer";
 				//dbMsg += "[" + webWidth + "×" + webHeight + "]";        //4/3=1.3		1478/957=1.53  801/392=2.04
 
@@ -504,10 +503,11 @@ namespace AWCF.ViewModels {
 				contlolPart += "\t\t</object>\n";
 
 
-				/*
+			/*	
 					dbMsg += ",playerUrl=" + playerUrl;
 					AxShockwaveFlashObjects.AxShockwaveFlash SFPlayer =new AxShockwaveFlashObjects.AxShockwaveFlash();
-					if (SFPlayer != null) {
+				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).BeginInit();
+				if (SFPlayer != null) {
 						SFPlayer.LoadMovie(0, playerUrl);
 						Uri urlObj = new Uri(fileName);
 						if (urlObj.IsFile) {             //Uriオブジェクトがファイルを表していることを確認する
@@ -521,8 +521,8 @@ namespace AWCF.ViewModels {
 						dbMsg += ",flashVvars=" + flashVvarsStr;
 						SFPlayer.FlashVars = flashVvarsStr;
 					}
-					*/
-
+					
+	*/
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);
@@ -867,90 +867,6 @@ namespace AWCF.ViewModels {
 //        }
 
 
-//        /*
-//         FLV・SWFファイルの再生 http://www.geocities.co.jp/NatureLand/2023/reference/Multimedia/movie02.html
-//         Flash 4 で新しくサポートされたスクリプトメソッド       http://kb2.adobe.com/jp/cps/228/228681.html
-//         */
-//        /// <summary>
-//        /// Flashのmoveプレイヤーで渡されたファイルを再生
-//        /// 
-//        /// error : video_fileが設定されていません。
-//        /// </summary>
-//        /// <param name="fileName">再生ファイル名</param>
-//        private void MakeFlash(string fileName)
-//        {
-//            string TAG = "[MakeFlash]" + fileName;
-//            string dbMsg = TAG;
-//            try
-//            {
-//                this.MediaPlayerPanel.Controls.RemoveAt(0);
-//                this.SFPlayer = null;
-//                this.playerWebBrowser = null;
-//                this.mediaPlayer = null;
-//                InitializeFLComponent();
-//                try
-//                {
-//                    System.IO.FileInfo fi = new System.IO.FileInfo(fileName);
-//                    if (fi.Extension.Equals(".flv") || fi.Extension.Equals(".f4v"))
-//                    {
-//                        LoadFladance(fileName);
-//                        //             LoadFlvplayer( fileName);
-//                        //        LoadFlaever(fileName);
-//                    }
-//                    else if (fi.Extension.Equals(".swf"))
-//                    {
-//                        this.SFPlayer.LoadMovie(0, fileName); //でthis.SFPlayer.Movieにセットされるが再生はされない
-//                                                              //   Movie   "M:\\sample\\EmbedFlash.swf" 
-//                    }
-//                    dbMsg += ",Movie=" + this.SFPlayer.Movie;
-//                    dbMsg += ",MovieData=" + this.SFPlayer.MovieData;
-//                    dbMsg += ",FlashVars=" + this.SFPlayer.FlashVars;
-//                    this.SFPlayer.FlashCall += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FlashCallEventHandler(this.SFPlayer_FlashCall);
-//                    //          ((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();                   //必須
-//                    this.SFPlayer.Play();
-//                }
-//                catch
-//                {
-//                    MessageBox.Show("Flashがインストールされていないようです");
-//                }
-
-
-//                MyLog(TAG, dbMsg);
-//            }
-//            catch (Exception er)
-//            {
-//                this.mediaPlayer = null;
-//                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(TAG, dbMsg);
-//            }
-//        }
-//        //C#でFLVファイルをお手軽再生   http://zecl.hatenablog.com/entry/20081119/p1///////////////////////////////
-//        private void SFPlayer_FlashCall(object sender, _IShockwaveFlashEvents_FlashCallEvent e)
-//        {
-//            string TAG = "[SFPlayer_FlashCall]";
-//            string dbMsg = TAG;
-//            try
-//            {
-//                var document = new XmlDocument();
-//                document.LoadXml(e.request);
-
-//                XmlNodeList list = document.GetElementsByTagName("arguments");
-//                //ResizePlayer(Convert.ToInt32(list[0].FirstChild.InnerText), Convert.ToInt32(list[0].ChildNodes[1].InnerText));
-
-//                var width = int.Parse(list[0].ChildNodes[0].InnerText);
-//                var height = int.Parse(list[0].ChildNodes[1].InnerText);
-
-//                this.ClientSize = new System.Drawing.Size(width, height);
-//                this.SFPlayer.ClientSize = this.SFPlayer.Size;
-//                MyLog(TAG, dbMsg);
-//            }
-//            catch (Exception er)
-//            {
-//                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(TAG, dbMsg);
-//            }
-//        }
-
 //        ///// <summary>
 //        ///// DragDrop
 //        ///// </summary>
@@ -974,90 +890,7 @@ namespace AWCF.ViewModels {
 //        //        e.Effect = DragDropEffects.All;
 //        //    }
 //        //}
-//        private void InitializeFLComponent()
-//        {
-//            string TAG = "[InitializeFLComponent]";
-//            string dbMsg = TAG;
-//            try
-//            {
-//                System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));   //?
-//                this.SFPlayer = new AxShockwaveFlashObjects.AxShockwaveFlash();
-//                ((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).BeginInit();      //必須;http://bbs.wankuma.com/index.cgi?mode=al2&namber=9784&KLOG=22
-//                this.SuspendLayout();           //必要？
-//                this.SFPlayer.Dock = System.Windows.Forms.DockStyle.Fill;
-//                this.SFPlayer.Enabled = true;
-//                this.SFPlayer.Location = new System.Drawing.Point(0, 0);
-//                this.SFPlayer.Name = "SFPlayer";
-//                this.SFPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("this.SFPlayer.OcxState")));
-//                this.SFPlayer.Size = new System.Drawing.Size(this.MediaPlayerPanel.Width, this.MediaPlayerPanel.Height);
-//                this.SFPlayer.TabIndex = 0;
 
-//                // 
-//                // Form1
-//                // 
-//                //      this.AllowDrop = true;
-//                //       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-//                //       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-//                this.MediaPlayerPanel.Controls.Add(this.SFPlayer);
-//                // 
-//                // Form1続き
-//                // 
-//                ////this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
-//                ////this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
-//                this.SFPlayer.FSCommand += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FSCommandEventHandler(this.SFPlayer_FSCommand);
-//                this.SFPlayer.RegionChanged += new System.EventHandler(this.SFPlayer_RegionChanged);
-//                this.SFPlayer.Move += new System.EventHandler(this.SFPlayer_Move);
-//                ((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();                   //必須
-//                this.ResumeLayout(false);
-
-//                InitAxShockwaveFlash();
-//                MyLog(TAG, dbMsg);
-//            }
-//            catch (Exception er)
-//            {
-//                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(TAG, dbMsg);
-//            }
-
-//        }
-
-//        /// <summary>
-//        /// AxShockwaveFlashの設定
-//        /// </summary>
-//        private void InitAxShockwaveFlash()
-//        {
-//            string TAG = "[InitAxShockwaveFlash]";
-//            string dbMsg = TAG;
-//            try
-//            {
-//                this.SFPlayer.AllowFullScreen = "false";
-//                this.SFPlayer.BGColor = "000000";
-//                this.SFPlayer.AllowNetworking = "all";
-
-//                this.SFPlayer.CtlScale = "NoScale";
-//                //this.SFPlayer.CtlScale = "NoBorder ";
-//                //this.SFPlayer.CtlScale = "ExactFit";
-//                //this.SFPlayer.CtlScale = "ShowAll";
-
-//                this.SFPlayer.DeviceFont = false;
-//                this.SFPlayer.EmbedMovie = true;
-
-//                this.SFPlayer.FrameNum = -1;
-//                this.SFPlayer.Loop = true;
-//                this.SFPlayer.Playing = true;
-//                this.SFPlayer.Profile = true;
-//                this.SFPlayer.Quality2 = "High";
-//                this.SFPlayer.SAlign = "LT";
-//                this.SFPlayer.WMode = "Window";
-//                this.SFPlayer.Dock = DockStyle.Fill;
-//                MyLog(TAG, dbMsg);
-//            }
-//            catch (Exception er)
-//            {
-//                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(TAG, dbMsg);
-//            }
-//        }
 
 //        /// <summary>
 //        /// FLVファイルのロード
@@ -1126,77 +959,6 @@ namespace AWCF.ViewModels {
 //        /// 
 //        /// 
 
-//        private void SFPlayer_FSCommand(object sender, AxShockwaveFlashObjects._IShockwaveFlashEvents_FSCommandEvent e)
-//        {
-//            string TAG = "[SFPlayer_FSCommand]";
-//            string dbMsg = TAG;
-//            try
-//            {
-//                dbMsg += e.command + ";";
-//                //switch (e.command)
-//                //{
-//                //    case 0:
-//                //        dbMsg += "1";
-//                //        //            PlayTitolLabel.Text = ("Undefined;WindowsMediaPlayerの状態が定義されていません");
-//                //        break;
-//                //}
-//                MyLog(TAG, dbMsg);
-//            }
-//            catch (Exception er)
-//            {
-//                this.mediaPlayer = null;
-//                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(TAG, dbMsg);
-//            }
-//        }
-
-//        private void SFPlayer_Move(object sender, EventArgs e)
-//        {
-//            string TAG = "[SFPlayer_Move]";
-//            string dbMsg = TAG;
-//            try
-//            {
-//                dbMsg += e.ToString() + ";";
-//                //switch (e.command)
-//                //{
-//                //    case 0:
-//                //        dbMsg += "1";
-//                //        //            PlayTitolLabel.Text = ("Undefined;WindowsMediaPlayerの状態が定義されていません");
-//                //        break;
-//                //}
-//                MyLog(TAG, dbMsg);
-//            }
-//            catch (Exception er)
-//            {
-//                this.mediaPlayer = null;
-//                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(TAG, dbMsg);
-//            }
-//        }
-
-//        private void SFPlayer_RegionChanged(object sender, EventArgs e)
-//        {
-//            string TAG = "[SFPlayer_RegionChanged]";
-//            string dbMsg = TAG;
-//            try
-//            {
-//                dbMsg += e.ToString() + ";";
-//                //switch (e.command)
-//                //{
-//                //    case 0:
-//                //        dbMsg += "1";
-//                //        //            PlayTitolLabel.Text = ("Undefined;WindowsMediaPlayerの状態が定義されていません");
-//                //        break;
-//                //}
-//                MyLog(TAG, dbMsg);
-//            }
-//            catch (Exception er)
-//            {
-//                this.mediaPlayer = null;
-//                dbMsg += "<<以降でエラー発生>>" + er.Message;
-//                MyLog(TAG, dbMsg);
-//            }
-//        }
 //        #endregion
 
 
