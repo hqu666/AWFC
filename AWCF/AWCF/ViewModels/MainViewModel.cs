@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using System.Data;
 using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 
 using Livet;
 using Livet.Commands;
@@ -853,7 +854,7 @@ namespace AWCF.ViewModels
 				dbMsg += "targetItem=" + targetItem.Summary;
 				if (MyView != null) {
 					if (0 < MyView.FrameGrid.Children.Count) {
-						dbMsg += "既存=" + MyView.FrameGrid.Children.Count + "件";
+						dbMsg += ">delete既存=" + MyView.FrameGrid.Children.Count + "件";
 						MyView.FrameGrid.Children.RemoveAt(0);
 					}
 					//if ( MyView.MainFrame.Source != null) {
@@ -875,12 +876,26 @@ namespace AWCF.ViewModels
 						WebViewModel WVM = new WebViewModel();
 						WVM.TargetURLStr = targetURLStr;
 						WVM.TargeStr = targetURLStr;
-						WebPage WP =new WebPage();
+						WebPage WP =new WebPage();                  //Page
 						WP.DataContext = WVM;
 						frame.Navigate(WP);
 						MyView.FrameGrid.Children.Add(frame);
 					} else if(-1 < Array.IndexOf(FlashVideo, extention)) {
-						MakeFlash(targetURLStr);
+						FlashForm FF = new FlashForm(targetURLStr);
+						frame.Navigate(FF);
+						MyView.FrameGrid.Children.Add(frame);
+						//if (extention.Equals(".flv") || extention.Equals(".f4v")) {
+						//	FF.LoadFLV(targetURLStr);
+						//} else if (extention.Equals(".swf")) {
+						//	FF.SFPlayer.LoadMovie(0, targetURLStr); //でthis.SFPlayer.Movieにセットされるが再生はされない
+						//										  //   Movie   "M:\\sample\\EmbedFlash.swf" 
+						//}
+
+						//System.Windows.Forms.Integration.WindowsFormsHost WFS = new System.Windows.Forms.Integration.WindowsFormsHost();
+						//WFS.Child=FF;
+						//MyView.FrameGrid.Children.Add(WFS);
+
+						//		MakeFlash(targetURLStr);
 					}
 				} else {
 					dbMsg += ">>MyView == null";
@@ -892,6 +907,7 @@ namespace AWCF.ViewModels
 		}
 
 		public AxShockwaveFlashObjects.AxShockwaveFlash SFPlayer;
+		private System.ComponentModel.IContainer components = null;
 		//public WindowsMediaPlayer mediaPlayer;
 		//	public AxWMPLib.AxWindowsMediaPlayer mediaPlayer;           //AxWMPLib
 		/*
@@ -909,13 +925,11 @@ namespace AWCF.ViewModels
 			string dbMsg = TAG;
 			try {
 		//		this.MediaPlayerPanel.Controls.RemoveAt(0);
-				this.SFPlayer = null;
-			//	this.playerWebBrowser = null;
-				//	this.mediaPlayer = null;
-				InitializeFLComponent();
+				this.SFPlayer = InitializeFLComponent();
 				try {
 					System.IO.FileInfo fi = new System.IO.FileInfo(fileName);
 					if (fi.Extension.Equals(".flv") || fi.Extension.Equals(".f4v")) {
+						LoadFLV(fileName, SFPlayer);
 			//			LoadFladance(fileName);
 					} else if (fi.Extension.Equals(".swf")) {
 						this.SFPlayer.LoadMovie(0, fileName); //でthis.SFPlayer.Movieにセットされるが再生はされない
@@ -932,7 +946,7 @@ namespace AWCF.ViewModels
 				} catch {
 					string titolStr = "Flash";
 					string msgStr = "Flashがインストールされていないようです";
-					MessageBoxResult result = MessageShowWPF(titolStr, msgStr, MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+					MessageBoxResult result = MessageShowWPF(titolStr, msgStr, MessageBoxButton.OK, MessageBoxImage.Exclamation);
 					dbMsg += ",result=" + result;
 				}
 
@@ -946,46 +960,49 @@ namespace AWCF.ViewModels
 		/// <summary>
 		/// ShockWaveObjewctを作成してGridに埋め込む
 		/// </summary>
-		private void InitializeFLComponent() {
+		private AxShockwaveFlashObjects.AxShockwaveFlash InitializeFLComponent() {
 			string TAG = "[InitializeFLComponent]";
 			string dbMsg = TAG;
+			//System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));   //?
+			AxShockwaveFlashObjects.AxShockwaveFlash SFPlayer = new AxShockwaveFlashObjects.AxShockwaveFlash();
 			try {
-				//System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));   //?
-				this.SFPlayer = new AxShockwaveFlashObjects.AxShockwaveFlash();
-				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).BeginInit();   
+				((System.ComponentModel.ISupportInitialize)(SFPlayer)).BeginInit();   
 				//必須;http://bbs.wankuma.com/index.cgi?mode=al2&namber=9784&KLOG=22
 			//	this.SuspendLayout();           //必要？
-				this.SFPlayer.Dock = System.Windows.Forms.DockStyle.Fill;
-				this.SFPlayer.Enabled = true;
-	//0113		this.SFPlayer.Location = new System.Drawing.Point(0, 0);
-				this.SFPlayer.Name = "SFPlayer";
+				SFPlayer.Dock = System.Windows.Forms.DockStyle.Fill;
+				SFPlayer.Enabled = true;
+	//0113		SFPlayer.Location = new System.Drawing.Point(0, 0);
+				SFPlayer.Name = "SFPlayer";
 				System.Windows.Forms.Panel MediaPlayerPanel = new System.Windows.Forms.Panel();
 				Frame frame = new Frame();
 				frame.Navigate(MediaPlayerPanel);
 				MyView.FrameGrid.Children.Add(frame);
-				VWidth = MyView.FrameGrid.ActualWidth;
-				VHeight = MyView.FrameGrid.ActualHeight;
+				//0115	VWidth = MyView.FrameGrid.ActualWidth;
+				//VHeight = MyView.FrameGrid.ActualHeight;
 				dbMsg += "[" + VWidth + "×" + VHeight + "]";
-	//0113			this.SFPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("this.SFPlayer.OcxState")));
-				this.SFPlayer.Width = (int)VWidth;
-				this.SFPlayer.Height = (int)VHeight;	
-				dbMsg += "[" + this.SFPlayer.Width + "×" + this.SFPlayer.Height + "]";
-				this.SFPlayer.TabIndex = 0;
+			//	SFPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("this.SFPlayer.OcxState")));
+			// 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Windows.Forms\v4.0_4.0.0.0__b77a5c561934e089\System.Windows.Forms.dll' が読み込まれました。PDB ファイルを開けないか、ファイルが見つかりません。
+// 'C:\Windows\Microsoft.Net\assembly\GAC_MSIL\System.Windows.Forms.resources\v4.0_4.0.0.0_ja_b77a5c561934e089\System.Windows.Forms.resources.dll' が読み込まれました。モジュールがシンボルなしでビルドされました。
+				SFPlayer.Width = (int)VWidth;
+				SFPlayer.Height = (int)VHeight;	
+				dbMsg += ">SFPlayer[" + this.SFPlayer.Width + "×" + this.SFPlayer.Height + "]";
+				SFPlayer.TabIndex = 0;
 				MediaPlayerPanel.Controls.Add(this.SFPlayer);
 				////this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
 				////this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
-				this.SFPlayer.FSCommand += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FSCommandEventHandler(this.SFPlayer_FSCommand);
-				this.SFPlayer.RegionChanged += new System.EventHandler(this.SFPlayer_RegionChanged);
-				this.SFPlayer.Move += new System.EventHandler(this.SFPlayer_Move);
+				SFPlayer.FSCommand += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FSCommandEventHandler(this.SFPlayer_FSCommand);
+				SFPlayer.RegionChanged += new System.EventHandler(this.SFPlayer_RegionChanged);
+				SFPlayer.Move += new System.EventHandler(this.SFPlayer_Move);
 				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();                   //必須
-			//	this.ResumeLayout(false);
+	//	0115	MyView.ResumeLayout(false);
 
-				InitAxShockwaveFlash();
+				SFPlayer=InitAxShockwaveFlash(SFPlayer);
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				dbMsg += "<<以降でエラー発生>>" + er.Message;
 				MyLog(TAG, dbMsg);
 			}
+			return SFPlayer;
 
 		}
 
@@ -1049,38 +1066,53 @@ namespace AWCF.ViewModels
 		/// <summary>
 		/// AxShockwaveFlashの設定
 		/// </summary>
-		private void InitAxShockwaveFlash() {
+		private AxShockwaveFlashObjects.AxShockwaveFlash InitAxShockwaveFlash(AxShockwaveFlashObjects.AxShockwaveFlash SFPlayer) {
 			string TAG = "[InitAxShockwaveFlash]";
 			string dbMsg = TAG;
 			try {
-				this.SFPlayer.AllowFullScreen = "false";
-				this.SFPlayer.BGColor = "000000";
-				this.SFPlayer.AllowNetworking = "all";
+				dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]";
+				SFPlayer.AllowFullScreen = "false";
+				SFPlayer.BGColor = "000000";
+				SFPlayer.AllowNetworking = "all";
+				dbMsg += ",AllowNetworking";
 
-				this.SFPlayer.CtlScale = "NoScale";
+	//0115			SFPlayer.CtlScale = "NoScale";
+				// 保護されているメモリに読み取りまたは書き込み操作を行おうとしました。他のメモリが壊れていることが考えられます。
 				//this.SFPlayer.CtlScale = "NoBorder ";
 				//this.SFPlayer.CtlScale = "ExactFit";
 				//this.SFPlayer.CtlScale = "ShowAll";
 
-				this.SFPlayer.DeviceFont = false;
-				this.SFPlayer.EmbedMovie = true;
+				SFPlayer.DeviceFont = false;
+				SFPlayer.EmbedMovie = true;
 
-				this.SFPlayer.FrameNum = -1;
-				this.SFPlayer.Loop = true;
-				this.SFPlayer.Playing = true;
-				this.SFPlayer.Profile = true;
-				this.SFPlayer.Quality2 = "High";
-				this.SFPlayer.SAlign = "LT";
-				this.SFPlayer.WMode = "Window";
-				this.SFPlayer.Dock = DockStyle.Fill;
+				SFPlayer.FrameNum = -1;
+				SFPlayer.Loop = true;
+				SFPlayer.Playing = true;
+				SFPlayer.Profile = true;
+				SFPlayer.Quality2 = "High";
+				SFPlayer.SAlign = "LT";
+				SFPlayer.WMode = "Window";
+				SFPlayer.Dock = DockStyle.Fill;
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				dbMsg += "<<以降でエラー発生>>" + er.Message;
 				MyLog(TAG, dbMsg);
 			}
+			return SFPlayer;
 		}
 
-		//C#でFLVファイルをお手軽再生   http://zecl.hatenablog.com/entry/20081119/p1///////////////////////////////
+		/// <summary>
+		/// FLVファイルのロード
+		/// </summary>
+		/// <param name="videoPath"></param>
+		private void LoadFLV(string videoPath , AxShockwaveFlashObjects.AxShockwaveFlash SFPlayer) {
+			SFPlayer.CallFunction("<invoke name=\"loadAndPlayVideo\" returntype=\"xml\"><arguments><string>" + videoPath + "</string></arguments></invoke>");
+		}
+		#endregion
+
+
+
+		//2008:C#でFLVファイルをお手軽再生   http://zecl.hatenablog.com/entry/20081119/p1///////////////////////////////
 		private void SFPlayer_FlashCall(object sender, _IShockwaveFlashEvents_FlashCallEvent e) {
 			string TAG = "[SFPlayer_FlashCall]";
 			string dbMsg = TAG;
@@ -1352,7 +1384,6 @@ namespace AWCF.ViewModels
             }
         }
 
-        #endregion
         #region inputダイアログのサンプル
         /// <summary>
         /// 三択ダイアログのコールバック
@@ -2149,7 +2180,7 @@ namespace AWCF.ViewModels
         string plRightClickItemUrl = "";       //PlayListクリックアイテムのFullPath
         string dragFrom = "";
         ListBox draglist;
-        Point mouceDownPoint;
+		System.Drawing.Point mouceDownPoint;
         int PlayListMouseDownNo;
         string PlayListMouseDownValue = "";
   //      DragDropEffects DDEfect;

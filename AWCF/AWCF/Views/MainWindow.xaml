@@ -8,7 +8,7 @@
       xmlns:l="http://schemas.livet-mvvm.net/2011/wpf"
       xmlns:igEditors="http://infragistics.com/Editors"
 		xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
-       xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+    xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"  
 	   xmlns:local="clr-namespace:AWCF"
 		xmlns:v="clr-namespace:AWCF.Views"
 		xmlns:vm="clr-namespace:AWCF.ViewModels"
