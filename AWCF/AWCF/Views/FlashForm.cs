@@ -127,33 +127,31 @@ namespace AWCF.Views {
 
 		private void InitializeComponent() {
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FlashForm));
-			this.axShockwaveFlash1 = new AxShockwaveFlashObjects.AxShockwaveFlash();
-			((System.ComponentModel.ISupportInitialize)(this.axShockwaveFlash1)).BeginInit();
+			this.SFPlayer = new AxShockwaveFlashObjects.AxShockwaveFlash();
+			((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).BeginInit();
+			//コントロールのレイアウト ロジックを一時的に中断します。
 			this.SuspendLayout();
-			// 
-			// axShockwaveFlash1
-			// 
-			this.axShockwaveFlash1.Enabled = true;
-			this.axShockwaveFlash1.Location = new System.Drawing.Point(63, 104);
-			this.axShockwaveFlash1.Name = "axShockwaveFlash1";
-			this.axShockwaveFlash1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axShockwaveFlash1.OcxState")));
-			this.axShockwaveFlash1.Size = new System.Drawing.Size(166, 95);
-			this.axShockwaveFlash1.TabIndex = 0;
-			// 
-			// FlashForm
-			// 
-			this.ClientSize = new System.Drawing.Size(284, 261);
-			this.Controls.Add(this.axShockwaveFlash1);
-			this.Name = "FlashForm";
-			((System.ComponentModel.ISupportInitialize)(this.axShockwaveFlash1)).EndInit();
-			this.ResumeLayout(false);
+			this.SFPlayer.Enabled = true;
+			this.SFPlayer.Location = new System.Drawing.Point(63, 104);
+			this.SFPlayer.Name = "SFPlayer";
+			this.SFPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("SFPlayer.OcxState")));
+			this.SFPlayer.Size = new System.Drawing.Size(166, 95);
+			this.SFPlayer.TabIndex = 0;
 
+			//フォームのクライアント領域のサイズを取得または設定
+			this.ClientSize = new System.Drawing.Size(284, 261);
+			//生成したAxShockwaveFlashObjectsの追加
+			this.Controls.Add(this.SFPlayer);
+			this.Name = "FlashPage";
+			((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();
+			//SuspendLayoutの終了：レイアウトロジックを再開する
+			this.ResumeLayout(false);
 		}
 
-		/// <summary>
-		/// AxShockwaveFlashの設定
-		/// </summary>
-		private void InitAxShockwaveFlash() {
+			/// <summary>
+			/// AxShockwaveFlashの設定
+			/// </summary>
+			private void InitAxShockwaveFlash() {
 			string TAG = "[InitAxShockwaveFlash]";
 			string dbMsg = TAG;
 			try {

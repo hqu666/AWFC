@@ -881,15 +881,16 @@ namespace AWCF.ViewModels
 						frame.Navigate(WP);
 						MyView.FrameGrid.Children.Add(frame);
 					} else if(-1 < Array.IndexOf(FlashVideo, extention)) {
-						FlashForm FF = new FlashForm(targetURLStr);
+						FlashPage FF = new FlashPage(targetURLStr);
+//						FlashForm FF = new FlashForm(targetURLStr);
 						frame.Navigate(FF);
 						MyView.FrameGrid.Children.Add(frame);
-						//if (extention.Equals(".flv") || extention.Equals(".f4v")) {
-						//	FF.LoadFLV(targetURLStr);
-						//} else if (extention.Equals(".swf")) {
-						//	FF.SFPlayer.LoadMovie(0, targetURLStr); //でthis.SFPlayer.Movieにセットされるが再生はされない
-						//										  //   Movie   "M:\\sample\\EmbedFlash.swf" 
-						//}
+						if (extention.Equals(".flv") || extention.Equals(".f4v")) {
+							FF.LoadFLV(targetURLStr);
+						} else if (extention.Equals(".swf")) {
+							FF.SFPlayer.LoadMovie(0, targetURLStr); //でthis.SFPlayer.Movieにセットされるが再生はされない
+																	//   Movie   "M:\\sample\\EmbedFlash.swf" 
+						}
 
 						//System.Windows.Forms.Integration.WindowsFormsHost WFS = new System.Windows.Forms.Integration.WindowsFormsHost();
 						//WFS.Child=FF;
