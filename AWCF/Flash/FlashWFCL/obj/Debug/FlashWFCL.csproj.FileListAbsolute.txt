@@ -1,0 +1,13 @@
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\FlashWFCL.csprojAssemblyReference.cache
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\Interop.ShockwaveFlashObjects.dll
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\AxInterop.ShockwaveFlashObjects.dll
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\FlashWFCL.csproj.ResolveComReference.cache
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\FlashWFCL.FlushControl.resources
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\FlashWFCL.csproj.GenerateResource.cache
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\FlashWFCL.csproj.CoreCompileInputs.cache
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\bin\Debug\FlashWFCL.dll
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\bin\Debug\FlashWFCL.pdb
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\bin\Debug\Interop.ShockwaveFlashObjects.dll
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\bin\Debug\AxInterop.ShockwaveFlashObjects.dll
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\FlashWFCL.dll
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\FlashWFCL.pdb

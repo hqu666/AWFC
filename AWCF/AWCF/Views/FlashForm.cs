@@ -126,26 +126,36 @@ namespace AWCF.Views {
 		#region メソッド
 
 		private void InitializeComponent() {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FlashForm));
-			this.SFPlayer = new AxShockwaveFlashObjects.AxShockwaveFlash();
-			((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).BeginInit();
-			//コントロールのレイアウト ロジックを一時的に中断します。
-			this.SuspendLayout();
-			this.SFPlayer.Enabled = true;
-			this.SFPlayer.Location = new System.Drawing.Point(63, 104);
-			this.SFPlayer.Name = "SFPlayer";
-			this.SFPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("SFPlayer.OcxState")));
-			this.SFPlayer.Size = new System.Drawing.Size(166, 95);
-			this.SFPlayer.TabIndex = 0;
+			string TAG = "[InitializeComponent]";
+			string dbMsg = TAG;
+			try {
+				System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FlashForm));
+				this.SFPlayer = new AxShockwaveFlashObjects.AxShockwaveFlash();
+				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).BeginInit();
+				//コントロールのレイアウト ロジックを一時的に中断します。
+				this.SuspendLayout();
+				this.SFPlayer.Enabled = true;
+				this.SFPlayer.Location = new System.Drawing.Point(10, 10);
+				this.SFPlayer.Name = "SFPlayer";
+				this.SFPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("SFPlayer.OcxState")));
+				this.SFPlayer.Size = new System.Drawing.Size(960, 540);
+				dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]";
+				this.SFPlayer.TabIndex = 0;
 
-			//フォームのクライアント領域のサイズを取得または設定
-			this.ClientSize = new System.Drawing.Size(284, 261);
-			//生成したAxShockwaveFlashObjectsの追加
-			this.Controls.Add(this.SFPlayer);
-			this.Name = "FlashPage";
-			((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();
-			//SuspendLayoutの終了：レイアウトロジックを再開する
-			this.ResumeLayout(false);
+				//フォームのクライアント領域のサイズを取得または設定
+				this.ClientSize = new System.Drawing.Size(284, 261);
+				//生成したAxShockwaveFlashObjectsの追加
+				this.Controls.Add(this.SFPlayer);
+				this.Name = "FlashPage";
+				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();
+				//SuspendLayoutの終了：レイアウトロジックを再開する
+				this.ResumeLayout(false);
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				dbMsg += "<<以降でエラー発生>>" + er.Message;
+				MyLog(TAG, dbMsg);
+			}
+
 		}
 
 			/// <summary>
@@ -195,6 +205,7 @@ namespace AWCF.Views {
 				if (SFPlayer != null) {
 					dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]";
 					SFPlayer.CallFunction("<invoke name=\"loadAndPlayVideo\" returntype=\"xml\"><arguments><string>" + videoPath + "</string></arguments></invoke>");
+					// HRESULT E_FAIL 
 				} else {
 					dbMsg += "SFPlayer = null";
 				}

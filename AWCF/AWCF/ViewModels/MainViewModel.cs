@@ -881,16 +881,31 @@ namespace AWCF.ViewModels
 						frame.Navigate(WP);
 						MyView.FrameGrid.Children.Add(frame);
 					} else if(-1 < Array.IndexOf(FlashVideo, extention)) {
-						FlashPage FF = new FlashPage(targetURLStr);
-//						FlashForm FF = new FlashForm(targetURLStr);
-						frame.Navigate(FF);
-						MyView.FrameGrid.Children.Add(frame);
-						if (extention.Equals(".flv") || extention.Equals(".f4v")) {
-							FF.LoadFLV(targetURLStr);
-						} else if (extention.Equals(".swf")) {
-							FF.SFPlayer.LoadMovie(0, targetURLStr); //でthis.SFPlayer.Movieにセットされるが再生はされない
-																	//   Movie   "M:\\sample\\EmbedFlash.swf" 
-						}
+						// Create the interop host control.
+						System.Windows.Forms.Integration.WindowsFormsHost host =
+							new System.Windows.Forms.Integration.WindowsFormsHost();
+
+						// Create the ActiveX control.H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\FlushControl.cs
+						FlashWFCL.FlushControl axWmp = new FlashWFCL.FlushControl(targetURLStr);
+
+						// Assign the ActiveX control as the host control's child.
+						host.Child = axWmp;
+
+						// Add the interop host control to the Grid
+						// control's collection of child controls.
+						MyView.FrameGrid.Children.Add(host);
+
+
+						////			FlashPage FF = new FlashPage(targetURLStr);
+						//			FlashForm FF = new FlashForm(targetURLStr);
+						//			frame.Navigate(FF);
+						//MyView.FrameGrid.Children.Add(frame);
+						//if (extention.Equals(".flv") || extention.Equals(".f4v")) {
+						//	FF.LoadFLV(targetURLStr);
+						//} else if (extention.Equals(".swf")) {
+						//	FF.SFPlayer.LoadMovie(0, targetURLStr); //でthis.SFPlayer.Movieにセットされるが再生はされない
+						//											//   Movie   "M:\\sample\\EmbedFlash.swf" 
+						//}
 
 						//System.Windows.Forms.Integration.WindowsFormsHost WFS = new System.Windows.Forms.Integration.WindowsFormsHost();
 						//WFS.Child=FF;
