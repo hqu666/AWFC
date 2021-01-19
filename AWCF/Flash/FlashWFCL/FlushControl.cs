@@ -10,23 +10,22 @@ using System.Xml;
 using AxShockwaveFlashObjects;
 using System.Threading;
 
-namespace FlashWFCL { 
+namespace PlayerWFCL { 
 
 	public partial class FlushControl : UserControl { 
 		public string titolStr = "【FlashPage】";
 		private System.ComponentModel.IContainer components = null;
-	//	public AxShockwaveFlash SFPlayer;
 		public string TargetURLStr;
 
 		#region コンストラクタ
 		public FlushControl(string targetURLStr) {
-			string TAG = "[FlashPage]";
+			string TAG = "[FlushControl]";
 			string dbMsg = TAG;
 			try {
 				dbMsg += "targetURLStr=" + targetURLStr;
 				TargetURLStr = targetURLStr;
 				Initialize();
-				InitAxShockwaveFlash();
+	//			InitAxShockwaveFlash();
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				dbMsg += "<<以降でエラー発生>>" + er.Message;
@@ -34,54 +33,56 @@ namespace FlashWFCL {
 			}
 		}
 
-		public FlushControl() {
-			string TAG = "[FlashPage]";
-			string dbMsg = TAG;
-			try {
-				Initialize();
-				InitAxShockwaveFlash();
-				MyLog(TAG, dbMsg);
-			} catch (Exception er) {
-				dbMsg += "<<以降でエラー発生>>" + er.Message;
-				MyLog(TAG, dbMsg);
-			}
-		}
+		//public FlushControl() {
+		//	string TAG = "[FlashPage]";
+		//	string dbMsg = TAG;
+		//	try {
+		//		Initialize();
+		//		MyLog(TAG, dbMsg);
+		//	} catch (Exception er) {
+		//		dbMsg += "<<以降でエラー発生>>" + er.Message;
+		//		MyLog(TAG, dbMsg);
+		//	}
+		//}
 
 
 		/// <summary>
 		/// FormのInitializeComponent
 		/// </summary>
-		private void Initialize() {
+		public void Initialize() {
 			string TAG = "[Initialize]";
 			string dbMsg = TAG;
 			try {
-//				System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FlushControl));
-//		//		this.SFPlayer = new AxShockwaveFlashObjects.AxShockwaveFlash();
-//				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).BeginInit();
-//				////コントロールのレイアウト ロジックを一時的に中断します。
-//				//this.SuspendLayout();
-//				this.SFPlayer.Enabled = true;
-//				this.SFPlayer.Location = new System.Drawing.Point(0, 0);
-//				this.SFPlayer.Name = "SFPlayer";
-//				//this.SFPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("SFPlayer.OcxState")));
-//				////'System.Windows.Forms.AxHost+InvalidActiveXStateException' 
-//				this.SFPlayer.Size = new System.Drawing.Size(960, 540);
-//				this.SFPlayer.TabIndex = 0;
+				System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FlushControl));
+				this.SFPlayer = new AxShockwaveFlashObjects.AxShockwaveFlash();
+				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).BeginInit();
+				////コントロールのレイアウト ロジックを一時的に中断します。
+				this.SuspendLayout();
+				this.SFPlayer.Enabled = true;
+				this.SFPlayer.Location = new System.Drawing.Point(0, 0);
+				this.SFPlayer.Name = "SFPlayer";
+				//this.SFPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("SFPlayer.OcxState")));
+				////'System.Windows.Forms.AxHost+InvalidActiveXStateException' 
+				this.SFPlayer.Size = new System.Drawing.Size(960, 540);
+				dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]";
+				this.SFPlayer.TabIndex = 0;
 
-//				////フォームのクライアント領域のサイズを取得または設定
-//				//this.ClientSize = new System.Drawing.Size(284, 261);
-//				//生成したAxShockwaveFlashObjectsの追加	
+				////フォームのクライアント領域のサイズを取得または設定
+				//this.ClientSize = new System.Drawing.Size(284, 261);
+				//生成したAxShockwaveFlashObjectsの追加	
 
-//				//this.Controls.Add(this.SFPlayer);
-//				//	Frame frame = new Frame();
-//				//		this.PlayerFrame.Navigate(this.SFPlayer);
-//				////		System.Windows.Forms.AxHost + InvalidActiveXStateException
-//				//	this.FlashGrid.Children.Add((UIElement)frame);
-////				this.Name = "FlashPage";
-//				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();
-//				////SuspendLayoutの終了：レイアウトロジックを再開する
-//				//this.ResumeLayout(false);
+				//this.Controls.Add(this.SFPlayer);
+				//	Frame frame = new Frame();
+				//		this.PlayerFrame.Navigate(this.SFPlayer);
+				////		System.Windows.Forms.AxHost + InvalidActiveXStateException
+				//	this.FlashGrid.Children.Add((UIElement)frame);
+				//				this.Name = "FlashPage";
+				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();
+				////SuspendLayoutの終了：レイアウトロジックを再開する
+				//MyLog(TAG, dbMsg);
+				//InitAxShockwaveFlash();
 				MyLog(TAG, dbMsg);
+				this.ResumeLayout(false);
 			} catch (Exception er) {
 				dbMsg += "<<以降でエラー発生>>" + er.Message;
 				MyLog(TAG, dbMsg);
@@ -91,17 +92,20 @@ namespace FlashWFCL {
 		/// <summary>
 		/// AxShockwaveFlashの設定
 		/// </summary>
-		private void InitAxShockwaveFlash() {
+		public void InitAxShockwaveFlash() {
 			string TAG = "[InitAxShockwaveFlash]";
 			string dbMsg = TAG;
 			try {
 				dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]";
 
-				this.SFPlayer.AllowFullScreen = "false";
+				//0119		this.SFPlayer.AllowFullScreen = "false";
+				////System.Windows.Forms.AxHost.InvalidActiveXStateException
 				this.SFPlayer.BGColor = "000000";
 				this.SFPlayer.AllowNetworking = "all";
 
-				this.SFPlayer.CtlScale = "NoScale";
+	//0119			this.SFPlayer.CtlScale = "NoScale";
+				////System.AccessViolationException
+
 				//this.SFPlayer.CtlScale = "NoBorder ";
 				//this.SFPlayer.CtlScale = "ExactFit";
 				//this.SFPlayer.CtlScale = "ShowAll";
@@ -275,14 +279,14 @@ namespace FlashWFCL {
 		public void MyLog(string TAG, string dbMsg) {
 			dbMsg = titolStr + dbMsg;
 #if DEBUG
-			Console.WriteLine(TAG + " : " + dbMsg);
+			Console.WriteLine(TAG + "【FlushControl】" + dbMsg);
 
 			//Constant.debugNow = true;
 #endif
 		}
 
 		public void MyErrorLog(string TAG, string dbMsg, Exception err) {
-			Console.WriteLine(TAG + " : " + dbMsg + "でエラー発生;" + err);
+			Console.WriteLine(TAG + "【FlushControl】" + dbMsg + "でエラー発生;" + err);
 		}
 
 		//public System.Windows.MessageBoxResult MessageShowWPF(String titolStr, String msgStr,

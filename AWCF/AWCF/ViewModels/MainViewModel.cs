@@ -2,31 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media;
-using System.Data.SqlClient;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Reflection;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using System.Data;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 using Livet;
 using Livet.Commands;
-using Livet.Messaging.Windows;
-using Livet.EventListeners;
 using Livet.Messaging;
-using Livet.Messaging.IO;
 
 using AWCF.Views;
 
@@ -34,9 +19,7 @@ using AWCF.Views;
 ///WebBrowserコントロールを配置すると、IEのバージョン 7をIE11の Edgeモードに変更///
 ///WebBrowserコントロールを配置すると、IEのバージョン 7をIE11の Edgeモードに変更///
 using System.IO;
-using System.Drawing;
 //using System.Windows;だとDragDropEffectsでエラー発生
-using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
 ///FileOpenDialogのカスタマイズ//////////////////////////////////////////////////////////////////////
@@ -51,11 +34,9 @@ using AxShockwaveFlashObjects;          //flv
 using AWCF.Models;
 using ContextMenu = System.Windows.Controls.ContextMenu;
 using MenuItem = System.Windows.Controls.MenuItem;
-using System.Threading;
 
-namespace AWCF.ViewModels
-{
-    public class MainViewModel : ViewModel
+namespace AWCF.ViewModels {
+	public class MainViewModel : ViewModel
     {
 		public Views.MainWindow MyView { get; set; }
 
@@ -147,7 +128,7 @@ namespace AWCF.ViewModels
                                               "mpa",".mpe",".webm",  ".ogv",".3gp",  ".3g2",  ".asf",  ".asx",
                                                 ".dvr-ms",".ivf",".wax",".wmv", ".wvx",  ".wm",  ".wmx",  ".wmz",
                                              };
-		public string[] WebVideo = new string[] { ".mp4", ".webm" ,".3gp",  ".rm",".dvr-ms",".ivf"};
+		public string[] WebVideo = new string[] {".webm" ,".3gp",  ".rm",".dvr-ms",".ivf"};
 		public string[] FlashVideo = new string[] {  ".flv", ".f4v", ".swf" };
 		#endregion
 
@@ -885,15 +866,20 @@ namespace AWCF.ViewModels
 						System.Windows.Forms.Integration.WindowsFormsHost host =
 							new System.Windows.Forms.Integration.WindowsFormsHost();
 
-						// Create the ActiveX control.H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\FlushControl.cs
-						FlashWFCL.FlushControl axWmp = new FlashWFCL.FlushControl(targetURLStr);
+						// Create the ActiveX control.
+						PlayerWFCL.FlushControl axFLP = new PlayerWFCL.FlushControl(targetURLStr);
+						if (axFLP.SFPlayer != null) {
+							// Assign the ActiveX control as the host control's child.
+							host.Child = axFLP;
 
-						// Assign the ActiveX control as the host control's child.
-						host.Child = axWmp;
+							// Add the interop host control to the Grid
+							// control's collection of child controls.
+							MyView.FrameGrid.Children.Add(host);
 
-						// Add the interop host control to the Grid
-						// control's collection of child controls.
-						MyView.FrameGrid.Children.Add(host);
+							axFLP.InitAxShockwaveFlash();
+						} else {
+							dbMsg += ">>FlushControl生成できず";
+						}
 
 
 						////			FlashPage FF = new FlashPage(targetURLStr);
@@ -912,6 +898,24 @@ namespace AWCF.ViewModels
 						//MyView.FrameGrid.Children.Add(WFS);
 
 						//		MakeFlash(targetURLStr);
+					} else {
+						// Create the interop host control.
+						System.Windows.Forms.Integration.WindowsFormsHost host =
+							new System.Windows.Forms.Integration.WindowsFormsHost();
+
+						// Create the ActiveX control.
+						PlayerWFCL.WMPControl axWmp = new PlayerWFCL.WMPControl();
+
+						// Assign the ActiveX control as the host control's child.
+						host.Child = axWmp;
+
+						// Add the interop host control to the Grid
+						// control's collection of child controls.
+						MyView.FrameGrid.Children.Add(host);
+
+						// Play a .wav file with the ActiveX control.
+						//	axWmp. = targetURLStr;
+						axWmp.AddURl(targetURLStr);
 					}
 				} else {
 					dbMsg += ">>MyView == null";

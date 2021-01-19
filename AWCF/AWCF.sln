@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28307.1259
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AWCF", "AWCF\AWCF.csproj", "{4CDBCFEF-82D7-43B3-B3AA-687194191EC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashWFCL", "Flash\FlashWFCL\FlashWFCL.csproj", "{61FF5896-24F7-42DB-922D-92E99736068C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayerWFCL", "Flash\FlashWFCL\PlayerWFCL.csproj", "{61FF5896-24F7-42DB-922D-92E99736068C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

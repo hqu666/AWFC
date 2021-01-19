@@ -206,9 +206,9 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Flash\FlashWFCL\FlashWFCL.csproj">
+    <ProjectReference Include="..\Flash\FlashWFCL\PlayerWFCL.csproj">
       <Project>{61ff5896-24f7-42db-922d-92e99736068c}</Project>
-      <Name>FlashWFCL</Name>
+      <Name>PlayerWFCL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
