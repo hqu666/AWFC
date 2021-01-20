@@ -289,21 +289,9 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <!--ここで動画再生-->
                 <Grid Name="FrameGrid" />
-                <!--
-                
-                                      Width="{Binding Path=VWidth ,Mode=TwoWay }" 
-                      Height="{Binding Path=VHeight ,Mode=TwoWay }"                       
 
-                <Frame Name="MainFrame"
-				    Source = "{Binding FrameSource}"
-                    DataContext= "{Binding FrameDataContext}"
-                    Margin="5,5,5,5"
-                    Width="Auto" 
-                    Height="Auto"
-                    MinHeight="800" 
-                       Navigated="MainFrame_Navigated"
-					/>-->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>

@@ -867,37 +867,23 @@ namespace AWCF.ViewModels {
 							new System.Windows.Forms.Integration.WindowsFormsHost();
 
 						// Create the ActiveX control.
-						PlayerWFCL.FlushControl axFLP = new PlayerWFCL.FlushControl(targetURLStr);
+						PlayerWFCL.FlushControl axFLP = new PlayerWFCL.FlushControl();
+						// Assign the ActiveX control as the host control's child.
+						host.Child = axFLP;
+
+						// Add the interop host control to the Grid
+						// control's collection of child controls.
+						MyView.FrameGrid.Children.Add(host);
+
+						//		axFLP.InitAxShockwaveFlash();
+						axFLP.AddURl(targetURLStr);
+
+
 						if (axFLP.SFPlayer != null) {
-							// Assign the ActiveX control as the host control's child.
-							host.Child = axFLP;
-
-							// Add the interop host control to the Grid
-							// control's collection of child controls.
-							MyView.FrameGrid.Children.Add(host);
-
-							axFLP.InitAxShockwaveFlash();
 						} else {
 							dbMsg += ">>FlushControl生成できず";
 						}
 
-
-						////			FlashPage FF = new FlashPage(targetURLStr);
-						//			FlashForm FF = new FlashForm(targetURLStr);
-						//			frame.Navigate(FF);
-						//MyView.FrameGrid.Children.Add(frame);
-						//if (extention.Equals(".flv") || extention.Equals(".f4v")) {
-						//	FF.LoadFLV(targetURLStr);
-						//} else if (extention.Equals(".swf")) {
-						//	FF.SFPlayer.LoadMovie(0, targetURLStr); //でthis.SFPlayer.Movieにセットされるが再生はされない
-						//											//   Movie   "M:\\sample\\EmbedFlash.swf" 
-						//}
-
-						//System.Windows.Forms.Integration.WindowsFormsHost WFS = new System.Windows.Forms.Integration.WindowsFormsHost();
-						//WFS.Child=FF;
-						//MyView.FrameGrid.Children.Add(WFS);
-
-						//		MakeFlash(targetURLStr);
 					} else {
 						// Create the interop host control.
 						System.Windows.Forms.Integration.WindowsFormsHost host =
@@ -914,7 +900,6 @@ namespace AWCF.ViewModels {
 						MyView.FrameGrid.Children.Add(host);
 
 						// Play a .wav file with the ActiveX control.
-						//	axWmp. = targetURLStr;
 						axWmp.AddURl(targetURLStr);
 					}
 				} else {

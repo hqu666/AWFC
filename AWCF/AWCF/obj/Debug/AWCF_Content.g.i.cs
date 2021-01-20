@@ -9,7 +9,6 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("axinterop.shockwaveflashobjects.dll")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("axinterop.wmplib.dll")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("embedflash.swf")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("fladance.swf")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("webview2loader.dll")]

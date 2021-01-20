@@ -68,9 +68,6 @@
     <Compile Include="Views\FileNameInput.xaml.cs">
       <DependentUpon>FileNameInput.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FlashForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\FlashPage.xaml.cs">
       <DependentUpon>FlashPage.xaml</DependentUpon>
     </Compile>
@@ -118,9 +115,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\FlashForm.resx">
-      <DependentUpon>FlashForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -174,9 +168,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AxInterop.ShockwaveFlashObjects.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="AxInterop.WMPLib.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="EmbedFlash.swf">

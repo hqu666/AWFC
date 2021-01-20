@@ -14,7 +14,7 @@ namespace PlayerWFCL {
 
 
 		public WMPControl() {
-			string TAG = "[FlashPage]";
+			string TAG = "[WMPControl]";
 			string dbMsg = TAG;
 			try {
 				InitializeComponent();
