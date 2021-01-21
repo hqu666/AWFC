@@ -109,8 +109,10 @@ namespace PlayerWFCL {
 			}
 		}
 
-
-
+		/// <summary>
+		/// クラス外から再生ファイルを指定する
+		/// </summary>
+		/// <param name="targetURLStr"></param>
 		public void AddURl(string targetURLStr) {
 			string TAG = "[AddURl]";
 			string dbMsg = TAG;
@@ -127,6 +129,7 @@ namespace PlayerWFCL {
 															 //   Movie   "M:\\sample\\EmbedFlash.swf" 
 					}
 					SFPlayer.FlashCall += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FlashCallEventHandler(SFPlayer_FlashCall);
+			//		SFPlayer.Play();
 				} catch {
 					string titolStr = "Flash";
 						//dbMsg += ",result=" + result;
@@ -154,7 +157,18 @@ namespace PlayerWFCL {
 			try {
 				if (this.SFPlayer != null) {
 					dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]";
-					this.SFPlayer.CallFunction("<invoke name=\"loadAndPlayVideo\" returntype=\"xml\"><arguments><string>" + videoPath + "</string></arguments></invoke>");
+					//SFPlayer.LoadMovie(0, videoPath); //ストレートには読めない
+					string assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+					dbMsg += "、実行デレクトリ= " + assemblyPath;
+					string[] urlStrs = assemblyPath.Split(System.IO.Path.DirectorySeparatorChar);                   //パスセパレータで切り分け
+					string assemblyName = urlStrs[urlStrs.Length - 1];
+					string playerUrl = assemblyPath.Replace(assemblyName, "fladance.swf");
+					dbMsg += "、playerUrl= " + playerUrl;
+					SFPlayer.LoadMovie(0, playerUrl);
+					SFPlayer.FlashVars = "video_file=" + videoPath;
+
+													  ///////オリジナル
+													  ////		this.SFPlayer.CallFunction("<invoke name=\"loadAndPlayVideo\" returntype=\"xml\"><arguments><string>" + videoPath + "</string></arguments></invoke>");
 				} else {
 					dbMsg += "SFPlayer = null";
 				}

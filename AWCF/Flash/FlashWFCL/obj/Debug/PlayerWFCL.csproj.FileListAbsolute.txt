@@ -16,3 +16,4 @@ H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\PlayerWFCL.dll
 H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\PlayerWFCL.pdb
 H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\PlayerWFCL.csprojAssemblyReference.cache
 H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\obj\Debug\PlayerWFCL.FlushControl.resources
+H:\develop\dnet\AWFC2\AWCF\Flash\FlashWFCL\bin\Debug\fladance.swf
