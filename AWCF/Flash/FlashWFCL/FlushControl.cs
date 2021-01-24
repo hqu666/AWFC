@@ -14,12 +14,28 @@ namespace PlayerWFCL {
 	public partial class FlushControl : UserControl {
 
 		public string titolStr = "【WMPControl】";
+		/// <summary>
+		/// 実行デレクトリ
+		/// </summary>
+		public string assemblyPath;
+		/// <summary>
+		/// 元実行ファイル
+		/// </summary>
+		public string assemblyName;
+
 
 		public FlushControl() {
 			string TAG = "[WMPControl]";
 			string dbMsg = TAG;
 			try {
 				InitializeComponent();
+				this.assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+				dbMsg += "、実行デレクトリ= " + assemblyPath;
+				string[] urlStrs = assemblyPath.Split(System.IO.Path.DirectorySeparatorChar);                   //パスセパレータで切り分け
+				this.assemblyName = urlStrs[urlStrs.Length - 1];
+				dbMsg += "、元実行ファイル= " + assemblyName;
+
+				Initialize();
 				InitAxShockwaveFlash();
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
@@ -37,32 +53,50 @@ namespace PlayerWFCL {
 			string dbMsg = TAG;
 			try {
 				System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FlushControl));
-				this.SFPlayer = new AxShockwaveFlashObjects.AxShockwaveFlash();
 				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).BeginInit();
-				////コントロールのレイアウト ロジックを一時的に中断します。
-				//this.SuspendLayout();
+				this.SFPlayer.Dock = System.Windows.Forms.DockStyle.Fill;
 				this.SFPlayer.Enabled = true;
 				this.SFPlayer.Location = new System.Drawing.Point(0, 0);
 				this.SFPlayer.Name = "SFPlayer";
-				//this.SFPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("SFPlayer.OcxState")));
-				////'System.Windows.Forms.AxHost+InvalidActiveXStateException' 
+				this.SFPlayer.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("SFPlayer.OcxState")));
 				this.SFPlayer.Size = new System.Drawing.Size(960, 540);
 				this.SFPlayer.TabIndex = 0;
+				this.Name = "FlashObj";
 
-				////フォームのクライアント領域のサイズを取得または設定
-				//this.ClientSize = new System.Drawing.Size(284, 261);
-				//生成したAxShockwaveFlashObjectsの追加	
-
-				//this.Controls.Add(this.SFPlayer);
-				//	Frame frame = new Frame();
-				//		this.PlayerFrame.Navigate(this.SFPlayer);
-				////		System.Windows.Forms.AxHost + InvalidActiveXStateException
-				//	this.FlashGrid.Children.Add((UIElement)frame);
-
-				this.Name = "FlashPage";
+				// 
+				// Form1
+				// 
+				this.AllowDrop = true;
+				this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+				this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+				this.ClientSize = new System.Drawing.Size(394, 312);
+				//0124		this.MaximizeBox = false;
+				//0124		this.Text = "Form1";
+				//0124						this.Load += new System.EventHandler(this.FlushControlLoad);
+				//0124			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
+				//0124			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
 				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();
-				////SuspendLayoutの終了：レイアウトロジックを再開する
-				//this.ResumeLayout(false);
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				dbMsg += "<<以降でエラー発生>>" + er.Message;
+				MyLog(TAG, dbMsg);
+			}
+		}
+
+		private void FlushControlLoad(object sender, EventArgs e) {
+			string TAG = "[FlushControlLoad]";
+			string dbMsg = TAG;
+			try {
+				try {
+					dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]" + "、元実行ファイル= " + assemblyName;
+					//		string playerUrl = assemblyPath.Replace(assemblyName, "flvplayer-305.swf");
+					string playerUrl = assemblyPath.Replace(assemblyName, "fladance.swf");
+					dbMsg += " 、playerUrl= " + playerUrl;
+					SFPlayer.LoadMovie(0, playerUrl);
+					SFPlayer.FlashCall += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FlashCallEventHandler(SFPlayer_FlashCall);
+				} catch {
+					MessageBox.Show("Flashがインストールされていないようですが・・(^ω^;)");
+				}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				dbMsg += "<<以降でエラー発生>>" + er.Message;
@@ -83,9 +117,9 @@ namespace PlayerWFCL {
 				this.SFPlayer.BGColor = "000000";
 				this.SFPlayer.AllowNetworking = "all";
 
-			//	this.SFPlayer.CtlScale = "NoScale";
+				this.SFPlayer.CtlScale = "NoScale";
 				//this.SFPlayer.CtlScale = "NoBorder ";
-				this.SFPlayer.CtlScale = "ExactFit";
+				//	this.SFPlayer.CtlScale = "ExactFit";
 				//this.SFPlayer.CtlScale = "ShowAll";
 
 				this.SFPlayer.DeviceFont = false;
@@ -99,8 +133,6 @@ namespace PlayerWFCL {
 				this.SFPlayer.SAlign = "LT";
 				this.SFPlayer.WMode = "Window";
 				this.SFPlayer.Dock = DockStyle.Fill;
-
-		//		this.SFPlayer.Controls.Add. = DockStyle.Fill;
 
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
@@ -122,14 +154,14 @@ namespace PlayerWFCL {
 					string extention = System.IO.Path.GetExtension(targetURLStr);
 					dbMsg += "、拡張子=" + extention;
 					if (extention.Equals(".flv") || extention.Equals(".f4v")) {
-							LoadFLV(targetURLStr);
+						LoadFLV(targetURLStr);
+						//	SFPlayer.CallFunction(targetURLStr);
 					} else if (extention.Equals(".swf")) {
-						//swfファイルならなんでもいい
 						SFPlayer.LoadMovie(0, targetURLStr); //でthis.SFPlayer.Movieにセットされるが再生はされない
 															 //   Movie   "M:\\sample\\EmbedFlash.swf" 
 					}
 					SFPlayer.FlashCall += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FlashCallEventHandler(SFPlayer_FlashCall);
-			//		SFPlayer.Play();
+					SFPlayer.Play();
 				} catch {
 					string titolStr = "Flash";
 						//dbMsg += ",result=" + result;
@@ -151,24 +183,32 @@ namespace PlayerWFCL {
 		/// FLVファイルのロード
 		/// </summary>
 		/// <param name="videoPath"></param>
-		public void LoadFLV(string videoPath) {
+		public void LoadFLV(string targetURLStr) {
 			string TAG = "[LoadFLV]";
 			string dbMsg = TAG;
 			try {
 				if (this.SFPlayer != null) {
-					dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]";
-					//SFPlayer.LoadMovie(0, videoPath); //ストレートには読めない
-					string assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-					dbMsg += "、実行デレクトリ= " + assemblyPath;
-					string[] urlStrs = assemblyPath.Split(System.IO.Path.DirectorySeparatorChar);                   //パスセパレータで切り分け
-					string assemblyName = urlStrs[urlStrs.Length - 1];
+					dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]" + "、元実行ファイル= " + assemblyName;
+					//		string playerUrl = assemblyPath.Replace(assemblyName, "flvplayer-305.swf");
 					string playerUrl = assemblyPath.Replace(assemblyName, "fladance.swf");
-					dbMsg += "、playerUrl= " + playerUrl;
+					dbMsg += " 、playerUrl= " + playerUrl;
 					SFPlayer.LoadMovie(0, playerUrl);
-					SFPlayer.FlashVars = "video_file=" + videoPath;
 
-													  ///////オリジナル
-													  ////		this.SFPlayer.CallFunction("<invoke name=\"loadAndPlayVideo\" returntype=\"xml\"><arguments><string>" + videoPath + "</string></arguments></invoke>");
+
+					//string flashVvars = "flvmov=rtmp:///" + @targetURLStr;
+					//			string flashVvars = "fms_app=&video_file=file:///" + @targetURLStr;
+					string flashVvars = "\"" + "fms_app=&video_file=file:///" + @targetURLStr;
+					flashVvars += "&image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + "\"";
+					dbMsg += "\r\nflashVvars= " + flashVvars;
+					SFPlayer.FlashVars = flashVvars;
+					//		SFPlayer.Movie = playerUrl;
+
+					/*<param name="FlashVars" 
+					 value="fms_app=&video_file=file:///P:/dendow/1actress/%E7%A2%BA%E8%AA%8D%E4%B8%AD/%E5%B8%82%E8%B2%A9/%E5%88%BA%E9%9D%92%E5%9E%82%E3%82%8C%E4%B9%B3/20_34-92_109nmin.flv
+					 &image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10""/>
+					 */
+					///////オリジナル		"+ playerUrl + "
+					////		this.SFPlayer.CallFunction("<invoke name=\"loadAndPlayVideo\" returntype=\"xml\"><arguments><string>" + videoPath + "</string></arguments></invoke>");
 				} else {
 					dbMsg += "SFPlayer = null";
 				}
@@ -191,11 +231,11 @@ namespace PlayerWFCL {
 				XmlNodeList list = document.GetElementsByTagName("arguments");
 				//ResizePlayer(Convert.ToInt32(list[0].FirstChild.InnerText), Convert.ToInt32(list[0].ChildNodes[1].InnerText));
 
-				var width = int.Parse(list[0].ChildNodes[0].InnerText);
-				var height = int.Parse(list[0].ChildNodes[1].InnerText);
+				//0124		var width = int.Parse(list[0].ChildNodes[0].InnerText);
+				//0124		var height = int.Parse(list[0].ChildNodes[1].InnerText);
 
 				//0117			this.ClientSize = new System.Drawing.Size(width, height);
-				SFPlayer.ClientSize = this.SFPlayer.Size;
+				//0124		SFPlayer.ClientSize = this.SFPlayer.Size;
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				dbMsg += "<<以降でエラー発生>>" + er.Message;
