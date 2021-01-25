@@ -129,7 +129,7 @@ namespace AWCF.ViewModels {
                                                 ".dvr-ms",".ivf",".wax",".wmv", ".wvx",  ".wm",  ".wmx",  ".wmz",
                                              };
 		public string[] WebVideo = new string[] {".webm" ,".3gp",  ".rm",".dvr-ms",".ivf"};
-		public string[] FlashVideo = new string[] {  ".flv", ".f4v", ".swf" };
+		public string[] FlashVideo = new string[] {".flv", ".f4v", ".swf"};
 		#endregion
 
 		public string FrameSource { get; set; }
@@ -867,7 +867,7 @@ namespace AWCF.ViewModels {
 							new System.Windows.Forms.Integration.WindowsFormsHost();
 
 						// Create the ActiveX control.
-						PlayerWFCL.FlushControl axFLP = new PlayerWFCL.FlushControl();
+						PlayerWFCL.FlushControl axFLP = new PlayerWFCL.FlushControl(targetURLStr);
 						// Assign the ActiveX control as the host control's child.
 						host.Child = axFLP;
 
@@ -875,8 +875,8 @@ namespace AWCF.ViewModels {
 						// control's collection of child controls.
 						MyView.FrameGrid.Children.Add(host);
 
-						//		axFLP.InitAxShockwaveFlash();
-						axFLP.AddURl(targetURLStr);
+					//	//		axFLP.InitAxShockwaveFlash();
+					//	axFLP.AddURl(targetURLStr);
 
 
 						if (axFLP.SFPlayer != null) {

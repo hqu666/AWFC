@@ -22,12 +22,27 @@ namespace PlayerWFCL {
 		/// 元実行ファイル
 		/// </summary>
 		public string assemblyName;
+		/// <summary>
+		/// プレイヤーになるSWF
+		/// </summary>
+		public string FlashPlayerName = "fladance.swf";
+		/// <summary>
+		/// 再生ファイル名
+		/// </summary>
+		public string TargetURLStr = "";
 
 
-		public FlushControl() {
+
+		/// <summary>
+		/// ShockWaveFlashを組み込んだコントローラ
+		/// </summary>
+		/// <param name="targetURLStr"></param>
+		public FlushControl(string targetURLStr) {
 			string TAG = "[WMPControl]";
 			string dbMsg = TAG;
 			try {
+			//	FlashPlayerName = "flvplayer-305.swf";
+				this.TargetURLStr = targetURLStr;
 				InitializeComponent();
 				this.assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
 				dbMsg += "、実行デレクトリ= " + assemblyPath;
@@ -63,40 +78,16 @@ namespace PlayerWFCL {
 				this.SFPlayer.TabIndex = 0;
 				this.Name = "FlashObj";
 
-				// 
-				// Form1
-				// 
 				this.AllowDrop = true;
 				this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 				this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 				this.ClientSize = new System.Drawing.Size(394, 312);
 				//0124		this.MaximizeBox = false;
 				//0124		this.Text = "Form1";
-				//0124						this.Load += new System.EventHandler(this.FlushControlLoad);
+				this.Load += new System.EventHandler(this.FlushControlLoad);
 				//0124			this.DragDrop += new System.Windows.Forms.DragEventHandler(this.Form1_DragDrop);
 				//0124			this.DragEnter += new System.Windows.Forms.DragEventHandler(this.Form1_DragEnter);
 				((System.ComponentModel.ISupportInitialize)(this.SFPlayer)).EndInit();
-				MyLog(TAG, dbMsg);
-			} catch (Exception er) {
-				dbMsg += "<<以降でエラー発生>>" + er.Message;
-				MyLog(TAG, dbMsg);
-			}
-		}
-
-		private void FlushControlLoad(object sender, EventArgs e) {
-			string TAG = "[FlushControlLoad]";
-			string dbMsg = TAG;
-			try {
-				try {
-					dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]" + "、元実行ファイル= " + assemblyName;
-					//		string playerUrl = assemblyPath.Replace(assemblyName, "flvplayer-305.swf");
-					string playerUrl = assemblyPath.Replace(assemblyName, "fladance.swf");
-					dbMsg += " 、playerUrl= " + playerUrl;
-					SFPlayer.LoadMovie(0, playerUrl);
-					SFPlayer.FlashCall += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FlashCallEventHandler(SFPlayer_FlashCall);
-				} catch {
-					MessageBox.Show("Flashがインストールされていないようですが・・(^ω^;)");
-				}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				dbMsg += "<<以降でエラー発生>>" + er.Message;
@@ -131,9 +122,36 @@ namespace PlayerWFCL {
 				this.SFPlayer.Profile = true;
 				this.SFPlayer.Quality2 = "High";
 				this.SFPlayer.SAlign = "LT";
-				this.SFPlayer.WMode = "Window";
+	//0125			this.SFPlayer.WMode = "Window";
 				this.SFPlayer.Dock = DockStyle.Fill;
 
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				dbMsg += "<<以降でエラー発生>>" + er.Message;
+				MyLog(TAG, dbMsg);
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void FlushControlLoad(object sender, EventArgs e) {
+			string TAG = "[FlushControlLoad]";
+			string dbMsg = TAG;
+			try {
+				try {
+					dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]" + "、元実行ファイル= " + assemblyName;
+					AddURl(TargetURLStr);
+					////		string playerUrl = assemblyPath.Replace(assemblyName, "flvplayer-305.swf");
+					//string playerUrl = assemblyPath.Replace(assemblyName, "fladance.swf");
+					//dbMsg += " 、playerUrl= " + playerUrl;
+					//SFPlayer.LoadMovie(0, playerUrl);
+					//SFPlayer.FlashCall += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FlashCallEventHandler(SFPlayer_FlashCall);
+				} catch {
+					MessageBox.Show("Flashがインストールされていないようですが・・(^ω^;)");
+				}
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				dbMsg += "<<以降でエラー発生>>" + er.Message;
@@ -189,16 +207,19 @@ namespace PlayerWFCL {
 			try {
 				if (this.SFPlayer != null) {
 					dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]" + "、元実行ファイル= " + assemblyName;
-					//		string playerUrl = assemblyPath.Replace(assemblyName, "flvplayer-305.swf");
 					string playerUrl = assemblyPath.Replace(assemblyName, "fladance.swf");
+					if (FlashPlayerName.Equals("flvplayer-305.swf")) {
+						playerUrl = assemblyPath.Replace(assemblyName, "flvplayer-305.swf");
+					}
 					dbMsg += " 、playerUrl= " + playerUrl;
 					SFPlayer.LoadMovie(0, playerUrl);
 
-
-					//string flashVvars = "flvmov=rtmp:///" + @targetURLStr;
-					//			string flashVvars = "fms_app=&video_file=file:///" + @targetURLStr;
-					string flashVvars = "\"" + "fms_app=&video_file=file:///" + @targetURLStr;
-					flashVvars += "&image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + "\"";
+								string flashVvars = "video_file=" + '"' + "file:///" + @targetURLStr +'"';
+			//		string flashVvars = "\"" + "fms_app=&video_file=file:///" + @targetURLStr;
+				//	flashVvars += "&image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + "\"";
+					if (FlashPlayerName.Equals("flvplayer-305.swf")) {
+						flashVvars = "flvmov="+'"' + "rtmp:///" + @targetURLStr + '"';
+					}
 					dbMsg += "\r\nflashVvars= " + flashVvars;
 					SFPlayer.FlashVars = flashVvars;
 					//		SFPlayer.Movie = playerUrl;
