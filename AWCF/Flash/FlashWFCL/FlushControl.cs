@@ -143,12 +143,8 @@ namespace PlayerWFCL {
 			try {
 				try {
 					dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]" + "、元実行ファイル= " + assemblyName;
+					dbMsg += "\r\nTargetURLStr=" + TargetURLStr;
 					AddURl(TargetURLStr);
-					////		string playerUrl = assemblyPath.Replace(assemblyName, "flvplayer-305.swf");
-					//string playerUrl = assemblyPath.Replace(assemblyName, "fladance.swf");
-					//dbMsg += " 、playerUrl= " + playerUrl;
-					//SFPlayer.LoadMovie(0, playerUrl);
-					//SFPlayer.FlashCall += new AxShockwaveFlashObjects._IShockwaveFlashEvents_FlashCallEventHandler(SFPlayer_FlashCall);
 				} catch {
 					MessageBox.Show("Flashがインストールされていないようですが・・(^ω^;)");
 				}
@@ -213,16 +209,19 @@ namespace PlayerWFCL {
 					}
 					dbMsg += " 、playerUrl= " + playerUrl;
 					SFPlayer.LoadMovie(0, playerUrl);
+					SFPlayer.MovieData = @targetURLStr;
 
-								string flashVvars = "video_file=" + '"' + "file:///" + @targetURLStr +'"';
-			//		string flashVvars = "\"" + "fms_app=&video_file=file:///" + @targetURLStr;
-				//	flashVvars += "&image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + "\"";
+					//			string flashVvars = "video_file=" + '"' + "file:///" + @targetURLStr +'"';
+					string flashVvars = "\"" + "fms_app=" + System.IO.Path.GetDirectoryName(playerUrl) + "&";
+					flashVvars += "video_file=file:///" + targetURLStr;
+					flashVvars += "&image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + "\"";
 					if (FlashPlayerName.Equals("flvplayer-305.swf")) {
 						flashVvars = "flvmov="+'"' + "rtmp:///" + @targetURLStr + '"';
 					}
 					dbMsg += "\r\nflashVvars= " + flashVvars;
 					SFPlayer.FlashVars = flashVvars;
-					//		SFPlayer.Movie = playerUrl;
+					SFPlayer.AllowFullScreen = "true";
+					SFPlayer.Movie = playerUrl;
 
 					/*<param name="FlashVars" 
 					 value="fms_app=&video_file=file:///P:/dendow/1actress/%E7%A2%BA%E8%AA%8D%E4%B8%AD/%E5%B8%82%E8%B2%A9/%E5%88%BA%E9%9D%92%E5%9E%82%E3%82%8C%E4%B9%B3/20_34-92_109nmin.flv
