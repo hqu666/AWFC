@@ -163,6 +163,18 @@ namespace AWCF.ViewModels {
 						if (extention.Equals(".flv") ||
 							extention.Equals(".f4v")) {
 							MakeWebSouceBody(targetURLStr);
+						} else if (extention.Equals(".rm")) {
+								//contlolPart += "\t</head>\n";
+								//contlolPart += "\t<body style = " + '"' + "background-color: #000000;color:#ffffff;" + '"' + " >\n";
+								//clsId = "clsid:CFCDAA03-8BE4-11CF-B84B-0020AFBBCCFA";       //ブラウザーの ActiveX コントロール
+								//contlolPart += "\t\t<object  id=" + '"' + wiPlayerID + '"' +
+								//					"  classid=" + '"' + clsId + '"' +
+								//					" width=" + '"' + webWidth + '"' + " height=" + '"' + webHeight + '"' +
+								//				 ">\n";
+								//contlolPart += "\t\t\t<param name =" + '"' + "src" + '"' + " value=" + '"' + fileName + '"' + "/>\n";
+								//contlolPart += "\t\t\t<param name =" + '"' + "AUTOSTART" + '"' + " value=" + '"' + "TRUEF" + '"' + "/>\n";
+								//contlolPart += "\t\t\t<param name =" + '"' + "CONTROLS" + '"' + " value=" + '"' + "All" + '"' + "/>\n"; //http://www.tohoho-web.com/wwwmmd3.htm
+								//contlolPart += "\t\t</object>\n";
 						} else {
 							TargetURLStr = targetURLStr;
 							RaisePropertyChanged("TargetURLStr");
@@ -477,13 +489,16 @@ namespace AWCF.ViewModels {
 
 				//dbMsg += ",assemblyPath=" + assemblyPath + ",assemblyName=" + assemblyName;
 				//dbMsg += ",playerUrl=" + playerUrl;//,playerUrl=C:\Users\博臣\source\repos\file_tree_clock_web1\file_tree_clock_web1\bin\Debug\fladance.swf 
-				string clsId = "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000";       //ブラウザーの ActiveX コントロール
+				string clsId = "D27CDB6E-AE6D-11cf-96B8-444553540000";       //Flashの ActiveX コントロール
+
+				//				string clsId = "clsid:d27cdb6e-ae6d-11cf-96b8-444553540000";       //ブラウザーの ActiveX コントロール
 				string codeBase = "http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0";
 				string pluginspage = "http://www.macromedia.com/go/getflashplayer";
 				//dbMsg += "[" + webWidth + "×" + webHeight + "]";        //4/3=1.3		1478/957=1.53  801/392=2.04
 
                 contlolPart += "\t\t<object id=" + '"' + wiPlayerID + '"' +" \n"+
 								"\t\t\t\tclassid=" + '"' + clsId + '"' + " \n" +
+								"\t\t\t\ttype=" + '"' + "application/x-shockwave-flash" + '"' + " \n" +
 								"\t\t\t\tcodebase=" + '"' + codeBase + '"' + " \n" +
 								"\t\t\t\twidth=" + '"' + VWidth + '"' + " height=" + '"' + VHeight + '"' +
                                  ">\n";

@@ -102,6 +102,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EmbedFlash.swf" />
     <Content Include="fladance.swf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

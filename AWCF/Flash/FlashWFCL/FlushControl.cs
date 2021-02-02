@@ -41,7 +41,9 @@ namespace PlayerWFCL {
 			string TAG = "[WMPControl]";
 			string dbMsg = TAG;
 			try {
-			//	FlashPlayerName = "flvplayer-305.swf";
+		//		FlashPlayerName = "flvplayer-305.swf";
+				//		FlashPlayerName = "EmbedFlash.swf";
+
 				this.TargetURLStr = targetURLStr;
 				InitializeComponent();
 				this.assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
@@ -81,7 +83,7 @@ namespace PlayerWFCL {
 				this.AllowDrop = true;
 				this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 				this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-				this.ClientSize = new System.Drawing.Size(394, 312);
+				this.ClientSize = new System.Drawing.Size(1920, 1080);
 				//0124		this.MaximizeBox = false;
 				//0124		this.Text = "Form1";
 				this.Load += new System.EventHandler(this.FlushControlLoad);
@@ -203,32 +205,38 @@ namespace PlayerWFCL {
 			try {
 				if (this.SFPlayer != null) {
 					dbMsg += "開始[" + SFPlayer.Width + "×" + SFPlayer.Height + "]" + "、元実行ファイル= " + assemblyName;
+					//System.Text.Encoding enc_utf8 = System.Text.Encoding.GetEncoding("UTF-8");
+					//System.Web.HttpUtility.UrlEncode(targetURLStr, enc_utf8);
+					string encStr = Uri.EscapeUriString(targetURLStr);
+					encStr = encStr.Replace("file://", "file:///");
+					//System.Net.WebUtility.UrlEncode/ Uri.EscapeDataString は英数字もエンコード
 					string playerUrl = assemblyPath.Replace(assemblyName, "fladance.swf");
 					if (FlashPlayerName.Equals("flvplayer-305.swf")) {
 						playerUrl = assemblyPath.Replace(assemblyName, "flvplayer-305.swf");
+					}else if(FlashPlayerName.Equals("EmbedFlash.swf")) {
+						playerUrl = assemblyPath.Replace(assemblyName, "EmbedFlash.swf");
 					}
 					dbMsg += " 、playerUrl= " + playerUrl;
 					SFPlayer.LoadMovie(0, playerUrl);
-					SFPlayer.MovieData = @targetURLStr;
+		//			SFPlayer.MovieData = @targetURLStr;
 
 					//			string flashVvars = "video_file=" + '"' + "file:///" + @targetURLStr +'"';
-					string flashVvars = "\"" + "fms_app=" + System.IO.Path.GetDirectoryName(playerUrl) + "&";
-					flashVvars += "video_file=file:///" + targetURLStr;
+					string flashVvars = "fms_app=rtmpe://" + playerUrl + "&";
+					flashVvars += "video_file="+ encStr;
 					flashVvars += "&image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10" + "\"";
 					if (FlashPlayerName.Equals("flvplayer-305.swf")) {
-						flashVvars = "flvmov="+'"' + "rtmp:///" + @targetURLStr + '"';
+						flashVvars = "flvmov=" + encStr;
+//						flashVvars = "flvmov="+'"' + "rtmp:///" + encStr + '"';
 					}
-					dbMsg += "\r\nflashVvars= " + flashVvars;
+					//	SFPlayer.SetVariable("FlashVars", flashVvars);
 					SFPlayer.FlashVars = flashVvars;
 					SFPlayer.AllowFullScreen = "true";
 					SFPlayer.Movie = playerUrl;
-
-					/*<param name="FlashVars" 
-					 value="fms_app=&video_file=file:///P:/dendow/1actress/%E7%A2%BA%E8%AA%8D%E4%B8%AD/%E5%B8%82%E8%B2%A9/%E5%88%BA%E9%9D%92%E5%9E%82%E3%82%8C%E4%B9%B3/20_34-92_109nmin.flv
-					 &image_file=&link_url=&autoplay=true&mute=false&controllbar=true&buffertime=10""/>
-					 */
+					SFPlayer.AllowScriptAccess = "always";
 					///////オリジナル		"+ playerUrl + "
 					////		this.SFPlayer.CallFunction("<invoke name=\"loadAndPlayVideo\" returntype=\"xml\"><arguments><string>" + videoPath + "</string></arguments></invoke>");
+					dbMsg += "\r\nflashVvars= " + SFPlayer.FlashVars;
+
 				} else {
 					dbMsg += "SFPlayer = null";
 				}

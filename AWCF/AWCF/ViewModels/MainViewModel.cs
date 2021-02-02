@@ -128,8 +128,8 @@ namespace AWCF.ViewModels {
                                               "mpa",".mpe",".webm",  ".ogv",".3gp",  ".3g2",  ".asf",  ".asx",
                                                 ".dvr-ms",".ivf",".wax",".wmv", ".wvx",  ".wm",  ".wmx",  ".wmz",
                                              };
-		public string[] WebVideo = new string[] {".webm" ,".3gp",  ".rm",".dvr-ms",".ivf"};
-		public string[] FlashVideo = new string[] {".flv", ".f4v", ".swf"};
+		public string[] WebVideo = new string[] { ".webm", ".3gp",  ".rm",".dvr-ms",".ivf"};
+		public string[] FlashVideo = new string[] { ".flv", ".f4v", ".swf"};
 		#endregion
 
 		public string FrameSource { get; set; }
@@ -144,17 +144,14 @@ namespace AWCF.ViewModels {
 		/// <summary>
 		/// メイン画面
 		/// </summary>
-		public MainViewModel()
-				{
+		public MainViewModel(){
 					Initialize();
 				}
 
-        public void Initialize()
-        {
+        public void Initialize(){
             string TAG = "Initialize";
             string dbMsg = "";
-            try
-            {
+            try{
 				MakePlayListMenu();
 				PlayListItemViewExplore.IsEnabled = false;
 				PlayListItemMove.IsEnabled = false;
@@ -169,6 +166,16 @@ namespace AWCF.ViewModels {
                 RaisePropertyChanged(); //	"dataManager"
                 MakePlayListComboMenu();
 				dbMsg += "[" + VWidth + "×" + VHeight + "]";
+				dbMsg += ",CurrentPlayListFileName=" + CurrentPlayListFileName;
+				if (!CurrentPlayListFileName.Equals("")) {
+					ListUpFiles(CurrentPlayListFileName);
+
+					//PlayListsからCurrentPlayListFileNameのインデックスを取得
+					int listIndex = Array.IndexOf(PlayLists, CurrentPlayListFileName);
+					PLComboSelectedIndex = listIndex;
+				}
+				dbMsg += ",NowSelectedFile=" + NowSelectedFile;
+				dbMsg += " [" + NowSelectedPosition + "]";
 				MyLog(TAG, dbMsg);
 				//   CallWeb();
 				PlayListSaveBTVisble = "Hidden";
@@ -429,8 +436,6 @@ namespace AWCF.ViewModels {
 		}
 
 
-
-
 		//        /// <summary>
 		//        /// 指定フォルダ内の指定TypeファイルをPlayListにリストアップ
 		//        /// </summary>
@@ -581,29 +586,21 @@ namespace AWCF.ViewModels {
             set {
                 string TAG = "PLComboSelectedIndex(set)";
                 string dbMsg = "";
-                //try
-                //{
-                    if (_plcomboselectedindex == value)
-                        return;
-                    _plcomboselectedindex = value;
-                    RaisePropertyChanged("PLComboSelectedIndex");
-                    dbMsg += "[" + value + "]";
-                    KeyValuePair<string, string>[] items = PLComboSource.ToArray();
-                    CurrentPlayListFileName = items[value].Key;
-                    dbMsg += CurrentPlayListFileName;
-                    if (CurrentPlayListFileName.Equals(ComboLastItemKey)) {
-                    MakeNewPlayListFileAsync();
-                    }
-                    else
-                    {
-                        ListUpFiles(CurrentPlayListFileName);
-                    }
-
-                //catch (Exception er)
-                //{
-                //    MyErrorLog(TAG, dbMsg, er);
-                //}
-                MyLog(TAG, dbMsg);
+				if (_plcomboselectedindex == value)
+					return;
+				_plcomboselectedindex = value;
+				RaisePropertyChanged("PLComboSelectedIndex");
+				dbMsg += "[" + value + "]";
+				KeyValuePair<string, string>[] items = PLComboSource.ToArray();
+				CurrentPlayListFileName = items[value].Key;
+				dbMsg += CurrentPlayListFileName;
+				Properties.Settings.Default.Save();
+				if (CurrentPlayListFileName.Equals(ComboLastItemKey)) {
+					MakeNewPlayListFileAsync();
+				} else {
+					ListUpFiles(CurrentPlayListFileName);
+				}
+				MyLog(TAG, dbMsg);
             }
         }
 
@@ -800,7 +797,7 @@ namespace AWCF.ViewModels {
 
 		#endregion
 
-			/// <summary>
+		/// <summary>
 		/// プレイリスト上での移動
 		/// </summary>
 		public void PlayListItemMoveTo(PlayListModel fromItem, PlayListModel targetItem) {
@@ -823,7 +820,7 @@ namespace AWCF.ViewModels {
 		}
 
 
-	/// <summary>
+		/// <summary>
 	/// プレイヤーへ
 	/// </summary>
 	/// <param name="targetItem"></param>
@@ -1340,12 +1337,10 @@ namespace AWCF.ViewModels {
 		/// PlayListComboBoxにアイテムを追加する
 		/// 未登録リストは追加する。
 		/// </summary>
-		public void AddPlayListCombo(string AddFlieName)
-        {
+		public void AddPlayListCombo(string AddFlieName) {
             string TAG = "AddPlayListCombo";
             string dbMsg = "";
-            try
-            {
+            try {
                 dbMsg += "PLComboSource=" + PLComboSource.Count() + "件";
                 dbMsg += "、AddFlieName=" + AddFlieName;
                 //登録済みのPlayリストと照合
@@ -1353,12 +1348,11 @@ namespace AWCF.ViewModels {
                 PlayLists = PlayListStr.Split(',');
                 var list = new List<string>();
                 list.AddRange(PlayLists);
-                if (list.Count ==0 && AddFlieName.Equals(""))
-                {
+                if (list.Count ==0 && AddFlieName.Equals("")){
                     return;
                 }
-                if (list.IndexOf(AddFlieName) <0 && !AddFlieName.Equals(""))
-                {
+				//重複確認
+                if (list.IndexOf(AddFlieName) <0 && !AddFlieName.Equals("")){
                     //無ければリスト先頭に追加
                     PlayListStr = AddFlieName + "," + PlayListStr;
                     CurrentPlayListFileName = AddFlieName;
@@ -9892,7 +9886,7 @@ AddType video/MP2T .ts
         ///////////////////////Livet Messenger用//
         public static void MyLog(string TAG, string dbMsg)
         {
-            dbMsg = "[" + MethodBase.GetCurrentMethod().Module.Name + "]" + dbMsg;
+            dbMsg = "[MainViewModel]" + dbMsg;
             //dbMsg = "[" + MethodBase.GetCurrentMethod().Name + "]" + dbMsg;
             CS_Util Util = new CS_Util();
             Util.MyLog(TAG, dbMsg);
@@ -9900,8 +9894,8 @@ AddType video/MP2T .ts
 
         public static void MyErrorLog(string TAG, string dbMsg, Exception err)
         {
-            dbMsg = "[" + MethodBase.GetCurrentMethod().Name + "]" + dbMsg;
-            CS_Util Util = new CS_Util();
+			dbMsg = "[MainViewModel]" + dbMsg;
+			CS_Util Util = new CS_Util();
             Util.MyErrorLog(TAG, dbMsg, err);
         }
 
