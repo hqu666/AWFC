@@ -169,7 +169,6 @@ namespace AWCF.ViewModels {
 				dbMsg += ",CurrentPlayListFileName=" + CurrentPlayListFileName;
 				if (!CurrentPlayListFileName.Equals("")) {
 					ListUpFiles(CurrentPlayListFileName);
-
 					//PlayListsからCurrentPlayListFileNameのインデックスを取得
 					int listIndex = Array.IndexOf(PlayLists, CurrentPlayListFileName);
 					PLComboSelectedIndex = listIndex;
@@ -887,7 +886,7 @@ namespace AWCF.ViewModels {
 							new System.Windows.Forms.Integration.WindowsFormsHost();
 
 						// Create the ActiveX control.
-						PlayerWFCL.WMPControl axWmp = new PlayerWFCL.WMPControl();
+						PlayerWFCL.WMPControl axWmp = new PlayerWFCL.WMPControl(targetURLStr);
 
 						// Assign the ActiveX control as the host control's child.
 						host.Child = axWmp;
@@ -895,7 +894,7 @@ namespace AWCF.ViewModels {
 						// Add the interop host control to the Grid
 						// control's collection of child controls.
 						MyView.FrameGrid.Children.Add(host);
-
+						axWmp.ReSizeContlor((int)MyView.FrameGrid.Width , (int)MyView.FrameGrid.Height);
 						// Play a .wav file with the ActiveX control.
 						axWmp.AddURl(targetURLStr);
 					}

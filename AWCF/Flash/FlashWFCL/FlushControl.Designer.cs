@@ -30,6 +30,9 @@
 			// 
 			// SFPlayer
 			// 
+			this.SFPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.SFPlayer.Enabled = true;
 			this.SFPlayer.Location = new System.Drawing.Point(0, 0);
 			this.SFPlayer.Name = "SFPlayer";
