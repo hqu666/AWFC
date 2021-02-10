@@ -34,18 +34,98 @@ using AxShockwaveFlashObjects;          //flv
 using AWCF.Models;
 using ContextMenu = System.Windows.Controls.ContextMenu;
 using MenuItem = System.Windows.Controls.MenuItem;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace AWCF.ViewModels {
-	public class MainViewModel : ViewModel
-    {
+	public class MainViewModel : ViewModel {
 		public Views.MainWindow MyView { get; set; }
+		/// <summary>
+		/// WindowsMediaPlayerのコントローラ
+		/// </summary>
+		public PlayerWFCL.WMPControl axWmp;
 
 		/// <summary>
 		/// プレイリスト本体
 		/// </summary>
 		public ObservableCollection<PlayListModel> PLList { get; set; }
 		public PlayListModel PLListSelectedItem { get; set; }
-		
+
+		private string _DurationStr;
+		/// <summary>
+		/// 全長
+		/// </summary>
+		public string DurationStr {
+			//get { return GetDataBindItem<string>("Title").Value; }
+			//private set { GetDataBindItem<string>("Title").Value = value; }
+			get => _DurationStr;
+			set {
+				if (_DurationStr == value)
+					return;
+				_DurationStr = value;
+				RaisePropertyChanged();
+			}
+		}
+
+		private double _SliderMaximum;
+		/// <summary>
+		/// スライダー上限
+		/// </summary>
+		public double SliderMaximum {
+			get => _SliderMaximum;
+			set {
+				if (_SliderMaximum == value)
+					return;
+				_SliderMaximum = value;
+				RaisePropertyChanged();
+			}
+		}
+
+		private string _PositionStr;
+		/// <summary>
+		/// 再生ポジション
+		/// </summary>
+		public string PositionStr {
+			//get { return GetDataBindItem<string>("Title").Value; }
+			//private set { GetDataBindItem<string>("Title").Value = value; }
+			get => _PositionStr;
+			set {
+				if (_PositionStr == value)
+					return;
+				_PositionStr = value;
+				RaisePropertyChanged();
+			}
+		}
+
+		private double _SliderValue;
+		/// <summary>
+		/// スライダー位置 
+		/// </summary>
+		public double SliderValue {
+			get => _SliderValue;
+			set {
+				if (_SliderValue == value)
+					return;
+				_SliderValue = value;
+				RaisePropertyChanged();
+			}
+		}
+
+		private bool _IsPlaying;
+		/// <summary>
+		/// 再生中
+		/// </summary>
+		public bool IsPlaying {
+			get => _IsPlaying;
+			set {
+				if (_IsPlaying == value)
+					return;
+				_IsPlaying = value;
+				RaisePropertyChanged();
+			}
+		}
+
 		///// <summary>
 		///// 選択されている
 		///// </summary>
@@ -828,6 +908,7 @@ namespace AWCF.ViewModels {
 			string TAG = "PlayListToPlayer";
 			string dbMsg = "";
 			try {
+				axWmp = null;
 				dbMsg += "targetItem=" + targetItem.Summary;
 				if (MyView != null) {
 					if (0 < MyView.FrameGrid.Children.Count) {
@@ -886,7 +967,7 @@ namespace AWCF.ViewModels {
 							new System.Windows.Forms.Integration.WindowsFormsHost();
 
 						// Create the ActiveX control.
-						PlayerWFCL.WMPControl axWmp = new PlayerWFCL.WMPControl(targetURLStr);
+						axWmp = new PlayerWFCL.WMPControl(targetURLStr);
 
 						// Assign the ActiveX control as the host control's child.
 						host.Child = axWmp;
@@ -897,10 +978,107 @@ namespace AWCF.ViewModels {
 						axWmp.ReSizeContlor((int)MyView.FrameGrid.Width , (int)MyView.FrameGrid.Height);
 						// Play a .wav file with the ActiveX control.
 						axWmp.AddURl(targetURLStr);
+						double playPosition = axWmp.GetPlayPosition();
+						DurationStr = "00:00:00";
+						double playDuration = axWmp.GetDuration();
+						if (0 < playDuration) {
+							TimeSpan span = new TimeSpan(0, 0, (int)playDuration);
+							DurationStr = span.ToString("HH:mm:ss");
+						}
+						RaisePropertyChanged("DurationStr");
+						SetupTimer();
+						// player = axWmp.GetPlayer();
+						//player.currentMedia.
 					}
 				} else {
 					dbMsg += ">>MyView == null";
 				}
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		// タイマメソッド
+		private void MyTimerMethod(object sender, EventArgs e) {
+			string TAG = "MyTimerMethod";
+			string dbMsg = "";
+			try {
+				if (axWmp != null) {
+					this.IsPlaying = axWmp.IsPlaying;
+					dbMsg += ":IsPlaying=" + IsPlaying;
+					double position = axWmp.GetPlayPosition();
+					SliderMaximum = axWmp.GetDuration();
+					dbMsg += "," + position;
+					if (0 < position) {
+						TimeSpan span = new TimeSpan(0, 0, (int)position);
+						this.PositionStr = span.ToString(@"hh\:mm\:ss");
+						if (position < 1) {
+							SliderMaximum = axWmp.GetDuration();
+							dbMsg +=  " / " + SliderMaximum ;
+							span = new TimeSpan(0, 0, (int)SliderMaximum);
+							this.DurationStr = span.ToString(@"hh\:mm\:ss");
+						}
+						SliderValue = position;
+					} else {
+						this.DurationStr ="00:00:00";
+						this.PositionStr = "00:00:00";
+					}
+					dbMsg += ",>>" + PositionStr + " / " + DurationStr;
+				}
+				RaisePropertyChanged();
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		/// <summary>
+		/// タイマのインスタンス
+		/// </summary>
+		private DispatcherTimer _timer;
+
+		/// <summary>
+		/// タイマを設定する
+		/// </summary>
+		private void SetupTimer() {
+			string TAG = "SetupTimer";
+			string dbMsg = "";
+			try {
+				// タイマのインスタンスを生成
+				_timer = new DispatcherTimer(); // 優先度はDispatcherPriority.Background
+												// インターバルを設定
+				_timer.Interval = new TimeSpan(0, 0, 1);
+				// タイマメソッドを設定
+				_timer.Tick += new EventHandler(MyTimerMethod);
+				// タイマを開始
+				_timer.Start();
+
+				// 画面が閉じられるときに、タイマを停止
+				MyView.Closing += new CancelEventHandler(StopTimer);
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		// タイマを停止
+		private void StopTimer(object sender, CancelEventArgs e) {
+			string TAG = "StopTimer";
+			string dbMsg = "";
+			try {
+				_timer.Stop();
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyErrorLog(TAG, dbMsg, er);
+			}
+		}
+
+		public void BackFromPlayer(PlayListModel targetItem) {
+			//int oldIndex,
+			string TAG = "PlayListToPlayer";
+			string dbMsg = "";
+			try {
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyErrorLog(TAG, dbMsg, er);

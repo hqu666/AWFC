@@ -316,14 +316,14 @@
                             <TextBlock Grid.Column="0"
                                         Margin="0,0,0,0" 
                                        Background="Transparent" 
-                                       Text="00:00:00" 
+                                       Text="{Binding PositionStr }" 
                                        FontSize="36" 
                                        Foreground="White" />
                             <StackPanel  Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                 <TextBlock 
                                         Margin="0,0,6,0" 
                                        Background="Transparent" 
-                                       Text="00:00:00" 
+                                       Text="{Binding DurationStr }" 
                                        FontSize="24" 
                                        Foreground="White"/>
                             </StackPanel>
@@ -346,6 +346,8 @@
                                     VerticalContentAlignment="Stretch"
                                     HorizontalContentAlignment="Stretch" 
                                     Margin="0,6,0,0"
+                                    Maximum="{Binding SliderMaximum,Mode=OneWay}"
+                                    Value="{Binding SliderValue,Mode=TwoWay}"
                                     Style="{DynamicResource MySliderStyle}">
                                 <!--センターライン；TrackBackground　/　ハンドル；Thumb-->
                                 <Slider.Resources>
