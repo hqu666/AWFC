@@ -282,18 +282,48 @@ namespace PlayerWFCL {
 			}
 		}
 
+
+		/// <summary>
+		/// 再生ポジション取得
+		/// </summary>
+		/// <returns></returns>
 		public double GetPlayPosition() {
 			string TAG = "[GetPlayControls]";
 			string dbMsg = TAG;
+			double retDouble = 0;
 			try {
-				dbMsg += "開始[" + WMPlayer.Width + "×" + WMPlayer.Height + "]";
+				retDouble = WMPlayer.Ctlcontrols.currentPosition;
+				dbMsg += "、再生ポジション=" + retDouble + "=" + WMPlayer.Ctlcontrols.currentPositionString;
 				MyLog(TAG, dbMsg);
 			} catch (Exception er) {
 				MyLog(TAG, dbMsg);
 			}
-			return WMPlayer.Ctlcontrols.currentPosition;
+			return retDouble;
 		}
 
+		/// <summary>
+		/// 再生ポジション設定
+		/// </summary>
+		/// <returns></returns>
+		public void SetPlayPosition(double setVal) {
+			string TAG = "[SetPlayPosition]";
+			string dbMsg = TAG;
+			try {
+				dbMsg += "、再生ポジション=" + setVal + "=" + WMPlayer.Ctlcontrols.currentPositionString;
+		//		WMPlayer.Ctlcontrols.pause();
+				WMPlayer.Ctlcontrols.currentPosition = setVal;
+			//	WMPlayer.Ctlcontrols.play();
+				dbMsg += "、>>" + WMPlayer.Ctlcontrols.currentPosition + "=" + WMPlayer.Ctlcontrols.currentPositionString;
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyLog(TAG, dbMsg);
+			}
+		}
+
+		/// <summary>
+		/// 全長取得
+		/// </summary>
+		/// <returns></returns>
 		public double GetDuration() {
 			string TAG = "[GetDuration]";
 			string dbMsg = TAG;
@@ -308,7 +338,52 @@ namespace PlayerWFCL {
 			return retDouble;
 		}
 
+		/// <summary>
+		/// 音量取得
+		/// </summary>
+		/// <returns></returns>
+		public int GetVolume() {
+			string TAG = "[GetVolume]";
+			string dbMsg = TAG;
+			int retVal = 0;
+			try {
+				retVal = WMPlayer.settings.volume;
+				dbMsg += "、音量=" + retVal;
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyLog(TAG, dbMsg);
+			}
+			return retVal;
+		}
 
+		/// <summary>
+		/// 音量取得
+		/// </summary>
+		/// <param name="setVal"></param>
+		public void SetVolume(int setVal) {
+			string TAG = "[SetVolume]";
+			string dbMsg = TAG;
+			try {
+				dbMsg += "、音量=" + setVal;
+				WMPlayer.settings.volume= setVal;
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyLog(TAG, dbMsg);
+			}
+		}
+
+		public void SetMute(bool _mute) {
+			string TAG = "[SetMute]";
+			string dbMsg = TAG;
+			try {
+				dbMsg += "、消音=" + _mute;
+
+				WMPlayer.settings.mute = _mute;
+				MyLog(TAG, dbMsg);
+			} catch (Exception er) {
+				MyLog(TAG, dbMsg);
+			}
+		}
 
 		public AxWMPLib.AxWindowsMediaPlayer GetPlayer() {
 			string TAG = "[GetPlayer]";

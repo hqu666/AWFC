@@ -103,14 +103,14 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition  Width="*" MinWidth="50" />
         </Grid.ColumnDefinitions>
-        <Grid  Grid.Column="0" Background="White">
+        <Grid  Grid.Column="0" >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Grid VerticalAlignment="Bottom">
+                <Grid VerticalAlignment="Bottom" Background="White">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition  Width="Auto" />
                         <ColumnDefinition  Width="Auto" />
@@ -277,6 +277,39 @@
                     </Border>
                 </Popup>
 
+                <StackPanel Grid.Row="2" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Right"
+                            >
+                    <Button Width="40" Height="40" MinWidth="30"
+                                    >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/AWCF;component/Resources/rewbtn.png" Stretch="UniformToFill"/>
+                        </Button.Background>
+                    </Button>
+                    <Button Width="40" Height="40" MinWidth="30" Margin="20,5,5,5"
+                                    >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/AWCF;component/Resources/mute.png" Stretch="Uniform"/>
+                        </Button.Background>
+                    </Button>
+                    <Slider HorizontalAlignment="Stretch" Width="200" Height="20"
+                                    Maximum="100"
+                                    Value="{Binding SoundValue,Mode=TwoWay}" Margin="0,0,20,0"
+                            />
+                    
+                    <Button 
+                                     Width="40" Height="40" MinWidth="30"
+                                    >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/AWCF;component/Resources/ffbtn.png" Stretch="UniformToFill"/>
+                        </Button.Background>
+                    </Button>
+
+                </StackPanel>
+
+
+
             </Grid>
         </Grid>
         <GridSplitter Grid.Column="1"
@@ -334,6 +367,7 @@
                                 <ColumnDefinition  Width="*" />
                                 <ColumnDefinition  Width="Auto" />
                             </Grid.ColumnDefinitions>
+                            
                             <Button Grid.Column="0"
                                     MaxHeight="40" Width="40" MinWidth="30"
                                     >

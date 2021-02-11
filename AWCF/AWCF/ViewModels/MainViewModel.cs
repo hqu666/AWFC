@@ -81,7 +81,7 @@ namespace AWCF.ViewModels {
 				RaisePropertyChanged();
 			}
 		}
-
+		
 		private string _PositionStr;
 		/// <summary>
 		/// 再生ポジション
@@ -108,6 +108,11 @@ namespace AWCF.ViewModels {
 				if (_SliderValue == value)
 					return;
 				_SliderValue = value;
+				if (axWmp != null) {
+					_timer.Stop();
+					axWmp.SetPlayPosition(value);
+					_timer.Start();
+				}
 				RaisePropertyChanged();
 			}
 		}
@@ -122,6 +127,37 @@ namespace AWCF.ViewModels {
 				if (_IsPlaying == value)
 					return;
 				_IsPlaying = value;
+				RaisePropertyChanged();
+			}
+		}
+
+		private int _SoundValue;
+		/// <summary>
+		/// 音量
+		/// </summary>
+		public int SoundValue {
+			get => _SoundValue;
+			set {
+				if (_SoundValue == value)
+					return;
+				_SoundValue = value;
+				if (axWmp != null) {
+					axWmp.SetVolume(value);
+				}
+				RaisePropertyChanged();
+			}
+		}
+
+		private bool _IsMute;
+		/// <summary>
+		/// 消音
+		/// </summary>
+		public bool IsMute {
+			get => _IsMute;
+			set {
+				if (_IsMute == value)
+					return;
+				_IsMute = value;
 				RaisePropertyChanged();
 			}
 		}
@@ -1025,6 +1061,14 @@ namespace AWCF.ViewModels {
 						this.PositionStr = "00:00:00";
 					}
 					dbMsg += ",>>" + PositionStr + " / " + DurationStr;
+					SoundValue = axWmp.GetVolume();
+					dbMsg += "," + SoundValue;
+					if (SoundValue == 0) {
+						IsMute = true;
+					} else {
+						IsMute = false;
+					}
+
 				}
 				RaisePropertyChanged();
 				MyLog(TAG, dbMsg);
