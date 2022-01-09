@@ -1,0 +1,106 @@
+{
+  "format": 1,
+  "restore": {
+    "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\M3UPlayer\\M3UPlayer.csproj": {}
+  },
+  "projects": {
+    "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\Flash\\FlashWFCL\\PlayerWFCL.csproj": {
+      "restore": {
+        "projectUniqueName": "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\Flash\\FlashWFCL\\PlayerWFCL.csproj",
+        "projectName": "PlayerWFCL",
+        "projectPath": "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\Flash\\FlashWFCL\\PlayerWFCL.csproj",
+        "frameworks": {
+          "net48": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net48": {}
+      }
+    },
+    "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\M3UPlayer\\M3UPlayer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\M3UPlayer\\M3UPlayer.csproj",
+        "projectName": "M3UPlayer",
+        "projectPath": "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\M3UPlayer\\M3UPlayer.csproj",
+        "packagesPath": "C:\\Users\\hqu66\\.nuget\\packages\\",
+        "outputPath": "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\M3UPlayer\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "configFilePaths": [
+          "C:\\Users\\hqu66\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "projectReferences": {
+              "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\Flash\\FlashWFCL\\PlayerWFCL.csproj": {
+                "projectPath": "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\Flash\\FlashWFCL\\PlayerWFCL.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "dependencies": {
+            "CrystalReports.ShockwaveFlashObjects": {
+              "target": "Package",
+              "version": "[13.0.4000, )"
+            },
+            "LivetCask": {
+              "target": "Package",
+              "version": "[3.2.3.2, )"
+            },
+            "LivetCask.Behaviors": {
+              "target": "Package",
+              "version": "[3.2.3.1, )"
+            },
+            "LivetCask.Messaging": {
+              "target": "Package",
+              "version": "[3.2.3.1, )"
+            },
+            "LivetCask.Mvvm": {
+              "target": "Package",
+              "version": "[3.2.3.1, )"
+            },
+            "LivetExtensions": {
+              "target": "Package",
+              "version": "[3.2.3.1, )"
+            },
+            "Microsoft.Web.WebView2": {
+              "target": "Package",
+              "version": "[1.0.664.37, )"
+            },
+            "WMPLib": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.0, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

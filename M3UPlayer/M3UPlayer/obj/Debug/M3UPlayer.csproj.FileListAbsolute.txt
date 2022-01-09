@@ -1,0 +1,13 @@
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\M3UPlayer.csproj.AssemblyReference.cache
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\M3UPlayer.csproj.SuggestedBindingRedirects.cache
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\M3UPlayer.exe.config
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\M3UPlayer.csproj.ResolveComReference.cache
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\Views\FileNameInput.g.cs
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\Views\FlashPage.g.cs
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\Views\MainWindow.g.cs
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\Views\WebPage.g.cs
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\App.g.cs
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\M3UPlayer_Content.g.cs
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\GeneratedInternalTypeHelper.g.cs
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\M3UPlayer_MarkupCompile.cache
+H:\develop\dnet\AWFC2\M3UPlayer\M3UPlayer\obj\Debug\M3UPlayer_MarkupCompile.lref

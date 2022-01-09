@@ -1,0 +1,1327 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.7.2": {
+      "CrystalReports.ShockwaveFlashObjects/13.0.4000": {
+        "type": "package",
+        "compile": {
+          "lib/net40/ShockwaveFlashObjects.dll": {}
+        },
+        "runtime": {
+          "lib/net40/ShockwaveFlashObjects.dll": {}
+        }
+      },
+      "LivetCask/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Behaviors": "3.2.3.2",
+          "LivetCask.Collections": "3.2.3.2",
+          "LivetCask.Converters": "3.2.3.2",
+          "LivetCask.EventListeners": "3.2.3.2",
+          "LivetCask.Messaging": "3.2.3.2",
+          "LivetCask.Mvvm": "3.2.3.2",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.dll": {}
+        }
+      },
+      "LivetCask.Behaviors/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Behaviors.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Behaviors.dll": {}
+        }
+      },
+      "LivetCask.Collections/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.EventListeners": "3.2.3.2"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Collections.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Collections.dll": {}
+        }
+      },
+      "LivetCask.Converters/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Converters.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Converters.dll": {}
+        }
+      },
+      "LivetCask.Core/3.2.3.2": {
+        "type": "package",
+        "compile": {
+          "lib/net452/Livet.Core.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Core.dll": {}
+        }
+      },
+      "LivetCask.EventListeners/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.2"
+        },
+        "compile": {
+          "lib/net452/Livet.EventListeners.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.EventListeners.dll": {}
+        }
+      },
+      "LivetCask.Messaging/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.1",
+          "LivetCask.EventListeners": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Messaging.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Messaging.dll": {}
+        }
+      },
+      "LivetCask.Mvvm/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Messaging": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Mvvm.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Mvvm.dll": {}
+        }
+      },
+      "LivetExtensions/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Windows.Forms",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Extensions.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Extensions.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "resource": {
+          "lib/net452/ja/Livet.Extensions.resources.dll": {
+            "locale": "ja"
+          }
+        }
+      },
+      "Microsoft.Web.WebView2/1.0.664.37": {
+        "type": "package",
+        "compile": {
+          "lib/net462/Microsoft.Web.WebView2.Core.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.WinForms.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.Wpf.dll": {}
+        },
+        "runtime": {
+          "lib/net462/Microsoft.Web.WebView2.Core.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.WinForms.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.Wpf.dll": {}
+        },
+        "build": {
+          "build/Microsoft.Web.WebView2.targets": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win-arm/native/WebView2Loader.dll": {
+            "assetType": "native",
+            "rid": "win-arm"
+          },
+          "runtimes/win-x64/native/WebView2Loader.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/WebView2Loader.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      },
+      "Microsoft.Xaml.Behaviors.Wpf/1.1.3": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System",
+          "System.Core",
+          "System.XML",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net45/Microsoft.Xaml.Behaviors.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.Xaml.Behaviors.dll": {}
+        }
+      },
+      "WMPLib/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/_._": {}
+        },
+        "runtime": {
+          "lib/AxInterop.WMPLib.dll": {},
+          "lib/Interop.WMPLib.dll": {}
+        }
+      },
+      "PlayerWFCL/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/PlayerWFCL.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/PlayerWFCL.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win": {
+      "CrystalReports.ShockwaveFlashObjects/13.0.4000": {
+        "type": "package",
+        "compile": {
+          "lib/net40/ShockwaveFlashObjects.dll": {}
+        },
+        "runtime": {
+          "lib/net40/ShockwaveFlashObjects.dll": {}
+        }
+      },
+      "LivetCask/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Behaviors": "3.2.3.2",
+          "LivetCask.Collections": "3.2.3.2",
+          "LivetCask.Converters": "3.2.3.2",
+          "LivetCask.EventListeners": "3.2.3.2",
+          "LivetCask.Messaging": "3.2.3.2",
+          "LivetCask.Mvvm": "3.2.3.2",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.dll": {}
+        }
+      },
+      "LivetCask.Behaviors/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Behaviors.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Behaviors.dll": {}
+        }
+      },
+      "LivetCask.Collections/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.EventListeners": "3.2.3.2"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Collections.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Collections.dll": {}
+        }
+      },
+      "LivetCask.Converters/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Converters.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Converters.dll": {}
+        }
+      },
+      "LivetCask.Core/3.2.3.2": {
+        "type": "package",
+        "compile": {
+          "lib/net452/Livet.Core.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Core.dll": {}
+        }
+      },
+      "LivetCask.EventListeners/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.2"
+        },
+        "compile": {
+          "lib/net452/Livet.EventListeners.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.EventListeners.dll": {}
+        }
+      },
+      "LivetCask.Messaging/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.1",
+          "LivetCask.EventListeners": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Messaging.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Messaging.dll": {}
+        }
+      },
+      "LivetCask.Mvvm/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Messaging": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Mvvm.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Mvvm.dll": {}
+        }
+      },
+      "LivetExtensions/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Windows.Forms",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Extensions.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Extensions.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "resource": {
+          "lib/net452/ja/Livet.Extensions.resources.dll": {
+            "locale": "ja"
+          }
+        }
+      },
+      "Microsoft.Web.WebView2/1.0.664.37": {
+        "type": "package",
+        "compile": {
+          "lib/net462/Microsoft.Web.WebView2.Core.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.WinForms.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.Wpf.dll": {}
+        },
+        "runtime": {
+          "lib/net462/Microsoft.Web.WebView2.Core.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.WinForms.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.Wpf.dll": {}
+        },
+        "build": {
+          "build/Microsoft.Web.WebView2.targets": {}
+        }
+      },
+      "Microsoft.Xaml.Behaviors.Wpf/1.1.3": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System",
+          "System.Core",
+          "System.XML",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net45/Microsoft.Xaml.Behaviors.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.Xaml.Behaviors.dll": {}
+        }
+      },
+      "WMPLib/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/_._": {}
+        },
+        "runtime": {
+          "lib/AxInterop.WMPLib.dll": {},
+          "lib/Interop.WMPLib.dll": {}
+        }
+      },
+      "PlayerWFCL/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/PlayerWFCL.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/PlayerWFCL.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win-x64": {
+      "CrystalReports.ShockwaveFlashObjects/13.0.4000": {
+        "type": "package",
+        "compile": {
+          "lib/net40/ShockwaveFlashObjects.dll": {}
+        },
+        "runtime": {
+          "lib/net40/ShockwaveFlashObjects.dll": {}
+        }
+      },
+      "LivetCask/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Behaviors": "3.2.3.2",
+          "LivetCask.Collections": "3.2.3.2",
+          "LivetCask.Converters": "3.2.3.2",
+          "LivetCask.EventListeners": "3.2.3.2",
+          "LivetCask.Messaging": "3.2.3.2",
+          "LivetCask.Mvvm": "3.2.3.2",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.dll": {}
+        }
+      },
+      "LivetCask.Behaviors/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Behaviors.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Behaviors.dll": {}
+        }
+      },
+      "LivetCask.Collections/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.EventListeners": "3.2.3.2"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Collections.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Collections.dll": {}
+        }
+      },
+      "LivetCask.Converters/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Converters.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Converters.dll": {}
+        }
+      },
+      "LivetCask.Core/3.2.3.2": {
+        "type": "package",
+        "compile": {
+          "lib/net452/Livet.Core.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Core.dll": {}
+        }
+      },
+      "LivetCask.EventListeners/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.2"
+        },
+        "compile": {
+          "lib/net452/Livet.EventListeners.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.EventListeners.dll": {}
+        }
+      },
+      "LivetCask.Messaging/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.1",
+          "LivetCask.EventListeners": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Messaging.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Messaging.dll": {}
+        }
+      },
+      "LivetCask.Mvvm/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Messaging": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Mvvm.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Mvvm.dll": {}
+        }
+      },
+      "LivetExtensions/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Windows.Forms",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Extensions.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Extensions.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "resource": {
+          "lib/net452/ja/Livet.Extensions.resources.dll": {
+            "locale": "ja"
+          }
+        }
+      },
+      "Microsoft.Web.WebView2/1.0.664.37": {
+        "type": "package",
+        "compile": {
+          "lib/net462/Microsoft.Web.WebView2.Core.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.WinForms.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.Wpf.dll": {}
+        },
+        "runtime": {
+          "lib/net462/Microsoft.Web.WebView2.Core.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.WinForms.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.Wpf.dll": {}
+        },
+        "native": {
+          "runtimes/win-x64/native/WebView2Loader.dll": {}
+        },
+        "build": {
+          "build/Microsoft.Web.WebView2.targets": {}
+        }
+      },
+      "Microsoft.Xaml.Behaviors.Wpf/1.1.3": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System",
+          "System.Core",
+          "System.XML",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net45/Microsoft.Xaml.Behaviors.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.Xaml.Behaviors.dll": {}
+        }
+      },
+      "WMPLib/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/_._": {}
+        },
+        "runtime": {
+          "lib/AxInterop.WMPLib.dll": {},
+          "lib/Interop.WMPLib.dll": {}
+        }
+      },
+      "PlayerWFCL/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/PlayerWFCL.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/PlayerWFCL.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.7.2/win-x86": {
+      "CrystalReports.ShockwaveFlashObjects/13.0.4000": {
+        "type": "package",
+        "compile": {
+          "lib/net40/ShockwaveFlashObjects.dll": {}
+        },
+        "runtime": {
+          "lib/net40/ShockwaveFlashObjects.dll": {}
+        }
+      },
+      "LivetCask/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Behaviors": "3.2.3.2",
+          "LivetCask.Collections": "3.2.3.2",
+          "LivetCask.Converters": "3.2.3.2",
+          "LivetCask.EventListeners": "3.2.3.2",
+          "LivetCask.Messaging": "3.2.3.2",
+          "LivetCask.Mvvm": "3.2.3.2",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.dll": {}
+        }
+      },
+      "LivetCask.Behaviors/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Behaviors.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Behaviors.dll": {}
+        }
+      },
+      "LivetCask.Collections/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.EventListeners": "3.2.3.2"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Collections.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Collections.dll": {}
+        }
+      },
+      "LivetCask.Converters/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Converters.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Converters.dll": {}
+        }
+      },
+      "LivetCask.Core/3.2.3.2": {
+        "type": "package",
+        "compile": {
+          "lib/net452/Livet.Core.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Core.dll": {}
+        }
+      },
+      "LivetCask.EventListeners/3.2.3.2": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.2"
+        },
+        "compile": {
+          "lib/net452/Livet.EventListeners.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.EventListeners.dll": {}
+        }
+      },
+      "LivetCask.Messaging/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Core": "3.2.3.1",
+          "LivetCask.EventListeners": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Messaging.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Messaging.dll": {}
+        }
+      },
+      "LivetCask.Mvvm/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask.Messaging": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Mvvm.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Mvvm.dll": {}
+        }
+      },
+      "LivetExtensions/3.2.3.1": {
+        "type": "package",
+        "dependencies": {
+          "LivetCask": "3.2.3.1",
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.3"
+        },
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.Windows.Forms",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net452/Livet.Extensions.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "runtime": {
+          "lib/net452/Livet.Extensions.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.Shell.dll": {},
+          "lib/net452/Microsoft.WindowsAPICodePack.dll": {}
+        },
+        "resource": {
+          "lib/net452/ja/Livet.Extensions.resources.dll": {
+            "locale": "ja"
+          }
+        }
+      },
+      "Microsoft.Web.WebView2/1.0.664.37": {
+        "type": "package",
+        "compile": {
+          "lib/net462/Microsoft.Web.WebView2.Core.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.WinForms.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.Wpf.dll": {}
+        },
+        "runtime": {
+          "lib/net462/Microsoft.Web.WebView2.Core.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.WinForms.dll": {},
+          "lib/net462/Microsoft.Web.WebView2.Wpf.dll": {}
+        },
+        "native": {
+          "runtimes/win-x86/native/WebView2Loader.dll": {}
+        },
+        "build": {
+          "build/Microsoft.Web.WebView2.targets": {}
+        }
+      },
+      "Microsoft.Xaml.Behaviors.Wpf/1.1.3": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System",
+          "System.Core",
+          "System.XML",
+          "System.Xaml",
+          "WindowsBase"
+        ],
+        "compile": {
+          "lib/net45/Microsoft.Xaml.Behaviors.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Microsoft.Xaml.Behaviors.dll": {}
+        }
+      },
+      "WMPLib/1.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/_._": {}
+        },
+        "runtime": {
+          "lib/AxInterop.WMPLib.dll": {},
+          "lib/Interop.WMPLib.dll": {}
+        }
+      },
+      "PlayerWFCL/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/PlayerWFCL.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/PlayerWFCL.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CrystalReports.ShockwaveFlashObjects/13.0.4000": {
+      "sha512": "+oku0cLxaSpsKU4A1Zv9AU6v9tszRWHrMjhgqEVmcuTR4uOZO/ofZZZ+94zclyt82IHlO1c0NXoPRjASifAg5A==",
+      "type": "package",
+      "path": "crystalreports.shockwaveflashobjects/13.0.4000",
+      "files": [
+        ".editoricon.png",
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "CHANGELOG.md",
+        "LICENSE",
+        "README.md",
+        "crystalreports.shockwaveflashobjects.13.0.4000.nupkg.sha512",
+        "crystalreports.shockwaveflashobjects.nuspec",
+        "lib/net40/ShockwaveFlashObjects.dll"
+      ]
+    },
+    "LivetCask/3.2.3.2": {
+      "sha512": "a1/B7n5ra/bs34GlZvXpUDlU64COW50E0PL7nrwZlRgnktkzZuxacuY1K+sze5WMFeq3i7KoSpyQ+0Hz22C+JA==",
+      "type": "package",
+      "path": "livetcask/3.2.3.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/Livet.dll",
+        "lib/netcoreapp3.1/Livet.dll",
+        "license-en.txt",
+        "livetcask.3.2.3.2.nupkg.sha512",
+        "livetcask.nuspec"
+      ]
+    },
+    "LivetCask.Behaviors/3.2.3.1": {
+      "sha512": "DDLzcHrd/IZQJQ99RR3biq8KRY8EClG+pkRkc2S8dvuSqBgfxrP4tlqaRkIho8qIzWGYH1B8/FJ3ex6BIIkCTw==",
+      "type": "package",
+      "path": "livetcask.behaviors/3.2.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/Livet.Behaviors.dll",
+        "lib/netcoreapp3.1/Livet.Behaviors.dll",
+        "license-en.txt",
+        "livetcask.behaviors.3.2.3.1.nupkg.sha512",
+        "livetcask.behaviors.nuspec"
+      ]
+    },
+    "LivetCask.Collections/3.2.3.2": {
+      "sha512": "VeT6UEV87Xz5tWbEMwyaPmTwND6c8vvoV3GE7WIo3SCymGUIf7U7WqjvFkDbAgVqEiEwCRjHRQD1FJbm1bnBpA==",
+      "type": "package",
+      "path": "livetcask.collections/3.2.3.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/Livet.Collections.dll",
+        "lib/netcoreapp3.1/Livet.Collections.dll",
+        "license-en.txt",
+        "livetcask.collections.3.2.3.2.nupkg.sha512",
+        "livetcask.collections.nuspec"
+      ]
+    },
+    "LivetCask.Converters/3.2.3.2": {
+      "sha512": "A/0p9kbFWtN00w1FEs48HJE/0uJ8XOLk9zYzo8tNatM0HCrkPw9Ou99RarJr+0efWVNJXFsNMvVd8s0pxEfGlw==",
+      "type": "package",
+      "path": "livetcask.converters/3.2.3.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/Livet.Converters.dll",
+        "lib/netcoreapp3.1/Livet.Converters.dll",
+        "license-en.txt",
+        "livetcask.converters.3.2.3.2.nupkg.sha512",
+        "livetcask.converters.nuspec"
+      ]
+    },
+    "LivetCask.Core/3.2.3.2": {
+      "sha512": "oqyTdUn7wb/t/74vjjkuFqqf2cpHYZ5nJROCMvqRAmbPXfRYZBvNNCsqPXZC7GjH5gz4NOszVWG8wRoErB+zTw==",
+      "type": "package",
+      "path": "livetcask.core/3.2.3.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/Livet.Core.dll",
+        "lib/netstandard2.0/Livet.Core.dll",
+        "license-en.txt",
+        "livetcask.core.3.2.3.2.nupkg.sha512",
+        "livetcask.core.nuspec"
+      ]
+    },
+    "LivetCask.EventListeners/3.2.3.2": {
+      "sha512": "yn4064hqLrupLXoiamrJYlYmFk9LuK7RPCAr/6AXs78ECVNrAsjMja4YaQ/7nHr0ZsGMIthHcHvwwrrnuMRQAQ==",
+      "type": "package",
+      "path": "livetcask.eventlisteners/3.2.3.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/Livet.EventListeners.dll",
+        "lib/netstandard2.0/Livet.EventListeners.dll",
+        "license-en.txt",
+        "livetcask.eventlisteners.3.2.3.2.nupkg.sha512",
+        "livetcask.eventlisteners.nuspec"
+      ]
+    },
+    "LivetCask.Messaging/3.2.3.1": {
+      "sha512": "fovTK/6MckDQ/Vb42FX+08p4uzczhhfJPQig1aXKhTmIvAjulNadPJ2Mg/XhnBk2bBJO9ZH3mAKV2iZ8h3DKJg==",
+      "type": "package",
+      "path": "livetcask.messaging/3.2.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/Livet.Messaging.dll",
+        "lib/netcoreapp3.1/Livet.Messaging.dll",
+        "license-en.txt",
+        "livetcask.messaging.3.2.3.1.nupkg.sha512",
+        "livetcask.messaging.nuspec"
+      ]
+    },
+    "LivetCask.Mvvm/3.2.3.1": {
+      "sha512": "ujLHkv3tZhn5HFlw36XjWqWOVME8wxWmdLyY9Zt553AZdAzm32jliEsx1xRlgn+HdgANCa77kiv29ipRrFJc7w==",
+      "type": "package",
+      "path": "livetcask.mvvm/3.2.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/Livet.Mvvm.dll",
+        "lib/netcoreapp3.1/Livet.Mvvm.dll",
+        "license-en.txt",
+        "livetcask.mvvm.3.2.3.1.nupkg.sha512",
+        "livetcask.mvvm.nuspec"
+      ]
+    },
+    "LivetExtensions/3.2.3.1": {
+      "sha512": "Wsu0zKAxZdOg/ylGWC1fpUozkcHrDOrx3ykUiZRWs3txGvIMg9QwqOgrCE0IPcBQ73jR+z7XhhekpcHWuQ8W5g==",
+      "type": "package",
+      "path": "livetextensions/3.2.3.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net452/Livet.Extensions.dll",
+        "lib/net452/Microsoft.WindowsAPICodePack.Shell.dll",
+        "lib/net452/Microsoft.WindowsAPICodePack.dll",
+        "lib/net452/ja/Livet.Extensions.resources.dll",
+        "lib/netcoreapp3.1/Livet.Extensions.dll",
+        "lib/netcoreapp3.1/Microsoft.WindowsAPICodePack.Shell.dll",
+        "lib/netcoreapp3.1/Microsoft.WindowsAPICodePack.dll",
+        "lib/netcoreapp3.1/ja/Livet.Extensions.resources.dll",
+        "license-en.txt",
+        "livetextensions.3.2.3.1.nupkg.sha512",
+        "livetextensions.nuspec"
+      ]
+    },
+    "Microsoft.Web.WebView2/1.0.664.37": {
+      "sha512": "kAwRKd4oc3DBoCjTcwpwEKWJE/b8ZRKBgWAy+UlqwbbIhMYkV2uTAwS/ahaa77bOK1FOXu0Oy9pb4F8nY83KJw==",
+      "type": "package",
+      "path": "microsoft.web.webview2/1.0.664.37",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "WebView2.idl",
+        "WebView2.tlb",
+        "build/Microsoft.Web.WebView2.targets",
+        "build/arm64/WebView2Loader.dll",
+        "build/native/Microsoft.Web.WebView2.targets",
+        "build/native/arm64/WebView2Guid.lib",
+        "build/native/arm64/WebView2Loader.dll",
+        "build/native/arm64/WebView2Loader.dll.lib",
+        "build/native/arm64/WebView2LoaderStatic.lib",
+        "build/native/include/WebView2.h",
+        "build/native/include/WebView2EnvironmentOptions.h",
+        "build/native/x64/WebView2Guid.lib",
+        "build/native/x64/WebView2Loader.dll",
+        "build/native/x64/WebView2Loader.dll.lib",
+        "build/native/x64/WebView2LoaderStatic.lib",
+        "build/native/x86/WebView2Guid.lib",
+        "build/native/x86/WebView2Loader.dll",
+        "build/native/x86/WebView2Loader.dll.lib",
+        "build/native/x86/WebView2LoaderStatic.lib",
+        "build/x64/WebView2Loader.dll",
+        "build/x86/WebView2Loader.dll",
+        "lib/net462/Microsoft.Web.WebView2.Core.dll",
+        "lib/net462/Microsoft.Web.WebView2.Core.xml",
+        "lib/net462/Microsoft.Web.WebView2.WinForms.dll",
+        "lib/net462/Microsoft.Web.WebView2.WinForms.xml",
+        "lib/net462/Microsoft.Web.WebView2.Wpf.dll",
+        "lib/net462/Microsoft.Web.WebView2.Wpf.xml",
+        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.dll",
+        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Core.xml",
+        "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.dll",
+        "lib/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
+        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
+        "lib/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
+        "microsoft.web.webview2.1.0.664.37.nupkg.sha512",
+        "microsoft.web.webview2.nuspec",
+        "runtimes/win-arm/native/WebView2Loader.dll",
+        "runtimes/win-x64/native/WebView2Loader.dll",
+        "runtimes/win-x86/native/WebView2Loader.dll"
+      ]
+    },
+    "Microsoft.Xaml.Behaviors.Wpf/1.1.3": {
+      "sha512": "Nj5tRPkKQpIFg7HcXzV1P/1CLk1NtkoJLE0IMKCHZfKMiBWdy6TssdOUT2OHw8L4eKP65lG+OElNR3xdaeW+gQ==",
+      "type": "package",
+      "path": "microsoft.xaml.behaviors.wpf/1.1.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/Microsoft.Xaml.Behaviors.dll",
+        "lib/net45/Microsoft.Xaml.Behaviors.pdb",
+        "lib/net45/Microsoft.Xaml.Behaviors.xml",
+        "lib/netcoreapp3.0/Microsoft.Xaml.Behaviors.dll",
+        "lib/netcoreapp3.0/Microsoft.Xaml.Behaviors.pdb",
+        "lib/netcoreapp3.0/Microsoft.Xaml.Behaviors.xml",
+        "microsoft.xaml.behaviors.wpf.1.1.3.nupkg.sha512",
+        "microsoft.xaml.behaviors.wpf.nuspec"
+      ]
+    },
+    "WMPLib/1.0.0": {
+      "sha512": "hhTCfENN7xrSfUG7hrd/A9YiXVMVGHAc3Hv0USe6SvpacIDxVwiBb1X3nVzELpLtewjqqFy5dsWHwImpUy3vyw==",
+      "type": "package",
+      "path": "wmplib/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "License/license.txt",
+        "lib/AxInterop.WMPLib.dll",
+        "lib/Interop.WMPLib.dll",
+        "wmplib.1.0.0.nupkg.sha512",
+        "wmplib.nuspec"
+      ]
+    },
+    "PlayerWFCL/1.0.0": {
+      "type": "project",
+      "path": "../Flash/FlashWFCL/PlayerWFCL.csproj",
+      "msbuildProject": "../Flash/FlashWFCL/PlayerWFCL.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.7.2": [
+      "CrystalReports.ShockwaveFlashObjects >= 13.0.4000",
+      "LivetCask >= 3.2.3.2",
+      "LivetCask.Behaviors >= 3.2.3.1",
+      "LivetCask.Messaging >= 3.2.3.1",
+      "LivetCask.Mvvm >= 3.2.3.1",
+      "LivetExtensions >= 3.2.3.1",
+      "Microsoft.Web.WebView2 >= 1.0.664.37",
+      "PlayerWFCL >= 1.0.0",
+      "WMPLib >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\hqu66\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\M3UPlayer\\M3UPlayer.csproj",
+      "projectName": "M3UPlayer",
+      "projectPath": "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\M3UPlayer\\M3UPlayer.csproj",
+      "packagesPath": "C:\\Users\\hqu66\\.nuget\\packages\\",
+      "outputPath": "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\M3UPlayer\\obj\\",
+      "projectStyle": "PackageReference",
+      "skipContentFileWrite": true,
+      "configFilePaths": [
+        "C:\\Users\\hqu66\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net472"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net472": {
+          "projectReferences": {
+            "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\Flash\\FlashWFCL\\PlayerWFCL.csproj": {
+              "projectPath": "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\Flash\\FlashWFCL\\PlayerWFCL.csproj"
+            }
+          }
+        }
+      }
+    },
+    "frameworks": {
+      "net472": {
+        "dependencies": {
+          "CrystalReports.ShockwaveFlashObjects": {
+            "target": "Package",
+            "version": "[13.0.4000, )"
+          },
+          "LivetCask": {
+            "target": "Package",
+            "version": "[3.2.3.2, )"
+          },
+          "LivetCask.Behaviors": {
+            "target": "Package",
+            "version": "[3.2.3.1, )"
+          },
+          "LivetCask.Messaging": {
+            "target": "Package",
+            "version": "[3.2.3.1, )"
+          },
+          "LivetCask.Mvvm": {
+            "target": "Package",
+            "version": "[3.2.3.1, )"
+          },
+          "LivetExtensions": {
+            "target": "Package",
+            "version": "[3.2.3.1, )"
+          },
+          "Microsoft.Web.WebView2": {
+            "target": "Package",
+            "version": "[1.0.664.37, )"
+          },
+          "WMPLib": {
+            "include": "Runtime, Build, Native, ContentFiles, Analyzers",
+            "suppressParent": "All",
+            "target": "Package",
+            "version": "[1.0.0, )"
+          }
+        }
+      }
+    },
+    "runtimes": {
+      "win": {
+        "#import": []
+      },
+      "win-x64": {
+        "#import": []
+      },
+      "win-x86": {
+        "#import": []
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1605",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "LivetCask.Behaviors の 3.2.3.2 から 3.2.3.1 へのパッケージ ダウングレードが検出されました。別のバージョンを選択するには、プロジェクトから直接パッケージを参照してください。 \r\n M3UPlayer -> LivetCask 3.2.3.2 -> LivetCask.Behaviors (>= 3.2.3.2) \r\n M3UPlayer -> LivetCask.Behaviors (>= 3.2.3.1)",
+      "libraryId": "LivetCask.Behaviors",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2",
+        ".NETFramework,Version=v4.7.2/win",
+        ".NETFramework,Version=v4.7.2/win-x64",
+        ".NETFramework,Version=v4.7.2/win-x86"
+      ]
+    },
+    {
+      "code": "NU1605",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "LivetCask.Messaging の 3.2.3.2 から 3.2.3.1 へのパッケージ ダウングレードが検出されました。別のバージョンを選択するには、プロジェクトから直接パッケージを参照してください。 \r\n M3UPlayer -> LivetCask 3.2.3.2 -> LivetCask.Messaging (>= 3.2.3.2) \r\n M3UPlayer -> LivetCask.Messaging (>= 3.2.3.1)",
+      "libraryId": "LivetCask.Messaging",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2",
+        ".NETFramework,Version=v4.7.2/win",
+        ".NETFramework,Version=v4.7.2/win-x64",
+        ".NETFramework,Version=v4.7.2/win-x86"
+      ]
+    },
+    {
+      "code": "NU1605",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "LivetCask.Mvvm の 3.2.3.2 から 3.2.3.1 へのパッケージ ダウングレードが検出されました。別のバージョンを選択するには、プロジェクトから直接パッケージを参照してください。 \r\n M3UPlayer -> LivetCask 3.2.3.2 -> LivetCask.Mvvm (>= 3.2.3.2) \r\n M3UPlayer -> LivetCask.Mvvm (>= 3.2.3.1)",
+      "libraryId": "LivetCask.Mvvm",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2",
+        ".NETFramework,Version=v4.7.2/win",
+        ".NETFramework,Version=v4.7.2/win-x64",
+        ".NETFramework,Version=v4.7.2/win-x86"
+      ]
+    }
+  ]
+}

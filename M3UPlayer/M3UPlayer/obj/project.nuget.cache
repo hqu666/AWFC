@@ -1,0 +1,62 @@
+{
+  "version": 2,
+  "dgSpecHash": "mcUMNEeSbPIYObY66vusBLWj3Z2tRo7xa3gHnEckykrYf5rbaercJWaCuaZETGy5g4q8llIcnm13twRLj9OJzA==",
+  "success": true,
+  "projectFilePath": "H:\\develop\\dnet\\AWFC2\\M3UPlayer\\M3UPlayer\\M3UPlayer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\hqu66\\.nuget\\packages\\crystalreports.shockwaveflashobjects\\13.0.4000\\crystalreports.shockwaveflashobjects.13.0.4000.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\livetcask\\3.2.3.2\\livetcask.3.2.3.2.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\livetcask.behaviors\\3.2.3.1\\livetcask.behaviors.3.2.3.1.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\livetcask.collections\\3.2.3.2\\livetcask.collections.3.2.3.2.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\livetcask.converters\\3.2.3.2\\livetcask.converters.3.2.3.2.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\livetcask.core\\3.2.3.2\\livetcask.core.3.2.3.2.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\livetcask.eventlisteners\\3.2.3.2\\livetcask.eventlisteners.3.2.3.2.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\livetcask.messaging\\3.2.3.1\\livetcask.messaging.3.2.3.1.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\livetcask.mvvm\\3.2.3.1\\livetcask.mvvm.3.2.3.1.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\livetextensions\\3.2.3.1\\livetextensions.3.2.3.1.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\microsoft.web.webview2\\1.0.664.37\\microsoft.web.webview2.1.0.664.37.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.3\\microsoft.xaml.behaviors.wpf.1.1.3.nupkg.sha512",
+    "C:\\Users\\hqu66\\.nuget\\packages\\wmplib\\1.0.0\\wmplib.1.0.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1605",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "LivetCask.Behaviors の 3.2.3.2 から 3.2.3.1 へのパッケージ ダウングレードが検出されました。別のバージョンを選択するには、プロジェクトから直接パッケージを参照してください。 \r\n M3UPlayer -> LivetCask 3.2.3.2 -> LivetCask.Behaviors (>= 3.2.3.2) \r\n M3UPlayer -> LivetCask.Behaviors (>= 3.2.3.1)",
+      "libraryId": "LivetCask.Behaviors",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2",
+        ".NETFramework,Version=v4.7.2/win",
+        ".NETFramework,Version=v4.7.2/win-x64",
+        ".NETFramework,Version=v4.7.2/win-x86"
+      ]
+    },
+    {
+      "code": "NU1605",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "LivetCask.Messaging の 3.2.3.2 から 3.2.3.1 へのパッケージ ダウングレードが検出されました。別のバージョンを選択するには、プロジェクトから直接パッケージを参照してください。 \r\n M3UPlayer -> LivetCask 3.2.3.2 -> LivetCask.Messaging (>= 3.2.3.2) \r\n M3UPlayer -> LivetCask.Messaging (>= 3.2.3.1)",
+      "libraryId": "LivetCask.Messaging",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2",
+        ".NETFramework,Version=v4.7.2/win",
+        ".NETFramework,Version=v4.7.2/win-x64",
+        ".NETFramework,Version=v4.7.2/win-x86"
+      ]
+    },
+    {
+      "code": "NU1605",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "LivetCask.Mvvm の 3.2.3.2 から 3.2.3.1 へのパッケージ ダウングレードが検出されました。別のバージョンを選択するには、プロジェクトから直接パッケージを参照してください。 \r\n M3UPlayer -> LivetCask 3.2.3.2 -> LivetCask.Mvvm (>= 3.2.3.2) \r\n M3UPlayer -> LivetCask.Mvvm (>= 3.2.3.1)",
+      "libraryId": "LivetCask.Mvvm",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.2",
+        ".NETFramework,Version=v4.7.2/win",
+        ".NETFramework,Version=v4.7.2/win-x64",
+        ".NETFramework,Version=v4.7.2/win-x86"
+      ]
+    }
+  ]
+}
