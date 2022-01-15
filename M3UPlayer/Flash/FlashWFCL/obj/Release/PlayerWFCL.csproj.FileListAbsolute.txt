@@ -1,0 +1,7 @@
+H:\develop\dnet\AWFC2\M3UPlayer\Flash\FlashWFCL\obj\Release\Interop.WMPLib.dll
+H:\develop\dnet\AWFC2\M3UPlayer\Flash\FlashWFCL\obj\Release\AxInterop.WMPLib.dll
+H:\develop\dnet\AWFC2\M3UPlayer\Flash\FlashWFCL\obj\Release\PlayerWFCL.csproj.ResolveComReference.cache
+H:\develop\dnet\AWFC2\M3UPlayer\Flash\FlashWFCL\obj\Release\PlayerWFCL.FlushControl.resources
+H:\develop\dnet\AWFC2\M3UPlayer\Flash\FlashWFCL\obj\Release\PlayerWFCL.WMPControl.resources
+H:\develop\dnet\AWFC2\M3UPlayer\Flash\FlashWFCL\obj\Release\PlayerWFCL.csproj.GenerateResource.cache
+H:\develop\dnet\AWFC2\M3UPlayer\Flash\FlashWFCL\obj\Release\PlayerWFCL.csproj.CoreCompileInputs.cache

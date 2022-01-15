@@ -88,11 +88,11 @@
         <behaviors:EventTrigger EventName="Closed">
             <l:DataContextDisposeAction/>
         </behaviors:EventTrigger>
-        <l:InteractionMessageTrigger MessageKey="FileNameInputShow" Messenger="{Binding Messenger}" >
+        <!--<l:InteractionMessageTrigger MessageKey="FileNameInputShow" Messenger="{Binding Messenger}" >
             <l:TransitionInteractionMessageAction 
                 WindowType="{x:Type v:FileNameInput}" Mode="Modal" >
             </l:TransitionInteractionMessageAction>
-        </l:InteractionMessageTrigger>
+        </l:InteractionMessageTrigger>-->
 
     </behaviors:Interaction.Triggers>
 
